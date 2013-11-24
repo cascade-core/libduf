@@ -52,13 +52,18 @@ class B_duf__form extends Block {
 	{
 		$form = new \Duf\Form($this->fullId(), $this->in('form_def'), $this->in('form_toolbox'));
 
-		if (!$form->isSubmitted()) {
+		$form->loadInput();
+
+		if ($form->isSubmitted()) {
+			$form->useInput();
+		} else {
 			$form->setDefaults($this->inAll());
+			$form->useDefaults();
 		}
 
 		$this->outAll($form->getValues());
 		$this->out('form', $form);
-		$this->out('done', $form->isValid());
+		$this->out('done', $form->isSubmitted() && $form->isValid());
 	}
 
 }

@@ -38,17 +38,22 @@ class Renderer
 	 */
 	static function form(Form $form, $template_engine = null)
 	{
-		echo "<form id=\"", htmlspecialchars($form->id), "\" class=\"duf_form\" action=\"\" method=\"post\">\n";
+		echo "<form id=\"", htmlspecialchars($form->id), "\" class=\"duf_form\" ",
+			"action=\"", htmlspecialchars($form->action_url), "\" ",
+			"method=\"", htmlspecialchars($form->http_method), "\">\n";
 		$form->renderRootLayout($template_engine);
+		echo "<input type=\"hidden\" name=\"__[", htmlspecialchars($form->hashId()), "]\" value=\"1\">\n";
+		echo "<!--[if IE]><input type=\"text\" disabled style=\"display:none!important;\" size=\"1\"><![endif]-->\n"; // IE bug: single text input
 		echo "</form>\n";
 	}
+
 
 	/**
 	 * Default label renderer
 	 */
 	static function label(Form $form, $group_id, $field_id, $field_def, $template_engine = null)
 	{
-		echo "<label type=\"", htmlspecialchars($field_def['type']), "\" value=\"", htmlspecialchars($value), "\">",
+		echo "<label type=\"", htmlspecialchars($field_def['type']), "\">",
 			htmlspecialchars(sprintf(_('%s:'), $field_def['label'])),
 			"</label>\n";
 	}
@@ -59,15 +64,21 @@ class Renderer
 	 */
 	static function input(Form $form, $group_id, $field_id, $field_def, $value, $template_engine = null)
 	{
-		echo "<input type=\"", htmlspecialchars($field_def['type']), "\" value=\"", htmlspecialchars($value), "\">\n";
+		echo "<input type=\"", htmlspecialchars($field_def['type']), "\" ",
+			"name=\"", $form->getHtmlFieldName($group_id, $field_id), "\" ",
+			"value=\"", htmlspecialchars($form->getRawData($group_id, $field_id)), "\">\n";
 	}
+
 
 	/**
 	 * Default textarea renderer
 	 */
 	static function textarea(Form $form, $group_id, $field_id, $field_def, $value, $template_engine = null)
 	{
-		echo "<textarea class=\"", htmlspecialchars($field_def['type']), "\">", htmlspecialchars($value), "</textarea>\n";
+		echo "<textarea class=\"", htmlspecialchars($field_def['type']), "\" ",
+			"name=\"", $form->getHtmlFieldName($group_id, $field_id), "\">",
+			htmlspecialchars($form->getRawData($group_id, $field_id)),
+			"</textarea>\n";
 	}
 
 
@@ -76,7 +87,9 @@ class Renderer
 	 */
 	static function select(Form $form, $group_id, $field_id, $field_def, $value, $template_engine = null)
 	{
-		echo "<select class=\"", htmlspecialchars($field_def['type']), "\">\n";
+		echo "<select name=\"", $form->getHtmlFieldName($group_id, $field_id), "\" ",
+			"class=\"", htmlspecialchars($field_def['type']), "\">\n";
+		$value = $form->getRawData($group_id, $field_id);
 		foreach ($field_def['options'] as $key => $option) {
 			if (is_array($option)) {
 				$opt_label = $option['label'];
@@ -97,7 +110,9 @@ class Renderer
 	 */
 	static function submit(Form $form, $group_id, $field_id, $field_def, $value, $template_engine = null)
 	{
-		echo "<input type=\"", htmlspecialchars($field_def['type']), "\" value=\"", htmlspecialchars($field_def['label']), "\">\n";
+		echo "<input type=\"", htmlspecialchars($field_def['type']), "\" ",
+			"name=\"", $form->getHtmlFieldName($group_id, $field_id), "\" ",
+			"value=\"", htmlspecialchars($field_def['label']), "\">\n";
 	}
 
 

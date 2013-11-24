@@ -49,6 +49,7 @@ class B_duf__show extends Block {
 	public function main()
 	{
 		$in = $this->inAll();
+
 		$this->templateAdd(null, 'duf/form', $in);
 	}
 }

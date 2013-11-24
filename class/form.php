@@ -31,7 +31,24 @@
 namespace Duf;
 
 /**
- * Form.
+ * HTML form logic
+ *
+ * Form lifetime:
+ *
+ *   A. Form is not submitted:
+ *       1.  Initialize form -- load definition.
+ *       2.  Process input (empty for now).
+ *       3.  Load default values.
+ *       4.  Set form to use default values.
+ *       5.  Show form.
+ *
+ *   B. Form is submitted:
+ *       1.  Initialize form -- load definition.
+ *       2.  Process input (submission is detected).
+ *       3.  Validate user input.
+ *       4a. If input is not valid, set form to use submitted values and show the form.
+ *       4b. Otherwise pass values to application.
+ *
  */
 class Form
 {
@@ -40,6 +57,16 @@ class Form
 	 * Global form ID (HTML attribute)
 	 */
 	public $id;
+
+	/**
+	 * Form target URL (empty = the same page)
+	 */
+	public $action_url = '';
+
+	/**
+	 * Form submit method
+	 */
+	public $http_method = 'post';
 
 	/**
 	 * Definition of the form. What fields in what layouts.
@@ -55,6 +82,24 @@ class Form
 	 * Current value of the field.
 	 */
 	protected $field_values = array();
+
+	/**
+	 * Submitted input from user. Data are not modified in any way.
+	 */
+	protected $raw_input = null;
+
+	/**
+	 * Preprocessed default values. These data go directly to HTML form.
+	 */
+	protected $raw_defaults = null;
+
+	/**
+	 * Which value set should be used ?
+	 *
+	 * true = use default values
+	 * false = use submitted values
+	 */
+	protected $use_defaults = false;
 
 	/**
 	 * Listing of all available tools to build forms. Fields, layouts, 
@@ -75,11 +120,95 @@ class Form
 
 
 	/**
-	 * Set default values used when user has not submitted anything else.
+	 * Hash of form ID for submit detection
+	 *
+	 * This hashed ID is per-form specific constant and does not change 
+	 * over time. Hash is used to hide implementational details from API 
+	 * and to make nice alphanumeric string.
 	 */
-	public function setDefaults($defaults)
+	public function hashId()
 	{
-		$this->field_defaults = $defaults;
+		return md5($this->id);
+	}
+
+
+	/**
+	 * Set default values. Used when user has not submitted anything else. 
+	 * It will also load default values specified within field definitions.
+	 *
+	 * Does array_merge_recursive definition defaults with custom defaults.
+	 * 
+	 * $custom_defaults has the same structure as values returned by getValues().
+	 */
+	public function setDefaults($custom_defaults)
+	{
+		// Collect default values from the form definition
+		$def_defaults = array();
+		foreach ($this->form_def['fields'] as $group_name => $group_fields) {
+			foreach ($group_fields as $field_name => $field) {
+				if (isset($field['default'])) {
+					$def_defaults[$group_name][$field_name] = $field['default'];
+				}
+			}
+		}
+
+		// TODO: Split this to multiple methods, so each group is set separately
+		// Merge definition defaults with custom defaults -- custom defaults win
+		//$this->field_defaults = array_merge_recursive($def_defaults, (array) $custom_defaults);
+		$this->field_defaults = $def_defaults;
+
+		// TODO: Call pre-process functions to produce raw form data
+		$this->raw_defaults = $this->field_defaults;
+	}
+
+
+	/**
+	 * Load submitted input
+	 *
+	 * It is possible to use different input than $_GET or $_POST to make 
+	 * testing easy. If $raw_input is null, appropriate superglobal variable 
+	 * is used.
+	 */
+	public function loadInput($raw_input = null)
+	{
+		if ($raw_input !== null) {
+			$this->raw_input = $raw_input;
+		} else {
+			switch (@ $this->form_def['form']['http_method']) {
+				case 'get':
+				case 'GET':
+				case 'Get':
+					$this->raw_input = $_GET;
+					break;
+				case null:
+				case 'post':
+				case 'POST':
+				case 'Post':
+					$this->raw_input = $_POST;
+					break;
+				default:
+					throw new \InvalidArgumentException('Unknown HTTP method: '
+						.$this->form_def['form']['http_method']);
+			}
+		}
+	}
+
+
+	/**
+	 * Sets form to use default values.
+	 */
+	public function useDefaults()
+	{
+		$this->use_defaults = true;
+	}
+
+
+	/**
+	 * Sets form to use user submitted values.
+	 */
+	public function useInput()
+	{
+		$this->use_defaults = false;
 	}
 
 
@@ -88,6 +217,7 @@ class Form
 	 */
 	public function isSubmitted()
 	{
+		return isset($this->raw_input['__'][$this->hashId()]);
 	}
 
 
@@ -96,6 +226,8 @@ class Form
 	 */
 	public function isValid()
 	{
+		// TODO: Validate raw data (input or defaults).
+		return true;
 	}
 
 
@@ -104,7 +236,39 @@ class Form
 	 */
 	public function getValues()
 	{
-		return $this->field_values;
+		if ($this->use_defaults) {
+			return $this->field_defaults;
+		} else {
+			// TODO: Call post-process functions
+			$this->field_values = $this->raw_input;
+
+			return $this->field_values;
+		}
+	}
+
+
+	/**
+	 * Get raw data for HTML form field.
+	 */
+	public function getRawData($group, $field)
+	{
+		if ($this->use_defaults) {
+			return $this->raw_defaults[$group][$field];
+		} else {
+			return $this->raw_input[$group][$field];
+		}
+	}
+
+	/**
+	 * Helper method to get correct HTML form field name.
+	 */
+	public function getHtmlFieldName($group, $field, $field_component = null)
+	{
+		if ($field_component) {
+			return htmlspecialchars("${group}[$field][$field_component]");
+		} else {
+			return htmlspecialchars("${group}[$field]");
+		}
 	}
 
 
