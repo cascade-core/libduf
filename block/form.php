@@ -57,6 +57,7 @@ class B_duf__form extends Block {
 		if ($form->isSubmitted()) {
 			$form->useInput();
 		} else {
+			$form->loadDefaults();
 			$form->setDefaults($this->inAll());
 			$form->useDefaults();
 		}

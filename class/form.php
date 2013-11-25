@@ -84,6 +84,11 @@ class Form
 	protected $field_values = array();
 
 	/**
+	 * All collected errors from all fields.
+	 */
+	protected $field_errors = array();
+
+	/**
 	 * Submitted input from user. Data are not modified in any way.
 	 */
 	protected $raw_input = null;
@@ -133,14 +138,9 @@ class Form
 
 
 	/**
-	 * Set default values. Used when user has not submitted anything else. 
-	 * It will also load default values specified within field definitions.
-	 *
-	 * Does array_merge_recursive definition defaults with custom defaults.
-	 * 
-	 * $custom_defaults has the same structure as values returned by getValues().
+	 * Collect default values from form definition. Used when user has not submitted anything else. 
 	 */
-	public function setDefaults($custom_defaults)
+	public function loadDefaults()
 	{
 		// Collect default values from the form definition
 		$def_defaults = array();
@@ -152,13 +152,22 @@ class Form
 			}
 		}
 
-		// TODO: Split this to multiple methods, so each group is set separately
-		// Merge definition defaults with custom defaults -- custom defaults win
-		//$this->field_defaults = array_merge_recursive($def_defaults, (array) $custom_defaults);
 		$this->field_defaults = $def_defaults;
+	}
 
-		// TODO: Call pre-process functions to produce raw form data
-		$this->raw_defaults = $this->field_defaults;
+
+	/**
+	 * Set custom default values.
+	 *
+	 * Does array_merge_recursive definition defaults with custom defaults.
+	 * 
+	 * $custom_defaults has the same structure as values returned by getValues().
+	 */
+	public function setDefaults($custom_defaults)
+	{
+		// TODO: Split this, so each group is set separately
+		// Merge definition defaults with custom defaults -- custom defaults win
+		//$this->field_defaults = array_merge_recursive($this->field_defaults, (array) $custom_defaults);
 	}
 
 
@@ -226,8 +235,9 @@ class Form
 	 */
 	public function isValid()
 	{
-		// TODO: Validate raw data (input or defaults).
-		return true;
+		// TODO: Validate $this->field_values (post-processed values, second stage of validation).
+
+		return empty($this->field_errors);
 	}
 
 
@@ -239,7 +249,7 @@ class Form
 		if ($this->use_defaults) {
 			return $this->field_defaults;
 		} else {
-			// TODO: Call post-process functions
+			// TODO: Call post-process functions, populate $this->field_errors (first stage of validation).
 			$this->field_values = $this->raw_input;
 
 			return $this->field_values;
@@ -253,6 +263,10 @@ class Form
 	public function getRawData($group, $field)
 	{
 		if ($this->use_defaults) {
+			if ($this->raw_defaults === null) {
+				// TODO: Call pre-process functions to produce raw form data
+				$this->raw_defaults = $this->field_defaults;
+			}
 			return $this->raw_defaults[$group][$field];
 		} else {
 			return $this->raw_input[$group][$field];
