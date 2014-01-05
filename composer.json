@@ -1,0 +1,19 @@
+{
+	"name": "cascade/duf",
+	"type": "cascade-plugin",
+	"description": "DUF: Declarative Universal Forms",
+	"license": "BSD-3-Clause",
+	"authors": [
+		{
+			"name": "Josef Kufner",
+			"email": "jk@frozen-doe.net"
+		}
+	],
+	"extra": {
+		"plugin": "duf"
+	},
+	"require": {
+		"cascade/composer-plugin": "dev-master"
+	}
+}
+
