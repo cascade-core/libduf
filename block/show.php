@@ -19,7 +19,7 @@
 /**
  * Show form created by duf/form block.
  */
-class B_duf__show extends Block {
+class B_duf__show extends \Cascade\Core\Block {
 
 	protected $inputs = array(
 		'form' => array(),		// Form from duf/form block.

@@ -21,7 +21,7 @@
  * duf/show to show the form.
  */
 
-class B_duf__form extends Block {
+class B_duf__form extends \Cascade\Core\Block {
 
 	protected $inputs = array(
 		'form_def' => array(),

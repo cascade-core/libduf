@@ -12,8 +12,11 @@
 	"extra": {
 		"plugin": "duf"
 	},
+	"autoload": {
+		"psr-4": { "Duf\\": "class/" }
+	},
 	"require": {
-		"cascade/composer-plugin": "dev-master"
+		"cascade/composer-plugin": "~1.1"
 	}
 }
 
