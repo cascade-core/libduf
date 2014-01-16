@@ -16,7 +16,7 @@
 		"psr-4": { "Duf\\": "class/" }
 	},
 	"require": {
-		"cascade/composer-plugin": "~1.1"
+		"cascade/composer-plugin": ">=1.1"
 	}
 }
 
