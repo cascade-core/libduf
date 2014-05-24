@@ -8,7 +8,7 @@
             "in_con": {
                 "form_def": [
                     "config",
-                    "duf_example"
+                    "doc/duf_example"
                 ]
             }
         },
@@ -48,7 +48,7 @@
             "in_con": {
                 "data": [
                     "config",
-                    "duf_example"
+                    "doc/duf_example"
                 ]
             },
             "in_val": {

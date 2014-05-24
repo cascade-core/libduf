@@ -109,6 +109,13 @@ class Form
 		$this->id = $id;
 		$this->form_def = $form_def;
 		$this->toolbox = $toolbox;
+
+		if (empty($this->form_def)) {
+			throw new \InvalidArgumentException('Missing form definition!');
+		}
+		if (empty($this->form_def['fields'])) {
+			throw new \InvalidArgumentException('Missing "fields" section in configuration.');
+		}
 	}
 
 
@@ -132,9 +139,6 @@ class Form
 	{
 		// Collect default values from the form definition
 		$def_defaults = array();
-		if (!isset($this->form_def['fields'])) {
-			throw new \InvalidArgumentException('Missing "fields" section in configuration.');
-		}
 		foreach ($this->form_def['fields'] as $group_name => $group_fields) {
 			foreach ($group_fields as $field_name => $field) {
 				if (isset($field['default'])) {
