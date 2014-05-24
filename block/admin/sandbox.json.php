@@ -9,10 +9,6 @@
                 "form_def": [
                     "config",
                     "duf_example"
-                ],
-                "form_toolbox": [
-                    "config",
-                    "duf_toolbox"
                 ]
             }
         },

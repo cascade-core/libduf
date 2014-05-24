@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2011, Josef Kufner  <jk@frozen-doe.net>
+ * Copyright (c) 2013, Josef Kufner  <jk@frozen-doe.net>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,9 @@
  *
  */
 
+namespace Duf;
 
-function TPL_html5__duf__form($t, $id, $d, $so)
+class RendererException extends \RuntimeException
 {
-	extract($d);
-
-	if ($form instanceof \Duf\Form) {
-		$form->render($t);
-	} else {
-		echo "<div class=\"placeholder\">&lt;form&gt;</div>\n";
-	}
 }
 

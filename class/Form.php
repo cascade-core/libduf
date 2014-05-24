@@ -104,7 +104,7 @@ class Form
 	/**
 	 * Create form described by $form_def using $toolbox.
 	 */
-	public function __construct($id, $form_def, $toolbox)
+	public function __construct($id, $form_def, Toolbox $toolbox)
 	{
 		$this->id = $id;
 		$this->form_def = $form_def;
@@ -132,6 +132,9 @@ class Form
 	{
 		// Collect default values from the form definition
 		$def_defaults = array();
+		if (!isset($this->form_def['fields'])) {
+			throw new \InvalidArgumentException('Missing "fields" section in configuration.');
+		}
 		foreach ($this->form_def['fields'] as $group_name => $group_fields) {
 			foreach ($group_fields as $field_name => $field) {
 				if (isset($field['default'])) {
@@ -147,15 +150,22 @@ class Form
 	/**
 	 * Set custom default values.
 	 *
-	 * Does array_merge_recursive definition defaults with custom defaults.
+	 * Does array_merge() definition defaults with custom defaults.
 	 * 
-	 * $custom_defaults has the same structure as values returned by getValues().
+	 * $custom_defaults has the same structure as values returned by 
+	 * getValues(), if $group is null. Otherwise $custom_defaults is only 
+	 * fragment for specified field group.
 	 */
-	public function setDefaults($custom_defaults)
+	public function setDefaults($custom_defaults, $group = null)
 	{
-		// TODO: Split this, so each group is set separately
 		// Merge definition defaults with custom defaults -- custom defaults win
-		//$this->field_defaults = array_merge_recursive($this->field_defaults, (array) $custom_defaults);
+		if ($group === null) {
+			foreach ($custom_defaults as $k => $v) {
+				$this->field_defaults[$k] = array_merge((array) $this->field_defaults[$k], (array) $custom_defaults[$k]);
+			}
+		} else {
+			$this->field_defaults[$group] = array_merge((array) $this->field_defaults[$group], (array) $custom_defaults);
+		}
 	}
 
 
@@ -306,7 +316,7 @@ class Form
 	 */
 	public function render($template_engine = null)
 	{
-		call_user_func($this->toolbox['form']['renderer'], $this, $template_engine);
+		call_user_func($this->toolbox->getFormRenderer(), $this, $template_engine);
 	}
 
 
@@ -326,7 +336,7 @@ class Form
 	{
 		$type = $layout_def['type'];
 
-		call_user_func($this->toolbox['layouts'][$type]['renderer'], $this, $layout_def, $template_engine);
+		call_user_func($this->toolbox->getLayoutRenderer($type), $this, $layout_def, $template_engine);
 	}
 
 
@@ -339,7 +349,7 @@ class Form
 		$type = $field_def['type'];
 		$value = @ $this->field_values[$group_id][$field_id];
 
-		$renderers = $this->toolbox['field_types'][$type]['renderers'];
+		$renderers = $this->toolbox->getFieldRenderers($type);
 
 		if ($use_renderers === null) {
 			// Use all renderers

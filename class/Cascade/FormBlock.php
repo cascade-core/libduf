@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2010, Josef Kufner  <jk@frozen-doe.net>
+ * Copyright (c) 2013, Josef Kufner  <jk@frozen-doe.net>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,28 +16,47 @@
  *
  */
 
-/**
- * DUF - Declarative Universal Forms. This block contains form logic. Use 
- * duf/show to show the form.
- */
+namespace Duf\Cascade;
 
-class B_duf__form extends \Cascade\Core\Block {
+/**
+ * Interpreter for Cascade::Core::JsonBlockStorage using hashbang feature.
+ */
+class FormBlock extends \Cascade\Core\Block
+{
 
 	protected $inputs = array(
-		'form_def' => array(),
-		'*' => null,
 	);
 
 	protected $outputs = array(
-		'form' => true,
-		'done' => true,
-		'*' => true,
 	);
 
+	const force_exec = true;
 
-	public final function main()
+	protected $config;
+
+	/**
+	 * Setup block using configuration from a block storage.
+	 */
+	public function __construct($config)
 	{
-		$form = new \Duf\Form($this->fullId(), $this->in('form_def'), $this->context->duf_toolbox);
+		$this->config = $config;
+
+		// setup inputs and outputs
+		$this->inputs = array();
+		$this->outputs = array(
+			'duf_form' => true,
+		);
+		foreach ($this->config['fields'] as $group => $fields) {
+			$this->inputs[$group] = null;
+			$this->outputs[$group] = true;
+		}
+		$this->outputs['done'] = true;
+	}
+
+
+	public function main()
+	{
+		$form = new \Duf\Form($this->fullId(), $this->config, $this->context->duf_toolbox);
 
 		$form->loadInput();
 
@@ -50,9 +69,8 @@ class B_duf__form extends \Cascade\Core\Block {
 		}
 
 		$this->outAll($form->getValues());
-		$this->out('form', $form);
+		$this->out('duf_form', $form);
 		$this->out('done', $form->isSubmitted() && $form->isValid());
 	}
-
 }
 
