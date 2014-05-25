@@ -18,7 +18,10 @@
 
 namespace Duf;
 
-class Renderer
+/**
+ * Collection of form renderers to create HTML5 form.
+ */
+class HtmlFormRenderer
 {
 
 	/**
@@ -110,8 +113,8 @@ class Renderer
 	static function layoutDefault(Form $form, $layout_def, $template_engine = null)
 	{
 		echo "<table class=\"duf_form\">\n";
-		foreach ($form->getAllFields() as $group_id => $fields) {
-			foreach ($fields as $field_id => $field_def) {
+		foreach ($form->getAllFieldgroups() as $group_id => $group_config) {
+			foreach ($group_config['fields'] as $field_id => $field_def) {
 				echo "<tr>\n";
 				echo "<th>\n";
 				$form->renderField($group_id, $field_id, 'label', null, $template_engine);

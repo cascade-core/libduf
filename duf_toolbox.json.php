@@ -66,13 +66,13 @@
         ],
         "select": {
             "renderers": {
-                "label": "\\Duf\\Renderer::label",
-                "control": "\\Duf\\Renderer::select"
+                "label": "\\Duf\\HtmlFormRenderer::label",
+                "control": "\\Duf\\HtmlFormRenderer::select"
             }
         },
         "submit": {
             "renderers": {
-                "control": "\\Duf\\Renderer::submit"
+                "control": "\\Duf\\HtmlFormRenderer::submit"
             }
         },
         "tel": [
@@ -80,14 +80,14 @@
         ],
         "text": {
             "renderers": {
-                "label": "\\Duf\\Renderer::label",
-                "control": "\\Duf\\Renderer::input"
+                "label": "\\Duf\\HtmlFormRenderer::label",
+                "control": "\\Duf\\HtmlFormRenderer::input"
             }
         },
         "textarea": {
             "renderers": {
-                "label": "\\Duf\\Renderer::label",
-                "control": "\\Duf\\Renderer::textarea"
+                "label": "\\Duf\\HtmlFormRenderer::label",
+                "control": "\\Duf\\HtmlFormRenderer::textarea"
             }
         },
         "time": [
@@ -101,11 +101,11 @@
         ]
     },
     "form": {
-        "renderer": "\\Duf\\Renderer::form"
+        "renderer": "\\Duf\\HtmlFormRenderer::form"
     },
     "layouts": {
         "default": {
-            "renderer": "\\Duf\\Renderer::layoutDefault"
+            "renderer": "\\Duf\\HtmlFormRenderer::layoutDefault"
         }
     }
 }
