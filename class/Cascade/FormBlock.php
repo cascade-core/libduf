@@ -21,7 +21,7 @@ namespace Duf\Cascade;
 /**
  * Interpreter for Cascade::Core::JsonBlockStorage using hashbang feature.
  */
-class FormBlock extends \Cascade\Core\Block
+class FormBlock extends \Cascade\Core\Block implements \Cascade\Core\IHashbangHandler
 {
 
 	protected $inputs = array(
@@ -32,21 +32,23 @@ class FormBlock extends \Cascade\Core\Block
 
 	const force_exec = true;
 
-	protected $config;
+	protected $form;
+
 
 	/**
 	 * Setup block using configuration from a block storage.
 	 */
-	public function __construct($config)
+	public function __construct($config, $context)
 	{
-		$this->config = $config;
+		// Create form
+		$this->form = new \Duf\Form(null, $config, $context->duf_toolbox);
 
-		// setup inputs and outputs
+		// Setup inputs and outputs using form field groups
 		$this->inputs = array();
 		$this->outputs = array(
 			'duf_form' => true,
 		);
-		foreach ($this->config['fields'] as $group => $fields) {
+		foreach ($this->form->getFieldGroups() as $group => $group_config) {
 			$this->inputs[$group] = null;
 			$this->outputs[$group] = true;
 		}
@@ -54,23 +56,32 @@ class FormBlock extends \Cascade\Core\Block
 	}
 
 
+	/**
+	 * Create block proxy.
+	 */
+	public static function createFromHashbang($block_config, $hashbang_config, \Cascade\Core\Context $context, $block_type)
+	{
+		$block = new self($block_config, $context);
+		return $block;
+	}
+
+
 	public function main()
 	{
-		$form = new \Duf\Form($this->fullId(), $this->config, $this->context->duf_toolbox);
+		$this->form->setId($this->fullId());
+		$this->form->loadInput();
 
-		$form->loadInput();
-
-		if ($form->isSubmitted()) {
-			$form->useInput();
+		if ($this->form->isSubmitted()) {
+			$this->form->useInput();
 		} else {
-			$form->loadDefaults();
-			$form->setDefaults($this->inAll());
-			$form->useDefaults();
+			$this->form->loadDefaults();
+			$this->form->setDefaults($this->inAll());
+			$this->form->useDefaults();
 		}
 
-		$this->outAll($form->getValues());
-		$this->out('duf_form', $form);
-		$this->out('done', $form->isSubmitted() && $form->isValid());
+		$this->outAll($this->form->getValues());
+		$this->out('duf_form', $this->form);
+		$this->out('done', $this->form->isSubmitted() && $this->form->isValid());
 	}
 }
 

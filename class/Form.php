@@ -103,6 +103,8 @@ class Form
 
 	/**
 	 * Create form described by $form_def using $toolbox.
+	 *
+	 * You can set $id to null here and set it later using setId().
 	 */
 	public function __construct($id, $form_def, Toolbox $toolbox)
 	{
@@ -113,9 +115,26 @@ class Form
 		if (empty($this->form_def)) {
 			throw new \InvalidArgumentException('Missing form definition!');
 		}
-		if (empty($this->form_def['fields'])) {
-			throw new \InvalidArgumentException('Missing "fields" section in configuration.');
+		if (empty($this->form_def['field_groups'])) {
+			throw new \InvalidArgumentException('Missing "field_groups" section in configuration.');
 		}
+
+		foreach ($this->form_def['field_groups'] as $group => & $group_config) {
+			if (isset($group_config['factory'])) {
+			}
+		}
+	}
+
+
+	/**
+	 * Set form ID. Use if ID cannot be set in constructor.
+	 */
+	public function setId($id)
+	{
+		if (isset($this->id)) {
+			throw new \RuntimeException('ID is already set, you cannot change it once it is set!');
+		}
+		$this->id = $id;
 	}
 
 
@@ -133,14 +152,23 @@ class Form
 
 
 	/**
+	 * Retrieve field groups
+	 */
+	public function getFieldGroups()
+	{
+		return $this->form_def['field_groups'];
+	}
+
+
+	/**
 	 * Collect default values from form definition. Used when user has not submitted anything else. 
 	 */
 	public function loadDefaults()
 	{
 		// Collect default values from the form definition
 		$def_defaults = array();
-		foreach ($this->form_def['fields'] as $group_name => $group_fields) {
-			foreach ($group_fields as $field_name => $field) {
+		foreach ($this->form_def['field_groups'] as $group_name => $group_config) {
+			foreach ($group_config['fields'] as $field_name => $field) {
 				if (isset($field['default'])) {
 					$def_defaults[$group_name][$field_name] = $field['default'];
 				}
@@ -291,9 +319,9 @@ class Form
 	/**
 	 * Get field definitions.
 	 */
-	public function getAllFields()
+	public function getAllFieldGroups()
 	{
-		return $this->form_def['fields'];
+		return $this->form_def['field_groups'];
 	}
 
 
@@ -302,7 +330,7 @@ class Form
 	 */
 	public function getFieldGroup($group)
 	{
-		return $this->form_def['fields'][$group];
+		return $this->form_def['field_groups'][$group];
 	}
 
 
@@ -311,7 +339,7 @@ class Form
 	 */
 	public function getField($group, $field)
 	{
-		return $this->form_def['fields'][$group][$field];
+		return $this->form_def['field_groups'][$group]['fields'][$field];
 	}
 
 
@@ -349,7 +377,7 @@ class Form
 	 */
 	public function renderField($group_id, $field_id, $use_renderers, $exclude_renderers, $template_engine = null)
 	{
-		$field_def = $this->form_def['fields'][$group_id][$field_id];
+		$field_def = $this->form_def['field_groups'][$group_id]['fields'][$field_id];
 		$type = $field_def['type'];
 		$value = @ $this->field_values[$group_id][$field_id];
 

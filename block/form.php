@@ -37,6 +37,8 @@ class B_duf__form extends \Cascade\Core\Block {
 
 	public final function main()
 	{
+		// TODO: Refactor using FormBlock.
+
 		$form = new \Duf\Form($this->fullId(), $this->in('form_def'), $this->context->duf_toolbox);
 
 		$form->loadInput();
