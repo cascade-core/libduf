@@ -27,6 +27,12 @@ Form definition contains set of fields and layout in which are these fields
 arranged. Fields are specified in groups, where each group should represent one
 entity. Form layout and field groups are completely unrelated.
 
+Field group may be generated from field source (see
+[IFieldSource](@ref Duf::FieldSource::IFieldSource)). If field group have
+`field_source` option specified, given field source will be asked to generate
+`fields` section of the field group configuration. Field sources are defined in
+the [Toolbox](@ref Duf::Toolbox).
+
 Both layouts and fields are of given type. When field or layout is used
 specification of its type is looked up in a toolbox (see next section).
 
@@ -58,9 +64,10 @@ Toolbox
 -------
 
 When the form needs to render something or process some data, it asks the
-toolbox to do it. But toolbox is lazy and only looks into its configuration and
-returns requested helper. So the toolbox is a service locator object. It is
-similar to proxy, but Toolbox does not invoke anything, only returns callables.
+[Toolbox](@ref Duf::Toolbox) to do it. But toolbox is lazy and only looks into its
+configuration and returns requested helper. So the toolbox is a service locator
+object. It is similar to proxy, but Toolbox does not invoke anything, only
+returns callables.
 
 
 License

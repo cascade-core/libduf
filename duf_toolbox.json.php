@@ -1,69 +1,72 @@
 {
     "_": "<?php printf('_%c%c}%c',34,10,10);__halt_compiler();?>",
+    "field_sources": {
+        "smalldb": "\\Duf\\FieldSource\\Smalldb"
+    },
     "field_types": {
-        "button": [
+        "button": {
 
-        ],
-        "checkbox": [
+        },
+        "checkbox": {
 
-        ],
-        "color": [
+        },
+        "color": {
 
-        ],
-        "date": [
+        },
+        "date": {
 
-        ],
-        "datetime": [
+        },
+        "datetime": {
 
-        ],
-        "datetime-local": [
+        },
+        "datetime-local": {
 
-        ],
-        "email": [
+        },
+        "email": {
 
-        ],
-        "file": [
+        },
+        "file": {
 
-        ],
-        "hidden": [
+        },
+        "hidden": {
 
-        ],
-        "htmlarea": [
+        },
+        "htmlarea": {
 
-        ],
-        "json": [
+        },
+        "json": {
 
-        ],
-        "image": [
+        },
+        "image": {
 
-        ],
-        "mdarea": [
+        },
+        "mdarea": {
 
-        ],
-        "money": [
+        },
+        "money": {
 
-        ],
-        "month": [
+        },
+        "month": {
 
-        ],
-        "number": [
+        },
+        "number": {
 
-        ],
-        "password": [
+        },
+        "password": {
 
-        ],
-        "radio": [
+        },
+        "radio": {
 
-        ],
-        "range": [
+        },
+        "range": {
 
-        ],
-        "reset": [
+        },
+        "reset": {
 
-        ],
-        "search": [
+        },
+        "search": {
 
-        ],
+        },
         "select": {
             "renderers": {
                 "label": "\\Duf\\HtmlFormRenderer::label",
@@ -75,9 +78,9 @@
                 "control": "\\Duf\\HtmlFormRenderer::submit"
             }
         },
-        "tel": [
+        "tel": {
 
-        ],
+        },
         "text": {
             "renderers": {
                 "label": "\\Duf\\HtmlFormRenderer::label",
@@ -90,15 +93,15 @@
                 "control": "\\Duf\\HtmlFormRenderer::textarea"
             }
         },
-        "time": [
+        "time": {
 
-        ],
-        "url": [
+        },
+        "url": {
 
-        ],
-        "week": [
+        },
+        "week": {
 
-        ]
+        }
     },
     "form": {
         "renderer": "\\Duf\\HtmlFormRenderer::form"

@@ -120,7 +120,9 @@ class Form
 		}
 
 		foreach ($this->form_def['field_groups'] as $group => & $group_config) {
-			if (isset($group_config['factory'])) {
+			$field_source = @ $group_config['field_source'];
+			if ($field_source !== null) {
+				$group_config['fields'] = $this->toolbox->getFieldsFromSource($field_source, $group_config);
 			}
 		}
 	}
@@ -193,10 +195,10 @@ class Form
 		// Merge definition defaults with custom defaults -- custom defaults win
 		if ($group === null) {
 			foreach ($custom_defaults as $k => $v) {
-				$this->field_defaults[$k] = array_merge((array) $this->field_defaults[$k], (array) $custom_defaults[$k]);
+				$this->field_defaults[$k] = array_merge((array) @ $this->field_defaults[$k], (array) @ $custom_defaults[$k]);
 			}
 		} else {
-			$this->field_defaults[$group] = array_merge((array) $this->field_defaults[$group], (array) $custom_defaults);
+			$this->field_defaults[$group] = array_merge((array) @ $this->field_defaults[$group], (array) $custom_defaults);
 		}
 	}
 

@@ -28,24 +28,47 @@ class Toolbox
 	 */
 	protected $config;
 
+	/**
+	 * Context
+	 */
+	protected $context;
+
 
 	/**
 	 * Create a toolbox.
 	 */
-	public function __construct($config)
+	public function __construct($config, $context)
 	{
 		$this->config = $config;
+		$this->context = $context;
 	}
 
 
 	/**
 	 * Create Toolbox and initialize it using context.
+	 *
+	 * @warning This loads configuration using config_loader from 
+	 * 	duf_toolbox.
 	 */
-	public static function createFromContext($cfg, $context)
+	public static function createFromContext($config, $context)
 	{
 		// TODO: Use proper factory. This should not be here.
 		$toolbox_config = $context->config_loader->load('duf_toolbox');
-		return new self($toolbox_config);
+		return new self($toolbox_config, $context);
+	}
+
+
+	/**
+	 * Generate fileds (one field group) for an entity type.
+	 */
+	public function getFieldsFromSource($source_name, $group_config)
+	{
+		$source_class = @ $this->config['field_sources'][$source_name];
+		if ($source_class === null) {
+			throw new \RuntimeException('Unknown field source: '.$source_name);
+		}
+
+		return $source_class::generateFieldGroup($group_config, $this->context);
 	}
 
 
