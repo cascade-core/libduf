@@ -269,6 +269,10 @@ class Form
 	{
 		// TODO: Validate $this->field_values (post-processed values, second stage of validation).
 
+
+		// TODO: http://www.the-art-of-web.com/html/html5-form-validation/
+		// TODO: http://cz2.php.net/manual/en/book.filter.php
+
 		return empty($this->field_errors);
 	}
 

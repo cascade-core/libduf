@@ -19,9 +19,9 @@
 namespace Duf\Cascade;
 
 /**
- * Interpreter for Cascade::Core::JsonBlockStorage using hashbang feature.
+ * Interpreter for Cascade::Core::JsonBlockStorage using shebang feature.
  */
-class FormBlock extends \Cascade\Core\Block implements \Cascade\Core\IHashbangHandler
+class FormBlock extends \Cascade\Core\Block implements \Cascade\Core\IShebangHandler
 {
 
 	protected $inputs = array(
@@ -59,7 +59,7 @@ class FormBlock extends \Cascade\Core\Block implements \Cascade\Core\IHashbangHa
 	/**
 	 * Create block proxy.
 	 */
-	public static function createFromHashbang($block_config, $hashbang_config, \Cascade\Core\Context $context, $block_type)
+	public static function createFromShebang($block_config, $shebang_config, \Cascade\Core\Context $context, $block_type)
 	{
 		$block = new self($block_config, $context);
 		return $block;
