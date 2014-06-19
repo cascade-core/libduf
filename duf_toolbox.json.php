@@ -53,7 +53,10 @@
 
         },
         "password": {
-
+            "renderers": {
+                "label": "\\Duf\\HtmlFormRenderer::label",
+                "control": "\\Duf\\HtmlFormRenderer::input"
+            }
         },
         "radio": {
 
