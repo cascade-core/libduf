@@ -41,64 +41,18 @@ namespace Duf;
 class Form
 {
 
-	/**
-	 * Global form ID (HTML attribute)
-	 */
-	public $id;
-
-	/**
-	 * Form target URL (empty = the same page)
-	 */
-	public $action_url = '';
-
-	/**
-	 * Form submit method
-	 */
-	public $http_method = 'post';
-
-	/**
-	 * Definition of the form. What fields in what layouts.
-	 */
-	protected $form_def;
-
-	/**
-	 * Default values used if form is not submitted.
-	 */
-	protected $field_defaults = array();
-
-	/**
-	 * Current value of the field.
-	 */
-	protected $field_values = array();
-
-	/**
-	 * All collected errors from all fields.
-	 */
-	protected $field_errors = array();
-
-	/**
-	 * Submitted input from user. Data are not modified in any way.
-	 */
-	protected $raw_input = null;
-
-	/**
-	 * Preprocessed default values. These data go directly to HTML form.
-	 */
-	protected $raw_defaults = null;
-
-	/**
-	 * Which value set should be used ?
-	 *
-	 * true = use default values
-	 * false = use submitted values
-	 */
-	protected $use_defaults = false;
-
-	/**
-	 * Listing of all available tools to build forms. Fields, layouts, 
-	 * helpers, etc.
-	 */
-	protected $toolbox;
+	public $id;				///< Global form ID (HTML attribute)
+	public $form_ttl = 750;			///< XSRF protection window (15 minutes by default)
+	public $action_url = '';		///< Form target URL (empty = the same page)
+	public $http_method = 'post';		///< Form submit method
+	protected $form_def;			///< Definition of the form. What fields in what layouts.
+	protected $field_defaults = array();	///< Default values used if form is not submitted.
+	protected $field_values = array();	///< Current value of the field.
+	protected $field_errors = array();	///< All collected errors from all fields.
+	protected $raw_input = null;		///< Submitted input from user. Data are not modified in any way.
+	protected $raw_defaults = null;		///< Preprocessed default values. These data go directly to HTML form.
+	protected $use_defaults = false;	///< Use default (true) or submitted (false) values.
+	protected $toolbox;			///< Listing of all available tools to build forms. Fields, layouts, helpers, etc.
 
 
 	/**
@@ -141,15 +95,78 @@ class Form
 
 
 	/**
-	 * Hash of form ID for submit detection
+	 * Generate form token for partial XSRF protection and form 
+	 * identification.
 	 *
-	 * This hashed ID is per-form specific constant and does not change 
-	 * over time. Hash is used to hide implementational details from API 
-	 * and to make nice alphanumeric string.
+	 * @return String value suitable for hidden `<input>`.
+	 * @see validateFormToken()
 	 */
-	public function hashId()
+	public static function createFormToken($form_id)
 	{
-		return md5($this->id);
+		$t = time();
+		$salt = mt_rand();
+		$url = $_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+		$extras = join(':', static::getFormTokenExtras());
+		$hash = sha1("$t:$salt:$form_id:$url:$extras");
+		return "$t:$salt:$hash";
+	}
+
+
+	/**
+	 * Get some additional client-specific values to make hash more secure and bound to client.
+	 *
+	 * Returned value must be constant as long as token should be valid.
+	 *
+	 * TODO: Add some secret and session-specific token to make it really hard to guess.
+	 *
+	 * @return Array of values, keys does not matter.
+	 */
+	protected static function getFormTokenExtras()
+	{
+		return array(
+			@ $_SERVER['REMOTE_ADDR'],
+			@ $_SERVER['HTTP_USER_AGENT'],
+			@ $_SERVER['SERVER_NAME'],	// easy to guess
+			@ $_SERVER['DOCUMENT_ROOT'],	// easy to guess
+		);
+	}
+
+
+	/**
+	 * Validate form token.
+	 *
+	 * @return If validation is successful, returns time when token has 
+	 * 	been generated. Otherwise returns FALSE.
+	 * @see createFormToken()
+	 */
+	public static function validateFormToken($token, $form_id)
+	{
+		@ list($t, $salt, $token_hash) = explode(':', $token);
+		$extras = join(':', static::getFormTokenExtras());
+
+		// First try using current URL
+		$url = $_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+		if ($token_hash === sha1("$t:$salt:$form_id:$url:$extras")) {
+			return (int) $t;
+		}
+
+		// Second try using referer URL
+		$referer = parse_url($_SERVER['HTTP_REFERER']);
+		$url = $referer['host'].$referer['path'];
+		if ($token_hash === sha1("$t:$salt:$form_id:$url:$extras")) {
+			return (int) $t;
+		}
+
+		return FALSE;
+	}
+
+
+	/**
+	 * Get token for this form (simple helper).
+	 */
+	public function getToken()
+	{
+		return static::createFormToken($this->id);
 	}
 
 
@@ -258,7 +275,18 @@ class Form
 	 */
 	public function isSubmitted()
 	{
-		return isset($this->raw_input['__'][$this->hashId()]);
+		foreach ((array) @ $this->raw_input['__'] as $token => $x) {
+			$t = static::validateFormToken($token, $this->id);
+			if ($t !== FALSE) {
+				// Submitted
+				if ($this->form_ttl !== null && time() - $t >$this->form_ttl) {
+					// TODO: Set expiration error
+					$this->field_errors[] = true;
+				}
+				return TRUE;
+			}
+		}
+		return FALSE;
 	}
 
 

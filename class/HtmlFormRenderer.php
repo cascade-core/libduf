@@ -33,7 +33,7 @@ class HtmlFormRenderer
 			"action=\"", htmlspecialchars($form->action_url), "\" ",
 			"method=\"", htmlspecialchars($form->http_method), "\">\n";
 		$form->renderRootLayout($template_engine);
-		echo "<input type=\"hidden\" name=\"__[", htmlspecialchars($form->hashId()), "]\" value=\"1\">\n";
+		echo "<input type=\"hidden\" name=\"__[", htmlspecialchars($form->getToken()), "]\" value=\"1\">\n";
 		echo "<!--[if IE]><input type=\"text\" disabled style=\"display:none!important;\" size=\"1\"><![endif]-->\n"; // IE bug: single text input
 		echo "</form>\n";
 	}

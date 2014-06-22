@@ -42,7 +42,7 @@ class B_duf__show_button extends \Cascade\Core\Block {
 		$this->templateAdd(null, 'duf/button', array(
 			'link' => $this->in('link'),
 			'label' => $this->in('label'),
-			'hash' => md5($this->in('target_form_id')),	// FIXME
+			'hash' => \Duf\Form::createFormToken($this->in('target_form_id')),
 		));
 	}
 }
