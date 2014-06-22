@@ -30,6 +30,7 @@ class B_duf__form extends \Cascade\Core\Block {
 
 	protected $outputs = array(
 		'form' => true,
+		'submitted' => true,
 		'done' => true,
 		'*' => true,
 	);
@@ -40,10 +41,11 @@ class B_duf__form extends \Cascade\Core\Block {
 		// TODO: Refactor using FormBlock.
 
 		$form = new \Duf\Form($this->fullId(), $this->in('form_def'), $this->context->duf_toolbox);
-
 		$form->loadInput();
 
-		if ($form->isSubmitted()) {
+		$is_submitted = $this->form->isSubmitted();
+
+		if ($is_submitted) {
 			$form->useInput();
 		} else {
 			$form->loadDefaults();
@@ -53,7 +55,8 @@ class B_duf__form extends \Cascade\Core\Block {
 
 		$this->outAll($form->getValues());
 		$this->out('form', $form);
-		$this->out('done', $form->isSubmitted() && $form->isValid());
+		$this->out('submitted', $is_submitted);
+		$this->out('done', $is_submitted && $this->form->isValid());
 	}
 
 }

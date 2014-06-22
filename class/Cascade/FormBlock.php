@@ -52,6 +52,7 @@ class FormBlock extends \Cascade\Core\Block implements \Cascade\Core\IShebangHan
 			$this->inputs[$group] = null;
 			$this->outputs[$group] = true;
 		}
+		$this->outputs['submitted'] = true;
 		$this->outputs['done'] = true;
 	}
 
@@ -71,7 +72,9 @@ class FormBlock extends \Cascade\Core\Block implements \Cascade\Core\IShebangHan
 		$this->form->setId($this->fullId());
 		$this->form->loadInput();
 
-		if ($this->form->isSubmitted()) {
+		$is_submitted = $this->form->isSubmitted();
+
+		if ($is_submitted) {
 			$this->form->useInput();
 		} else {
 			$this->form->loadDefaults();
@@ -81,7 +84,8 @@ class FormBlock extends \Cascade\Core\Block implements \Cascade\Core\IShebangHan
 
 		$this->outAll($this->form->getValues());
 		$this->out('duf_form', $this->form);
-		$this->out('done', $this->form->isSubmitted() && $this->form->isValid());
+		$this->out('submitted', $is_submitted);
+		$this->out('done', $is_submitted && $this->form->isValid());
 	}
 }
 
