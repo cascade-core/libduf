@@ -71,6 +71,21 @@ class Toolbox
 		return $source_class::generateFieldGroup($group_config, $this->context);
 	}
 
+	/**
+	 * Retrieve validator for given field type.
+	 *
+	 * @return `array($validator_name => function($form, $group_id, $field_id, $field_def, $value)))`
+	 */
+	public function getFieldValidators($field_type)
+	{
+		$validators = @ $this->config['field_types'][$field_type]['validators'];
+		if ($validators === null) {
+			throw new ValidatorException('Undefined field validators. Field type: '.$field_type);
+		}
+		return $validators;
+	}
+
+
 
 	/**
 	 * Retrieve form renderer.
@@ -104,16 +119,16 @@ class Toolbox
 
 	/**
 	 * Retrieve field renderers. Each field has multiple renderers, i.e. 
-	 * one for label, another for input.
+	 * one for label, another for input or errors.
 	 *
 	 * @return `array($renderer_name => function($form, $group_id, 
-	 *		$field_id, $field_def, $value, $template_engine)))`
+	 *		$field_id, $field_def, $value, $errors, $template_engine)))`
 	 */
 	public function getFieldRenderers($field_type)
 	{
 		$renderers = @ $this->config['field_types'][$field_type]['renderers'];
 		if ($renderers === null) {
-			throw new RendererException('Undefined field renderer. Field type: '.$field_type);
+			throw new RendererException('Undefined field renderers. Field type: '.$field_type);
 		}
 		return $renderers;
 	}

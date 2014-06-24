@@ -55,7 +55,11 @@
         "password": {
             "renderers": {
                 "label": "\\Duf\\HtmlFormRenderer::label",
-                "control": "\\Duf\\HtmlFormRenderer::input"
+                "control": "\\Duf\\HtmlFormRenderer::input",
+                "error": "\\Duf\\HtmlFormRenderer::error"
+            },
+            "validators": {
+                "html5": "\\Duf\\HtmlFormValidator::input"
             }
         },
         "radio": {
@@ -73,12 +77,17 @@
         "select": {
             "renderers": {
                 "label": "\\Duf\\HtmlFormRenderer::label",
-                "control": "\\Duf\\HtmlFormRenderer::select"
+                "control": "\\Duf\\HtmlFormRenderer::select",
+                "error": "\\Duf\\HtmlFormRenderer::error"
+            },
+            "validators": {
             }
         },
         "submit": {
             "renderers": {
-                "control": "\\Duf\\HtmlFormRenderer::submit"
+                "control": "\\Duf\\HtmlFormRenderer::input"
+            },
+            "validators": {
             }
         },
         "tel": {
@@ -87,13 +96,20 @@
         "text": {
             "renderers": {
                 "label": "\\Duf\\HtmlFormRenderer::label",
-                "control": "\\Duf\\HtmlFormRenderer::input"
+                "control": "\\Duf\\HtmlFormRenderer::input",
+                "error": "\\Duf\\HtmlFormRenderer::error"
+            },
+            "validators": {
+                "html5": "\\Duf\\HtmlFormValidator::input"
             }
         },
         "textarea": {
             "renderers": {
                 "label": "\\Duf\\HtmlFormRenderer::label",
-                "control": "\\Duf\\HtmlFormRenderer::textarea"
+                "control": "\\Duf\\HtmlFormRenderer::textarea",
+                "error": "\\Duf\\HtmlFormRenderer::error"
+            },
+            "validators": {
             }
         },
         "time": {

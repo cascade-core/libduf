@@ -45,15 +45,27 @@ class Form
 	public $form_ttl = 750;			///< XSRF protection window (15 minutes by default)
 	public $action_url = '';		///< Form target URL (empty = the same page)
 	public $http_method = 'post';		///< Form submit method
+	protected $toolbox;			///< Listing of all available tools to build forms. Fields, layouts, helpers, etc.
+	
 	protected $form_def;			///< Definition of the form. What fields in what layouts.
 	protected $field_defaults = array();	///< Default values used if form is not submitted.
-	protected $field_values = array();	///< Current value of the field.
-	protected $field_errors = array();	///< All collected errors from all fields.
+	protected $field_values = null;		///< Current value of the field (array, but it will be created very late).
+	
+	public $field_errors = array();		///< Errors from all fields; 2D structure (group, field).
+	public $form_errors = array();		///< Global errors; simple list.
+
 	protected $raw_input = null;		///< Submitted input from user. Data are not modified in any way.
 	protected $raw_defaults = null;		///< Preprocessed default values. These data go directly to HTML form.
 	protected $use_defaults = false;	///< Use default (true) or submitted (false) values.
-	protected $toolbox;			///< Listing of all available tools to build forms. Fields, layouts, helpers, etc.
 
+	/**
+	 * @name Errors
+	 * @{
+	 */
+	const E_FORM_EXPIRED = 'form_expired';		// Error: The XSRF token has expired.
+	const E_FIELD_REQUIRED = 'field_required';	// Error: The empty field is required.
+	const E_FIELD_PATTERN = 'field_pattern';	// Error: The field does not match pattern
+	/// @}
 
 	/**
 	 * Create form described by $form_def using $toolbox.
@@ -105,7 +117,12 @@ class Form
 	{
 		$t = time();
 		$salt = mt_rand();
-		$url = $_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+
+		// Get form URL (empty string when not in web server). When 
+		// form is submitted, this URL will be same or contained in 
+		// referer header (both is checked).
+		$url = @$_SERVER['SERVER_NAME'] . @$_SERVER['REQUEST_URI'];
+
 		$extras = join(':', static::getFormTokenExtras());
 		$hash = sha1("$t:$salt:$form_id:$url:$extras");
 		return "$t:$salt:$hash";
@@ -144,8 +161,8 @@ class Form
 		@ list($t, $salt, $token_hash) = explode(':', $token);
 		$extras = join(':', static::getFormTokenExtras());
 
-		// First try using current URL
-		$url = $_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+		// First try using current URL (empty string when not in web server)
+		$url = @$_SERVER['SERVER_NAME'].@$_SERVER['REQUEST_URI'];
 		if ($token_hash === sha1("$t:$salt:$form_id:$url:$extras")) {
 			return (int) $t;
 		}
@@ -186,10 +203,10 @@ class Form
 	{
 		// Collect default values from the form definition
 		$def_defaults = array();
-		foreach ($this->form_def['field_groups'] as $group_name => $group_config) {
-			foreach ($group_config['fields'] as $field_name => $field) {
+		foreach ($this->form_def['field_groups'] as $group_id => $group_config) {
+			foreach ($group_config['fields'] as $field_id => $field) {
 				if (isset($field['default'])) {
-					$def_defaults[$group_name][$field_name] = $field['default'];
+					$def_defaults[$group_id][$field_id] = $field['default'];
 				}
 			}
 		}
@@ -281,7 +298,7 @@ class Form
 				// Submitted
 				if ($this->form_ttl !== null && time() - $t >$this->form_ttl) {
 					// TODO: Set expiration error
-					$this->field_errors[] = true;
+					$this->form_errors[self::E_FORM_EXPIRED] = true;
 				}
 				return TRUE;
 			}
@@ -300,10 +317,30 @@ class Form
 
 		// TODO: http://www.the-art-of-web.com/html/html5-form-validation/
 		// TODO: http://cz2.php.net/manual/en/book.filter.php
+		
+		$values = $this->getValues();
+
+		foreach ($this->form_def['field_groups'] as $group_id => $group_config) {
+			foreach ($group_config['fields'] as $field_id => $field_def) {
+				$validators = $this->toolbox->getFieldValidators($field_def['type']);
+				$value = @ $values[$group_id][$field_id];
+				foreach ($validators as $v => $validator) {
+					call_user_func($validator, $this, $group_id, $field_id, $field_def, $value);
+				}
+			}
+		}
 
 		return empty($this->field_errors);
 	}
 
+
+	/**
+	 * Assign error to field
+	 */
+	public function setFieldError($group_id, $field_id, $error, $args = true)
+	{
+		$this->field_errors[$group_id][$field_id][$error] = $args;
+	}
 
 	/**
 	 * Returns values submitted by user.
@@ -313,8 +350,10 @@ class Form
 		if ($this->use_defaults) {
 			return $this->field_defaults;
 		} else {
-			// TODO: Call post-process functions, populate $this->field_errors (first stage of validation).
-			$this->field_values = $this->raw_input;
+			if ($this->field_values === null) {
+				// TODO: Call post-process functions, populate $this->field_errors (first stage of validation).
+				$this->field_values = $this->raw_input;
+			}
 
 			return $this->field_values;
 		}
@@ -336,6 +375,20 @@ class Form
 			return $this->raw_input[$group][$field];
 		}
 	}
+
+
+	/**
+	 * Helper method to get correct HTML form field ID.
+	 */
+	public function getHtmlFieldId($group, $field, $field_component = null)
+	{
+		if ($field_component) {
+			return htmlspecialchars("{$this->id}__{$group}__{$field}__{$field_component}");
+		} else {
+			return htmlspecialchars("{$this->id}__{$group}__{$field}");
+		}
+	}
+
 
 	/**
 	 * Helper method to get correct HTML form field name.
@@ -414,6 +467,7 @@ class Form
 		$field_def = $this->form_def['field_groups'][$group_id]['fields'][$field_id];
 		$type = $field_def['type'];
 		$value = @ $this->field_values[$group_id][$field_id];
+		$errors = @ $this->field_errors[$group_id][$field_id];
 
 		$renderers = $this->toolbox->getFieldRenderers($type);
 
@@ -421,7 +475,7 @@ class Form
 			// Use all renderers
 			foreach ($renderers as $renderer => $renderer_fn) {
 				if ($renderer_fn && ($exclude_renderers === null || !in_array($renderer, $exclude_renderers))) {
-					call_user_func($renderer_fn, $this, $group_id, $field_id, $field_def, $value, $template_engine);
+					call_user_func($renderer_fn, $this, $group_id, $field_id, $field_def, $value, $errors, $template_engine);
 				}
 			}
 		} else if (is_array($use_renderers)) {
@@ -429,14 +483,14 @@ class Form
 			foreach ($use_renderers as $r) {
 				$renderer_fn = @ $renderers[$r];
 				if ($renderer_fn && ($exclude_renderers === null || !in_array($r, $exclude_renderers))) {
-					call_user_func($renderer_fn, $this, $group_id, $field_id, $field_def, $value, $template_engine);
+					call_user_func($renderer_fn, $this, $group_id, $field_id, $field_def, $value, $errors, $template_engine);
 				}
 			}
 		} else {
 			// Use specific renderer
 			$renderer_fn = @ $renderers[$use_renderers];
 			if ($renderer_fn) {
-				call_user_func($renderer_fn, $this, $group_id, $field_id, $field_def, $value, $template_engine);
+				call_user_func($renderer_fn, $this, $group_id, $field_id, $field_def, $value, $errors, $template_engine);
 			}
 		}
 	}
