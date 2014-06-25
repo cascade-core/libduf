@@ -24,8 +24,7 @@
         },
         "email": {
             "renderers": {
-                "label": "\\Duf\\HtmlFormRenderer::label",
-                "control": "\\Duf\\HtmlFormRenderer::input"
+                "control": "\\Duf\\Renderer\\HtmlForm\\Input"
             },
             "validators": {
                 "html5": "\\Duf\\FieldValidator\\EmailInput"
@@ -60,8 +59,7 @@
         },
         "password": {
             "renderers": {
-                "label": "\\Duf\\HtmlFormRenderer::label",
-                "control": "\\Duf\\HtmlFormRenderer::input"
+                "control": "\\Duf\\Renderer\\HtmlForm\\Input"
             },
             "validators": {
                 "html5": "\\Duf\\FieldValidator\\TextInput"
@@ -81,15 +79,15 @@
         },
         "select": {
             "renderers": {
-                "label": "\\Duf\\HtmlFormRenderer::label",
-                "control": "\\Duf\\HtmlFormRenderer::select"
+                "control": "\\Duf\\Renderer\\HtmlForm\\Select"
             },
             "validators": {
             }
         },
         "submit": {
             "renderers": {
-                "control": "\\Duf\\HtmlFormRenderer::input"
+                "control": "\\Duf\\Renderer\\HtmlForm\\Input",
+                "label": false
             },
             "validators": {
             }
@@ -99,8 +97,7 @@
         },
         "text": {
             "renderers": {
-                "label": "\\Duf\\HtmlFormRenderer::label",
-                "control": "\\Duf\\HtmlFormRenderer::input"
+                "control": "\\Duf\\Renderer\\HtmlForm\\Input"
             },
             "validators": {
                 "html5": "\\Duf\\FieldValidator\\TextInput"
@@ -108,8 +105,7 @@
         },
         "textarea": {
             "renderers": {
-                "label": "\\Duf\\HtmlFormRenderer::label",
-                "control": "\\Duf\\HtmlFormRenderer::textarea"
+                "control": "\\Duf\\Renderer\\HtmlForm\\TextArea"
             },
             "validators": {
             }
@@ -125,14 +121,15 @@
         }
     },
     "form": {
-        "renderer": "\\Duf\\HtmlFormRenderer::form",
+        "renderer": "Duf\\Renderer\\HtmlForm\\Form",
         "common_field_renderers": {
-            "error": "\\Duf\\HtmlFormRenderer::error"
+            "label": "\\Duf\\Renderer\\HtmlForm\\Label",
+            "error": "\\Duf\\Renderer\\HtmlForm\\Error"
         }
     },
-    "layouts": {
+    "widgets": {
         "default": {
-            "renderer": "\\Duf\\HtmlFormRenderer::layoutDefault"
+            "renderer": "\\Duf\\Renderer\\HtmlForm\\DefaultLayout"
         }
     }
 }

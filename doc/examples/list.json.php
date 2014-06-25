@@ -44,7 +44,23 @@
         }
     },
     "layout": {
-        "type": "default"
+        "#!": "fieldsets",
+        "#!": "default",
+        "fieldsets": [
+            {
+                "label": "Quest",
+                "content": {
+                    "#!": "default",
+                    "field_group": "quest"
+                }
+            }, {
+                "label": "Objectives",
+                "content": {
+                    "#!": "default",
+                    "field_group": "objectives"
+                }
+            }
+        ]
     }
 }
 

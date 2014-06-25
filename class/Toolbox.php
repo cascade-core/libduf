@@ -103,6 +103,21 @@ class Toolbox
 
 
 	/**
+	 * Retrieve widget renderer.
+	 *
+	 * @return `function($form, $template_engine, $widget_conf)`
+	 */
+	public function getWidgetRenderer($widget_shebang)
+	{
+		$renderer = @ $this->config['widgets'][$widget_shebang]['renderer'];
+		if ($renderer === null) {
+			throw new RendererException('Undefined widget renderer: '.$widget_shebang);
+		}
+		return $renderer;
+	}
+
+
+	/**
 	 * Get common renderers for all fields in form. These should be added 
 	 * to field-specific renderes of each field. Exact ordering of 
 	 * renderers after merge is not specified.
@@ -142,6 +157,25 @@ class Toolbox
 			throw new RendererException('Undefined field renderers. Field type: '.$field_type);
 		}
 		return $renderers;
+	}
+
+
+	/**
+	 * Retrieve field renderer.
+	 * 
+	 * @return `array($renderer_name => function($form, $group_id, 
+	 *		$field_id, $field_def, $value, $errors, $template_engine)))`
+	 */
+	public function getFieldRenderer($field_type, $renderer_name)
+	{
+		$renderer = @ $this->config['field_types'][$field_type]['renderers'][$renderer_name];
+		if ($renderer === null) {
+			$renderer = @ $this->config['form']['common_field_renderers'][$renderer_name];
+		}
+		if ($renderer === null) {
+			throw new RendererException('Undefined field renderer "'.$renderer_name.'". Field type: '.$field_type);
+		}
+		return $renderer;
 	}
 
 }

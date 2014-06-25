@@ -372,9 +372,9 @@ class Form
 				// TODO: Call pre-process functions to produce raw form data
 				$this->raw_defaults = $this->field_defaults;
 			}
-			return $this->raw_defaults[$group][$field];
+			return isset($this->raw_defaults[$group][$field]) ? $this->raw_defaults[$group][$field] : null;
 		} else {
-			return $this->raw_input[$group][$field];
+			return isset($this->raw_input[$group][$field]) ? $this->raw_input[$group][$field] : null;
 		}
 	}
 
@@ -438,64 +438,67 @@ class Form
 	public function render($template_engine = null)
 	{
 		$this->common_field_renderers = $this->toolbox->getFormCommonFieldRenderers();
-		call_user_func($this->toolbox->getFormRenderer(), $this, $template_engine);
-	}
-
-
-	/**
-	 * Start layout tree rendering.
-	 */
-	public function renderRootLayout($template_engine = null)
-	{
-		$this->renderLayout($this->form_def['layout'], $template_engine);
-	}
-
-
-	/**
-	 * Render layout subtree using specified renderer.
-	 */
-	public function renderLayout($layout_def, $template_engine = null)
-	{
-		$type = $layout_def['type'];
-
-		call_user_func($this->toolbox->getLayoutRenderer($type), $this, $layout_def, $template_engine);
-	}
-
-
-	/**
-	 * Render field using specified renderer.
-	 */
-	public function renderField($group_id, $field_id, $use_renderers, $exclude_renderers, $template_engine = null)
-	{
-		$field_def = $this->form_def['field_groups'][$group_id]['fields'][$field_id];
-		$type = $field_def['type'];
-		$value = @ $this->field_values[$group_id][$field_id];
-		$errors = @ $this->field_errors[$group_id][$field_id];
-
-		$renderers = $this->toolbox->getFieldRenderers($type) + $this->common_field_renderers;
-
-		if ($use_renderers === null) {
-			// Use all renderers
-			foreach ($renderers as $renderer => $renderer_fn) {
-				if ($renderer_fn && ($exclude_renderers === null || !in_array($renderer, $exclude_renderers))) {
-					call_user_func($renderer_fn, $this, $group_id, $field_id, $field_def, $value, $errors, $template_engine);
-				}
-			}
-		} else if (is_array($use_renderers)) {
-			// Use selected renderers
-			foreach ($use_renderers as $r) {
-				$renderer_fn = @ $renderers[$r];
-				if ($renderer_fn && ($exclude_renderers === null || !in_array($r, $exclude_renderers))) {
-					call_user_func($renderer_fn, $this, $group_id, $field_id, $field_def, $value, $errors, $template_engine);
-				}
-			}
+		$form_renderer = $this->toolbox->getFormRenderer();
+		if (is_a($form_renderer, 'Duf\\Renderer\\IFormRenderer', TRUE)) {
+			$form_renderer::renderForm($this, $template_engine, $this->form_def['layout']);
 		} else {
-			// Use specific renderer
-			$renderer_fn = @ $renderers[$use_renderers];
-			if ($renderer_fn) {
-				call_user_func($renderer_fn, $this, $group_id, $field_id, $field_def, $value, $errors, $template_engine);
-			}
+			throw new RendererException('Form renderer '.$form_renderer.' must implement Duf\\Renderer\\IFormRenderer inteface.');
 		}
+	}
+
+
+	/**
+	 * Start widget tree rendering.
+	 */
+	public function renderRootWidget($template_engine)
+	{
+		$this->renderWidget($template_engine, $this->form_def['layout']);
+	}
+
+
+	/**
+	 * Render widget and its subtree.
+	 */
+	public function renderWidget($template_engine, $widget_conf)
+	{
+		// Lookup renderer in toolbox
+		$renderer_name = @ $widget_conf['#!'];
+		if ($renderer_name === null) {
+			throw new \InvalidArgumentException('Shebang is missing in widget configuration.');
+		}
+		$renderer_class = $this->toolbox->getWidgetRenderer($renderer_name);
+		if (!is_a($renderer_class, '\\Duf\\Renderer\\IWidgetRenderer', TRUE)) {
+			throw new RendererException('Widget renderer '.$renderer_class.' must implement Duf\\Renderer\\IWidgetRenderer inteface.');
+		}
+
+		// Execute renderer
+		$renderer_class::renderWidget($this, $template_engine, $widget_conf);
+	}
+
+
+	/**
+	 * Render a widget using given configuration. Key `'#!'` determines 
+	 * renderer which will render the widget.
+	 *
+	 * FIXME: This is completely wrong.
+	 */
+	public function renderField($template_engine, $group_id, $field_id, $renderer)
+	{
+		$widget_conf = $this->form_def['field_groups'][$group_id]['fields'][$field_id];
+		$type = $widget_conf['type'];
+
+		$renderer_class = $this->toolbox->getFieldRenderer($type, $renderer);
+		if (!$renderer_class) {
+			return;
+		}
+		if (!is_a($renderer_class, '\\Duf\\Renderer\\IWidgetRenderer', TRUE)) {
+			throw new RendererException('Field renderer '.$renderer_class.' must implement Duf\\Renderer\\IWidgetRenderer inteface.');
+		}
+
+		$widget_conf['group_id'] = $group_id;
+		$widget_conf['field_id'] = $field_id;
+
+		$renderer_class::renderWidget($this, $template_engine, $widget_conf);
 	}
 
 }

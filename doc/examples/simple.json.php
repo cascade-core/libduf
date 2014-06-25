@@ -46,7 +46,7 @@
         }
     },
     "layout": {
-        "type": "default"
+        "#!": "default"
     }
 }
 
