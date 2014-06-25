@@ -42,7 +42,7 @@ class TextInput implements IFieldValidator
 
 		// HTML5 'pattern' attribute
 		if (($pattern = @ $field_def['pattern']) && !preg_match("\xFF$pattern\$\xFFADmsu", $value)) {
-			$form->setFieldError($group_id, $field_id, Form::E_FIELD_MALFORMED, array(
+			$form->setFieldError($group_id, $field_id, \Duf\Form::E_FIELD_MALFORMED, array(
 				'message' => sprintf(_('Field does not match pattern: %s'), $pattern),
 				'pattern' => $pattern,
 			));

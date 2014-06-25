@@ -52,7 +52,7 @@ $form_def = array(
 		),
 	),
 	'layout' => array(
-		'type' => 'default',
+		'#!' => 'default',
 	),
 );
 
@@ -133,7 +133,7 @@ array (
   array (
     'number_not_rq_fill_bad' => 
     array (
-      'field_pattern' => 
+      'field_malformed' => 
       array (
         'message' => 'Field does not match pattern: [0-9]+',
         'pattern' => '[0-9]+',
@@ -186,7 +186,7 @@ line 47 column 1 - Warning: <input> proprietary attribute "pattern"
 <td>
 <input type="text" id="test.form__foo__number_not_rq_fill_bad" name="foo[number_not_rq_fill_bad]" value="abc" pattern="[0-9]+">
 <ul class="errors">
-<li class="error_field_pattern">Field does not match pattern: [0-9]+</li>
+<li class="error_field_malformed">Field does not match pattern: [0-9]+</li>
 </ul>
 </td>
 </tr>

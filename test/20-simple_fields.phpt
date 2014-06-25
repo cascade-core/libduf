@@ -28,7 +28,7 @@ $form_def = array(
 		),
 	),
 	'layout' => array(
-		'type' => 'default',
+		'#!' => 'default',
 	),
 );
 
@@ -106,9 +106,10 @@ if ($values !== $post_data) {
 ?>
 --EXPECTF--
 Submitted: true
-Valid:     true
+Valid:     false
 
 line 6 column 1 - Warning: <table> lacks "summary" attribute
+line 12 column 1 - Warning: <input> attribute "type" has invalid value "email"
 
 <!DOCTYPE html>
 <html>
@@ -116,6 +117,17 @@ line 6 column 1 - Warning: <table> lacks "summary" attribute
 <body>
 <form id="test.form" class="duf_form" action="" method="post">
 <table class="duf_form">
+<tr>
+<th>
+<label for="test.form__foo__email">The email:</label>
+</th>
+<td>
+<input type="email" id="test.form__foo__email" name="foo[email]" value="Hello world.">
+<ul class="errors">
+<li class="error_field_malformed">Please enter valid e-mail address.</li>
+</ul>
+</td>
+</tr>
 <tr>
 <th>
 <label for="test.form__foo__password">The password:</label>

@@ -345,6 +345,14 @@ class Form
 	}
 
 	/**
+	 */
+	public function getFieldErrors($group_id, $field_id)
+	{
+		return isset($this->field_errors[$group_id][$field_id]) ? $this->field_errors[$group_id][$field_id] : array();
+	}
+
+
+	/**
 	 * Returns values submitted by user.
 	 */
 	public function getValues()

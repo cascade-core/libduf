@@ -27,6 +27,9 @@ class TextArea extends Input implements \Duf\Renderer\IWidgetRenderer
 	/// @copydoc \Duf\Renderer\IWidgetRenderer::renderWidget
 	public static function renderWidget(\Duf\Form $form, $template_engine, $widget_conf)
 	{
+		$group_id = $widget_conf['group_id'];
+		$field_id = $widget_conf['field_id'];
+
 		echo "<textarea",
 			" id=\"", $form->getHtmlFieldId($group_id, $field_id), "\"",
 			" name=\"", $form->getHtmlFieldName($group_id, $field_id), "\"";
