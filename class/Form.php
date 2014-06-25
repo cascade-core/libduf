@@ -64,7 +64,7 @@ class Form
 	 */
 	const E_FORM_EXPIRED = 'form_expired';		// Error: The XSRF token has expired.
 	const E_FIELD_REQUIRED = 'field_required';	// Error: The empty field is required.
-	const E_FIELD_PATTERN = 'field_pattern';	// Error: The field does not match pattern
+	const E_FIELD_MALFORMED = 'field_malformed';	// Error: The field value is malformed (does not match pattern or so).
 	/// @}
 
 	/**
@@ -298,7 +298,9 @@ class Form
 				// Submitted
 				if ($this->form_ttl !== null && time() - $t >$this->form_ttl) {
 					// TODO: Set expiration error
-					$this->form_errors[self::E_FORM_EXPIRED] = true;
+					$this->form_errors[self::E_FORM_EXPIRED] = array(
+						'message' => _('The form has expired, please check entered data and submit it again.')
+					);
 				}
 				return TRUE;
 			}
@@ -325,7 +327,7 @@ class Form
 				$validators = $this->toolbox->getFieldValidators($field_def['type']);
 				$value = @ $values[$group_id][$field_id];
 				foreach ($validators as $v => $validator) {
-					call_user_func($validator, $this, $group_id, $field_id, $field_def, $value);
+					$validator::validateField($this, $group_id, $field_id, $field_def, $value);
 				}
 			}
 		}
@@ -435,6 +437,7 @@ class Form
 	 */
 	public function render($template_engine = null)
 	{
+		$this->common_field_renderers = $this->toolbox->getFormCommonFieldRenderers();
 		call_user_func($this->toolbox->getFormRenderer(), $this, $template_engine);
 	}
 
@@ -469,7 +472,7 @@ class Form
 		$value = @ $this->field_values[$group_id][$field_id];
 		$errors = @ $this->field_errors[$group_id][$field_id];
 
-		$renderers = $this->toolbox->getFieldRenderers($type);
+		$renderers = $this->toolbox->getFieldRenderers($type) + $this->common_field_renderers;
 
 		if ($use_renderers === null) {
 			// Use all renderers

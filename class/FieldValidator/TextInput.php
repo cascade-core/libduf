@@ -16,39 +16,39 @@
  *
  */
 
-namespace Duf;
+namespace Duf\FieldValidator;
 
 /**
- * Collection of form validators compliant with HTML5 forms.
+ * Validate HTML5 `<input type="text">`.
  */
-class HtmlFormValidator
+class TextInput implements IFieldValidator
 {
 
 	/**
-	 * Basic validator for text input.
+	 * Check simple text input.
 	 */
-	public static function input($form, $group_id, $field_id, $field_def, $value)
+	public static function validateField(\Duf\Form $form, $group_id, $field_id, $field_def, $value)
 	{
 		if ($value == '') {
 			// HTML5 'required' attribute
 			if (@ $field_def['required']) {
-				$form->setFieldError($group_id, $field_id, Form::E_FIELD_REQUIRED, array(
+				$form->setFieldError($group_id, $field_id, \Duf\Form::E_FIELD_REQUIRED, array(
 					'message' => _('Please fill this field.'),
 				));
 			}
 			// Other validations require some value
-			return;
+			return false;
 		}
 
 		// HTML5 'pattern' attribute
 		if (($pattern = @ $field_def['pattern']) && !preg_match("\xFF$pattern\$\xFFADmsu", $value)) {
-			$form->setFieldError($group_id, $field_id, Form::E_FIELD_PATTERN, array(
+			$form->setFieldError($group_id, $field_id, Form::E_FIELD_MALFORMED, array(
 				'message' => sprintf(_('Field does not match pattern: %s'), $pattern),
 				'pattern' => $pattern,
 			));
 		}
 
+		return true;
 	}
-
 }
 

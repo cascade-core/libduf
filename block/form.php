@@ -43,7 +43,7 @@ class B_duf__form extends \Cascade\Core\Block {
 		$form = new \Duf\Form($this->fullId(), $this->in('form_def'), $this->context->duf_toolbox);
 		$form->loadInput();
 
-		$is_submitted = $this->form->isSubmitted();
+		$is_submitted = $form->isSubmitted();
 
 		if ($is_submitted) {
 			$form->useInput();
@@ -56,7 +56,7 @@ class B_duf__form extends \Cascade\Core\Block {
 		$this->outAll($form->getValues());
 		$this->out('form', $form);
 		$this->out('submitted', $is_submitted);
-		$this->out('done', $is_submitted && $this->form->isValid());
+		$this->out('done', $is_submitted && $form->isValid());
 	}
 
 }

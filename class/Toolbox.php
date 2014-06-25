@@ -74,7 +74,7 @@ class Toolbox
 	/**
 	 * Retrieve validator for given field type.
 	 *
-	 * @return `array($validator_name => function($form, $group_id, $field_id, $field_def, $value)))`
+	 * @return `array('validator_name' => 'Duf\FieldValidator\IFieldValidator class name'))`
 	 */
 	public function getFieldValidators($field_type)
 	{
@@ -99,6 +99,17 @@ class Toolbox
 			throw new RendererException('Undefined form renderer.');
 		}
 		return $renderer;
+	}
+
+
+	/**
+	 * Get common renderers for all fields in form. These should be added 
+	 * to field-specific renderes of each field. Exact ordering of 
+	 * renderers after merge is not specified.
+	 */
+	public function getFormCommonFieldRenderers()
+	{
+		return @ $this->config['form']['common_field_renderers'] ? : array();
 	}
 
 

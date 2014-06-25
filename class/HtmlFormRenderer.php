@@ -315,6 +315,13 @@ class HtmlFormRenderer
 
 		echo ">\n";
 		$value = $form->getRawData($group_id, $field_id);
+		if (!isset($field_def['options'][''])) {
+			echo "<option value=\"\" ", $value == '' ? ' selected':'',
+				!empty($field_def['required']) ? " disabled class=\"placeholder\" style=\"display: none;\"" : '',
+				">",
+				isset($field_def['placeholder']) ? htmlspecialchars($field_def['placeholder']) : '',
+				"</option>";
+		}
 		foreach ($field_def['options'] as $key => $option) {
 			if (is_array($option)) {
 				$opt_label = $option['label'];
@@ -358,11 +365,11 @@ class HtmlFormRenderer
 			echo "<tr>\n",
 				"<td colspan=\"2\">\n",
 				"<ul class=\"errors\">\n";
-			foreach ($form->form_errors as $error) {
+			foreach ($form->form_errors as $error_type => $error) {
 				echo "<li";
-				if (($class = @ $error['class'])) {
-					echo " class=\"", htmlspecialchars(join(' ', (array) $class)), "\"";
-				}
+				$class = (array) @ $error['class'];
+				$class[] = 'error_'.$error_type;
+				echo " class=\"", htmlspecialchars(join(' ', $class)), "\"";
 				echo ">", htmlspecialchars($error['message']), "</li>\n";
 			}
 			echo "</ul>\n",

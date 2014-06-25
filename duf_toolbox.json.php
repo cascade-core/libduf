@@ -23,7 +23,13 @@
 
         },
         "email": {
-
+            "renderers": {
+                "label": "\\Duf\\HtmlFormRenderer::label",
+                "control": "\\Duf\\HtmlFormRenderer::input"
+            },
+            "validators": {
+                "html5": "\\Duf\\FieldValidator\\EmailInput"
+            }
         },
         "file": {
 
@@ -55,11 +61,10 @@
         "password": {
             "renderers": {
                 "label": "\\Duf\\HtmlFormRenderer::label",
-                "control": "\\Duf\\HtmlFormRenderer::input",
-                "error": "\\Duf\\HtmlFormRenderer::error"
+                "control": "\\Duf\\HtmlFormRenderer::input"
             },
             "validators": {
-                "html5": "\\Duf\\HtmlFormValidator::input"
+                "html5": "\\Duf\\FieldValidator\\TextInput"
             }
         },
         "radio": {
@@ -77,8 +82,7 @@
         "select": {
             "renderers": {
                 "label": "\\Duf\\HtmlFormRenderer::label",
-                "control": "\\Duf\\HtmlFormRenderer::select",
-                "error": "\\Duf\\HtmlFormRenderer::error"
+                "control": "\\Duf\\HtmlFormRenderer::select"
             },
             "validators": {
             }
@@ -96,18 +100,16 @@
         "text": {
             "renderers": {
                 "label": "\\Duf\\HtmlFormRenderer::label",
-                "control": "\\Duf\\HtmlFormRenderer::input",
-                "error": "\\Duf\\HtmlFormRenderer::error"
+                "control": "\\Duf\\HtmlFormRenderer::input"
             },
             "validators": {
-                "html5": "\\Duf\\HtmlFormValidator::input"
+                "html5": "\\Duf\\FieldValidator\\TextInput"
             }
         },
         "textarea": {
             "renderers": {
                 "label": "\\Duf\\HtmlFormRenderer::label",
-                "control": "\\Duf\\HtmlFormRenderer::textarea",
-                "error": "\\Duf\\HtmlFormRenderer::error"
+                "control": "\\Duf\\HtmlFormRenderer::textarea"
             },
             "validators": {
             }
@@ -123,7 +125,10 @@
         }
     },
     "form": {
-        "renderer": "\\Duf\\HtmlFormRenderer::form"
+        "renderer": "\\Duf\\HtmlFormRenderer::form",
+        "common_field_renderers": {
+            "error": "\\Duf\\HtmlFormRenderer::error"
+        }
     },
     "layouts": {
         "default": {
