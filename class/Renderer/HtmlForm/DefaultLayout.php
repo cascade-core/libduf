@@ -28,22 +28,6 @@ class DefaultLayout implements \Duf\Renderer\IWidgetRenderer
 	public static function renderWidget(\Duf\Form $form, $template_engine, $widget_conf)
 	{
 		echo "<table class=\"duf_form\">\n";
-		if (!empty($form->form_errors)) {
-			echo "<tr>\n",
-				"<td colspan=\"2\">\n",
-				"<ul class=\"errors\">\n";
-			foreach ($form->form_errors as $error_type => $error) {
-				echo "<li";
-				$class = (array) @ $error['class'];
-				$class[] = 'error_'.$error_type;
-				echo " class=\"", htmlspecialchars(join(' ', $class)), "\"";
-				echo ">", htmlspecialchars($error['message']), "</li>\n";
-			}
-			echo "</ul>\n",
-				"</td>\n",
-				"</tr>\n";
-		}
-
 		foreach ($form->getAllFieldgroups() as $group_id => $group_config) {
 			foreach ($group_config['fields'] as $field_id => $field_def) {
 				echo "<tr>\n";

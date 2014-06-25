@@ -465,7 +465,8 @@ class Form
 
 
 	/**
-	 * Render widget and its subtree.
+	 * Render a widget using given configuration. Key `'#!'` determines 
+	 * renderer which will render the widget.
 	 */
 	public function renderWidget($template_engine, $widget_conf)
 	{
@@ -485,8 +486,7 @@ class Form
 
 
 	/**
-	 * Render a widget using given configuration. Key `'#!'` determines 
-	 * renderer which will render the widget.
+	 * Render a field widget.
 	 *
 	 * FIXME: This is completely wrong.
 	 */

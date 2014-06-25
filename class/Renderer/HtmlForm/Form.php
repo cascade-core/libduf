@@ -32,6 +32,18 @@ class Form implements \Duf\Renderer\IFormRenderer
 			"action=\"", htmlspecialchars($form->action_url), "\" ",
 			"method=\"", htmlspecialchars($form->http_method), "\">\n";
 
+		if (!empty($form->form_errors)) {
+			echo "<ul class=\"errors\">\n";
+			foreach ($form->form_errors as $error_type => $error) {
+				echo "<li";
+				$class = (array) @ $error['class'];
+				$class[] = 'error_'.$error_type;
+				echo " class=\"", htmlspecialchars(join(' ', $class)), "\"";
+				echo ">", htmlspecialchars($error['message']), "</li>\n";
+			}
+			echo "</ul>\n";
+		}
+
 		$form->renderRootWidget($template_engine);
 		
 		echo "<input type=\"hidden\" name=\"__[", htmlspecialchars($form->getToken()), "]\" value=\"1\">\n";
