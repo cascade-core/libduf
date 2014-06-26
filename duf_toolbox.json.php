@@ -128,7 +128,7 @@
         }
     },
     "widgets": {
-        "default": {
+        "default_layout": {
             "renderer": "\\Duf\\Renderer\\HtmlForm\\DefaultLayout"
         },
         "plain_layout": {

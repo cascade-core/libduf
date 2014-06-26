@@ -27,19 +27,22 @@ class PlainLayout implements \Duf\Renderer\IWidgetRenderer
 	/// @copydoc \Duf\Renderer\IWidgetRenderer::renderWidget
 	public static function renderWidget(\Duf\Form $form, $template_engine, $widget_conf)
 	{
-		echo "<div";
-		if (isset($row['class'])) {
-			if (is_array($row['class'])) {
-				echo " class=\"", htmlspecialchars(join(' ', $row['class'])), "\"";
-			} else {
-				echo " class=\"", htmlspecialchars($row['class']), "\"";
+		$layout_has_holder = !empty($widget_conf['has_holder']) || isset($widget_conf['class']);
+		if ($layout_has_holder) {
+			echo "<div";
+			if (isset($widget_conf['class'])) {
+				if (is_array($widget_confow['class'])) {
+					echo " class=\"", htmlspecialchars(join(' ', $widget_confow['class'])), "\"";
+				} else {
+					echo " class=\"", htmlspecialchars($widget_confow['class']), "\"";
+				}
 			}
+			echo ">\n";
 		}
-		echo ">\n";
 
 		foreach($widget_conf['rows'] as $row) {
-			$row_holder = (isset($row['class']) || count($row['widgets']) > 1);
-			if($row_holder) {
+			$row_has_holder = !empty($row['has_holder']) || isset($row['class']);
+			if ($row_has_holder) {
 				echo "<div";
 				if (isset($row['class'])) {
 					if (is_array($row['class'])) {
@@ -55,11 +58,14 @@ class PlainLayout implements \Duf\Renderer\IWidgetRenderer
 				$form->renderWidget($template_engine, $widget);
 			}
 
-			if ($row_holder) {
+			if ($row_has_holder) {
 				echo "</div>\n";
 			}
 		}
-		echo "</div>\n";
+
+		if ($layout_has_holder) {
+			echo "</div>\n";
+		}
 	}
 
 }

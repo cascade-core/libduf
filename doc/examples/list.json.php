@@ -38,7 +38,7 @@
             "fields": {
                 "submit": {
                     "type": "submit",
-                    "label": "Send"
+                    "label": "Submit"
                 }
             }
         }
@@ -50,7 +50,7 @@
                 "label": "Quest",
                 "widgets": [
                     {
-                        "#!": "default",
+                        "#!": "default_layout",
                         "field_group": "quest"
                     }
                 ]
@@ -58,8 +58,17 @@
                 "label": "Users",
                 "widgets": [
                     {
-                        "#!": "default",
+                        "#!": "default_layout",
                         "field_group": "users"
+                    }
+                ]
+            }, {
+                "class": "submit",
+                "widgets": [
+                    {
+                        "#!": "@control",
+                        "group_id": "submit",
+                        "field_id": "submit"
                     }
                 ]
             }
