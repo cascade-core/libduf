@@ -27,25 +27,39 @@ class PlainLayout implements \Duf\Renderer\IWidgetRenderer
 	/// @copydoc \Duf\Renderer\IWidgetRenderer::renderWidget
 	public static function renderWidget(\Duf\Form $form, $template_engine, $widget_conf)
 	{
-		echo "<div class=\"duf_form\">\n";
-		static::renderRow($form, $template_engine, $widget_conf['rows']);
-		echo "</div>\n";
-	}
-
-
-	private static function renderRow(\Duf\Form $form, $template_engine, $rows)
-	{
-		foreach ($rows as $row_conf) {
-			if (is_array($row_conf)) {
-				if (isset($row_conf['#!'])) {
-					$form->renderWidget($template_engine, $row_conf);
-				} else {
-					echo "<div>\n";
-					static::renderRow($form, $template_engine, $row_conf);
-					echo "</div>\n";
-				}
+		echo "<div";
+		if (isset($row['class'])) {
+			if (is_array($row['class'])) {
+				echo " class=\"", htmlspecialchars(join(' ', $row['class'])), "\"";
+			} else {
+				echo " class=\"", htmlspecialchars($row['class']), "\"";
 			}
 		}
+		echo ">\n";
+
+		foreach($widget_conf['rows'] as $row) {
+			$row_holder = (isset($row['class']) || count($row['widgets']) > 1);
+			if($row_holder) {
+				echo "<div";
+				if (isset($row['class'])) {
+					if (is_array($row['class'])) {
+						echo " class=\"", htmlspecialchars(join(' ', $row['class'])), "\"";
+					} else {
+						echo " class=\"", htmlspecialchars($row['class']), "\"";
+					}
+				}
+				echo ">\n";
+			}
+
+			foreach ($row['widgets'] as $widget) {
+				$form->renderWidget($template_engine, $widget);
+			}
+
+			if ($row_holder) {
+				echo "</div>\n";
+			}
+		}
+		echo "</div>\n";
 	}
 
 }
