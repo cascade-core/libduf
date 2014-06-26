@@ -24,7 +24,7 @@
         },
         "email": {
             "renderers": {
-                "control": "\\Duf\\Renderer\\HtmlForm\\Input"
+                "@control": "\\Duf\\Renderer\\HtmlForm\\Input"
             },
             "validators": {
                 "html5": "\\Duf\\FieldValidator\\EmailInput"
@@ -59,7 +59,7 @@
         },
         "password": {
             "renderers": {
-                "control": "\\Duf\\Renderer\\HtmlForm\\Input"
+                "@control": "\\Duf\\Renderer\\HtmlForm\\Input"
             },
             "validators": {
                 "html5": "\\Duf\\FieldValidator\\TextInput"
@@ -79,15 +79,15 @@
         },
         "select": {
             "renderers": {
-                "control": "\\Duf\\Renderer\\HtmlForm\\Select"
+                "@control": "\\Duf\\Renderer\\HtmlForm\\Select"
             },
             "validators": {
             }
         },
         "submit": {
             "renderers": {
-                "control": "\\Duf\\Renderer\\HtmlForm\\Input",
-                "label": false
+                "@control": "\\Duf\\Renderer\\HtmlForm\\Input",
+                "@label": false
             },
             "validators": {
             }
@@ -97,7 +97,7 @@
         },
         "text": {
             "renderers": {
-                "control": "\\Duf\\Renderer\\HtmlForm\\Input"
+                "@control": "\\Duf\\Renderer\\HtmlForm\\Input"
             },
             "validators": {
                 "html5": "\\Duf\\FieldValidator\\TextInput"
@@ -105,7 +105,7 @@
         },
         "textarea": {
             "renderers": {
-                "control": "\\Duf\\Renderer\\HtmlForm\\TextArea"
+                "@control": "\\Duf\\Renderer\\HtmlForm\\TextArea"
             },
             "validators": {
             }
@@ -123,13 +123,16 @@
     "form": {
         "renderer": "Duf\\Renderer\\HtmlForm\\Form",
         "common_field_renderers": {
-            "label": "\\Duf\\Renderer\\HtmlForm\\Label",
-            "error": "\\Duf\\Renderer\\HtmlForm\\Error"
+            "@label": "\\Duf\\Renderer\\HtmlForm\\Label",
+            "@error": "\\Duf\\Renderer\\HtmlForm\\Error"
         }
     },
     "widgets": {
         "default": {
             "renderer": "\\Duf\\Renderer\\HtmlForm\\DefaultLayout"
+        },
+        "plain_layout": {
+            "renderer": "\\Duf\\Renderer\\HtmlForm\\PlainLayout"
         }
     }
 }

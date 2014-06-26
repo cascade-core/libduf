@@ -46,7 +46,24 @@
         }
     },
     "layout": {
-        "#!": "default"
+        "#!": "plain_layout",
+        "rows": [
+            [
+                {
+                    "#!": "@control",
+                    "group_id": "contact",
+                    "field_id": "from"
+                }, {
+                    "#!": "@control",
+                    "group_id": "contact",
+                    "field_id": "subject"
+                }
+            ], {
+                "#!": "@control",
+                "group_id": "submit",
+                "field_id": "submit"
+            }
+        ]
     }
 }
 

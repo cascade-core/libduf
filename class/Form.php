@@ -475,12 +475,38 @@ class Form
 		if ($renderer_name === null) {
 			throw new \InvalidArgumentException('Shebang is missing in widget configuration.');
 		}
-		$renderer_class = $this->toolbox->getWidgetRenderer($renderer_name);
-		if (!is_a($renderer_class, '\\Duf\\Renderer\\IWidgetRenderer', TRUE)) {
-			throw new RendererException('Widget renderer '.$renderer_class.' must implement Duf\\Renderer\\IWidgetRenderer inteface.');
+
+		if ($renderer_name[0] == '@') {
+			// Field renderer: Lookup field type and select correct renderer
+			if (empty($widget_conf['group_id']) || empty($widget_conf['field_id'])) {
+				throw new RendererException('No field specified.');
+			}
+			$group_id = $widget_conf['group_id'];
+			$field_id = $widget_conf['field_id'];
+			if (empty($this->form_def['field_groups'][$group_id]['fields'][$field_id])) {
+				throw new RendererException('Unknown field.');
+			}
+			$field_def = $this->form_def['field_groups'][$group_id]['fields'][$field_id];
+			$renderer_class = $this->toolbox->getFieldRenderer($field_def['type'], $renderer_name);
+
+			// Add field identification to widget configuration
+			$widget_conf = $field_def;
+			$widget_conf['group_id'] = $group_id;
+			$widget_conf['field_id'] = $field_id;
+
+			//debug_msg('Field: %s, %s, %s: %s', $group_id, $field_id, $renderer_name, var_export($widget_conf, TRUE));
+		} else {
+			// Widget
+			$renderer_class = $this->toolbox->getWidgetRenderer($renderer_name);
 		}
 
 		// Execute renderer
+		if (empty($renderer_class)) {
+			throw new RendererException('Renderer class not specified for renderer "'.$renderer_name.'".');
+		}
+		if (!is_a($renderer_class, '\\Duf\\Renderer\\IWidgetRenderer', TRUE)) {
+			throw new RendererException('Widget renderer '.$renderer_class.' must implement Duf\\Renderer\\IWidgetRenderer inteface.');
+		}
 		$renderer_class::renderWidget($this, $template_engine, $widget_conf);
 	}
 

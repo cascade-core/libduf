@@ -19,29 +19,33 @@
 namespace Duf\Renderer\HtmlForm;
 
 /**
- * Render simple tabular layout containing all fields.
+ * Render plain layout made of divs.
  */
-class DefaultLayout implements \Duf\Renderer\IWidgetRenderer
+class PlainLayout implements \Duf\Renderer\IWidgetRenderer
 {
 
 	/// @copydoc \Duf\Renderer\IWidgetRenderer::renderWidget
 	public static function renderWidget(\Duf\Form $form, $template_engine, $widget_conf)
 	{
-		echo "<table class=\"duf_form\">\n";
-		foreach ($form->getAllFieldgroups() as $group_id => $group_config) {
-			foreach ($group_config['fields'] as $field_id => $field_def) {
-				echo "<tr>\n";
-				echo "<th>\n";
-				$form->renderField($template_engine, $group_id, $field_id, '@label');
-				echo "</th>\n";
-				echo "<td>\n";
-				$form->renderField($template_engine, $group_id, $field_id, '@control');
-				$form->renderField($template_engine, $group_id, $field_id, '@error');
-				echo "</td>\n";
-				echo "</tr>\n";
+		echo "<div class=\"duf_form\">\n";
+		static::renderRow($form, $template_engine, $widget_conf['rows']);
+		echo "</div>\n";
+	}
+
+
+	private static function renderRow(\Duf\Form $form, $template_engine, $rows)
+	{
+		foreach ($rows as $row_conf) {
+			if (is_array($row_conf)) {
+				if (isset($row_conf['#!'])) {
+					$form->renderWidget($template_engine, $row_conf);
+				} else {
+					echo "<div>\n";
+					static::renderRow($form, $template_engine, $row_conf);
+					echo "</div>\n";
+				}
 			}
 		}
-		echo "</table>\n";
 	}
 
 }

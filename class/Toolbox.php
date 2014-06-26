@@ -20,6 +20,8 @@ namespace Duf;
 
 /**
  * Form gets everything it needs from this toolbox.
+ *
+ * Renderers starting with '@' are field renderers.
  */
 class Toolbox
 {
