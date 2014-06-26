@@ -3,7 +3,7 @@
     "blocks": {
         "form1": {
             "block": "duf/form",
-            "x": 0,
+            "x": 222,
             "y": 224,
             "in_con": {
                 "form_def": [
@@ -14,7 +14,7 @@
         },
         "show1": {
             "block": "duf/show",
-            "x": 259,
+            "x": 481,
             "y": 196,
             "in_con": {
                 "form": [
@@ -28,7 +28,7 @@
         },
         "print_data1": {
             "block": "core/out/print_r",
-            "x": 251,
+            "x": 473,
             "y": 320,
             "in_con": {
                 "enable": [
@@ -48,7 +48,7 @@
         },
         "form2": {
             "block": "duf/form",
-            "x": 14,
+            "x": 236,
             "y": 743,
             "in_con": {
                 "form_def": [
@@ -59,7 +59,7 @@
         },
         "show2": {
             "block": "duf/show",
-            "x": 253,
+            "x": 475,
             "y": 664,
             "in_con": {
                 "form": [
@@ -73,7 +73,7 @@
         },
         "print_data2": {
             "block": "core/out/print_r",
-            "x": 254,
+            "x": 476,
             "y": 795,
             "in_con": {
                 "enable": [
@@ -96,7 +96,7 @@
         },
         "header2": {
             "block": "core/out/header",
-            "x": 250,
+            "x": 472,
             "y": 466,
             "in_val": {
                 "level": 2,
@@ -106,12 +106,36 @@
         },
         "header1": {
             "block": "core/out/header",
-            "x": 254,
+            "x": 476,
             "y": 0,
             "in_val": {
                 "level": 2,
                 "text": "Simple Form",
                 "slot_weight": 30
+            }
+        },
+        "listing2": {
+            "block": "smalldb/listing",
+            "x": 0,
+            "y": 766,
+            "in_val": {
+                "type": "user"
+            }
+        },
+        "print_collection": {
+            "block": "core/out/print_r",
+            "x": 247,
+            "y": 928,
+            "in_con": {
+                "data": [
+                    "listing2",
+                    "list"
+                ]
+            },
+            "in_val": {
+                "title": "Collection",
+                "header_level": 3,
+                "slot_weight": 47
             }
         }
     }

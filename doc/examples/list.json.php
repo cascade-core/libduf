@@ -20,17 +20,17 @@
                 }
             }
         },
-        "objectives": {
+        "users": {
             "collection": "list",
             "fields": {
-                "objective": {
+                "username": {
                     "type": "text",
-                    "label": "Objective",
+                    "label": "Username",
                     "required": true
                 },
-                "contact": {
-                    "type": "email",
-                    "label": "Contact"
+                "role": {
+                    "type": "text",
+                    "label": "Role"
                 }
             }
         },
@@ -44,21 +44,24 @@
         }
     },
     "layout": {
-        "#!": "fieldsets",
-        "#!": "default",
+        "#!": "fieldsets_layout",
         "fieldsets": [
             {
                 "label": "Quest",
-                "content": {
-                    "#!": "default",
-                    "field_group": "quest"
-                }
+                "widgets": [
+                    {
+                        "#!": "default",
+                        "field_group": "quest"
+                    }
+                ]
             }, {
-                "label": "Objectives",
-                "content": {
-                    "#!": "default",
-                    "field_group": "objectives"
-                }
+                "label": "Users",
+                "widgets": [
+                    {
+                        "#!": "default",
+                        "field_group": "users"
+                    }
+                ]
             }
         ]
     }

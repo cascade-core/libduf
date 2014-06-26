@@ -133,6 +133,9 @@
         },
         "plain_layout": {
             "renderer": "\\Duf\\Renderer\\HtmlForm\\PlainLayout"
+        },
+        "fieldsets_layout": {
+            "renderer": "\\Duf\\Renderer\\HtmlForm\\FieldsetsLayout"
         }
     }
 }

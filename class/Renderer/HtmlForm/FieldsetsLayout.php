@@ -19,34 +19,35 @@
 namespace Duf\Renderer\HtmlForm;
 
 /**
- * Render simple tabular layout containing all fields.
+ * Render <fieldset> layout.
  */
-class DefaultLayout implements \Duf\Renderer\IWidgetRenderer
+class FieldsetsLayout implements \Duf\Renderer\IWidgetRenderer
 {
 
 	/// @copydoc \Duf\Renderer\IWidgetRenderer::renderWidget
 	public static function renderWidget(\Duf\Form $form, $template_engine, $widget_conf)
 	{
-		echo "<table class=\"duf_form\">\n";
-		if (isset($widget_conf['field_group'])) {
-			$groups = array($widget_conf['field_group'] => $form->getFieldGroup($widget_conf['field_group']));
-		} else {
-			$groups = $form->getAllFieldgroups();
-		}
-		foreach ($groups as $group_id => $group_config) {
-			foreach ($group_config['fields'] as $field_id => $field_def) {
-				echo "<tr>\n";
-				echo "<th>\n";
-				$form->renderField($template_engine, $group_id, $field_id, '@label');
-				echo "</th>\n";
-				echo "<td>\n";
-				$form->renderField($template_engine, $group_id, $field_id, '@control');
-				$form->renderField($template_engine, $group_id, $field_id, '@error');
-				echo "</td>\n";
-				echo "</tr>\n";
+		foreach($widget_conf['fieldsets'] as $set) {
+			echo "<fieldset";
+			if (isset($set['class'])) {
+				if (is_array($set['class'])) {
+					echo " class=\"", htmlspecialchars(join(' ', $set['class'])), "\"";
+				} else {
+					echo " class=\"", htmlspecialchars($set['class']), "\"";
+				}
 			}
+			echo ">\n";
+
+			if (isset($set['label'])) {
+				echo "<legend>", htmlspecialchars($set['label']), "</legend>\n";
+			}
+
+			foreach ($set['widgets'] as $widget) {
+				$form->renderWidget($template_engine, $widget);
+			}
+
+			echo "</fieldset>\n";
 		}
-		echo "</table>\n";
 	}
 
 }
