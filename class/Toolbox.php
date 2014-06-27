@@ -65,12 +65,12 @@ class Toolbox
 	 */
 	public function getFieldsFromSource($source_name, $group_config)
 	{
-		$source_class = @ $this->config['field_sources'][$source_name];
-		if ($source_class === null) {
-			throw new \RuntimeException('Unknown field source: '.$source_name);
+		if (isset($this->config['field_sources'][$source_name])) {
+			$source_class = $this->config['field_sources'][$source_name];
+			return $source_class::generateFieldGroup($group_config, $this->context);
 		}
+		throw new \RuntimeException('Unknown field source: '.$source_name);
 
-		return $source_class::generateFieldGroup($group_config, $this->context);
 	}
 
 	/**
@@ -80,11 +80,10 @@ class Toolbox
 	 */
 	public function getFieldValidators($field_type)
 	{
-		$validators = @ $this->config['field_types'][$field_type]['validators'];
-		if ($validators === null) {
-			throw new ValidatorException('Undefined field validators. Field type: '.$field_type);
+		if (isset($this->config['field_types'][$field_type]['validators'])) {
+			return $this->config['field_types'][$field_type]['validators'];
 		}
-		return $validators;
+		throw new ValidatorException('Undefined field validators. Field type: '.$field_type);
 	}
 
 
@@ -94,13 +93,12 @@ class Toolbox
 	 *
 	 * @return `function($form, $template_engine)`
 	 */
-	public function getFormRenderer()
+	public function getFormRenderer($renderer)
 	{
-		$renderer = @ $this->config['form']['renderer'];
-		if ($renderer === null) {
-			throw new RendererException('Undefined form renderer.');
+		if (isset($this->config['form']['renderers'][$renderer])) {
+			return $this->config['form']['renderers'][$renderer];
 		}
-		return $renderer;
+		throw new RendererException('Undefined form renderer: '.$renderer);
 	}
 
 
@@ -111,11 +109,10 @@ class Toolbox
 	 */
 	public function getWidgetRenderer($widget_shebang)
 	{
-		$renderer = @ $this->config['widgets'][$widget_shebang]['renderer'];
-		if ($renderer === null) {
-			throw new RendererException('Undefined widget renderer: '.$widget_shebang);
+		if (isset($this->config['widgets'][$widget_shebang]['renderer'])) {
+			return $this->config['widgets'][$widget_shebang]['renderer'];
 		}
-		return $renderer;
+		throw new RendererException('Undefined widget renderer: '.$widget_shebang);
 	}
 
 
@@ -126,7 +123,11 @@ class Toolbox
 	 */
 	public function getFormCommonFieldRenderers()
 	{
-		return @ $this->config['form']['common_field_renderers'] ? : array();
+		if (isset($this->config['form']['common_field_renderers'])) {
+			return $this->config['form']['common_field_renderers'];
+		} else {
+			return array();
+		}
 	}
 
 
@@ -137,11 +138,10 @@ class Toolbox
 	 */
 	public function getLayoutRenderer($layout_type)
 	{
-		$renderer = @ $this->config['layouts'][$layout_type]['renderer'];
-		if ($renderer === null) {
-			throw new RendererException('Undefined layout renderer. Layout type: '.$layout_type);
+		if (isset($this->config['layouts'][$layout_type]['renderer'])) {
+			return $this->config['layouts'][$layout_type]['renderer'];
 		}
-		return $renderer;
+		throw new RendererException('Undefined layout renderer. Layout type: '.$layout_type);
 	}
 
 
@@ -154,11 +154,10 @@ class Toolbox
 	 */
 	public function getFieldRenderers($field_type)
 	{
-		$renderers = @ $this->config['field_types'][$field_type]['renderers'];
-		if ($renderers === null) {
-			throw new RendererException('Undefined field renderers. Field type: '.$field_type);
+		if (isset($this->config['field_types'][$field_type]['renderers'])) {
+			return $this->config['field_types'][$field_type]['renderers'];
 		}
-		return $renderers;
+		throw new RendererException('Undefined field renderers. Field type: '.$field_type);
 	}
 
 
@@ -170,14 +169,13 @@ class Toolbox
 	 */
 	public function getFieldRenderer($field_type, $renderer_name)
 	{
-		$renderer = @ $this->config['field_types'][$field_type]['renderers'][$renderer_name];
-		if ($renderer === null) {
-			$renderer = @ $this->config['form']['common_field_renderers'][$renderer_name];
+		if (isset($this->config['field_types'][$field_type]['renderers'][$renderer_name])) {
+			return $this->config['field_types'][$field_type]['renderers'][$renderer_name];
 		}
-		if ($renderer === null) {
-			throw new RendererException('Undefined field renderer "'.$renderer_name.'". Field type: '.$field_type);
+		if (isset($this->config['form']['common_field_renderers'][$renderer_name])) {
+			return $this->config['form']['common_field_renderers'][$renderer_name];
 		}
-		return $renderer;
+		throw new RendererException('Undefined field renderer "'.$renderer_name.'". Field type: '.$field_type);
 	}
 
 }

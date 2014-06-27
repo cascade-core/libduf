@@ -16,7 +16,7 @@
  *
  */
 
-namespace Duf\Renderer\HtmlForm;
+namespace Duf\Renderer\HtmlView;
 
 /**
  * HTML5 Form, the root element.
@@ -27,11 +27,9 @@ class Form implements \Duf\Renderer\IFormRenderer
 	/// @copydoc \Duf\Renderer\IFormRenderer::renderForm
 	public static function renderForm(\Duf\Form $form, $template_engine)
 	{
-		echo "<form",
+		echo "<div",
 			" id=\"", htmlspecialchars($form->id), "\"",
-			" class=\"duf_form\"",
-			" action=\"", htmlspecialchars($form->action_url), "\"",
-			" method=\"", htmlspecialchars($form->http_method), "\"",
+			" class=\"duf_view\"",
 			">\n";
 
 		if (!empty($form->form_errors)) {
@@ -48,9 +46,7 @@ class Form implements \Duf\Renderer\IFormRenderer
 
 		$form->renderRootWidget($template_engine);
 		
-		echo "<input type=\"hidden\" name=\"__[", htmlspecialchars($form->getToken()), "]\" value=\"1\">\n";
-		echo "<!--[if IE]><input type=\"text\" disabled style=\"display:none!important;\" size=\"1\"><![endif]-->\n"; // IE bug: single text input
-		echo "</form>\n";
+		echo "</div>\n";
 	}
 
 }

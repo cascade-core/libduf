@@ -125,7 +125,10 @@
         }
     },
     "form": {
-        "renderer": "Duf\\Renderer\\HtmlForm\\Form",
+        "renderers": {
+            "@edit": "Duf\\Renderer\\HtmlForm\\Form",
+            "@view": "Duf\\Renderer\\HtmlView\\Form"
+        },
         "common_field_renderers": {
             "@label": "\\Duf\\Renderer\\HtmlForm\\Label",
             "@error": "\\Duf\\Renderer\\HtmlForm\\Error"

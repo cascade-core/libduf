@@ -51,6 +51,7 @@ class Form
 	public $form_ttl = 750;			///< XSRF protection window (15 minutes by default)
 	public $action_url = '';		///< Form target URL (empty = the same page)
 	public $http_method = 'post';		///< Form submit method
+	public $readonly = false;		///< Is form a read-only view ?
 	protected $toolbox;			///< Listing of all available tools to build forms. Fields, layouts, helpers, etc.
 	
 	protected $form_def;			///< Definition of the form. What fields in what layouts.
@@ -92,10 +93,23 @@ class Form
 			throw new \InvalidArgumentException('Missing "field_groups" section in configuration.');
 		}
 
-		foreach ($this->form_def['field_groups'] as $group => & $group_config) {
-			$field_source = @ $group_config['field_source'];
-			if ($field_source !== null) {
-				$group_config['fields'] = $this->toolbox->getFieldsFromSource($field_source, $group_config);
+		// Detect read only form
+		if (isset($this->form_def['form']['readonly'])) {
+			$this->readonly = $this->form_def['form']['readonly'];
+		} else {
+			$this->readonly = true;
+			foreach ($this->form_def['field_groups'] as $group_def) {
+				if (empty($group_def['readonly'])) {
+					$this->readonly = false;
+					break;
+				}
+			}
+		}
+
+		// Load field sources
+		foreach ($this->form_def['field_groups'] as $group => & $group_def) {
+			if (isset($group_def['field_source'])) {
+				$group_def['fields'] = $this->toolbox->getFieldsFromSource($group_def['field_source'], $group_def);
 			}
 		}
 	}
@@ -128,7 +142,11 @@ class Form
 		// Get form URL (empty string when not in web server). When 
 		// form is submitted, this URL will be same or contained in 
 		// referer header (both is checked).
-		$url = @$_SERVER['SERVER_NAME'] . @$_SERVER['REQUEST_URI'];
+		if (isset($_SERVER['SERVER_NAME']) && isset($_SERVER['REQUEST_URI'])) {
+			$url = $_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+		} else {
+			$url = '';
+		}
 
 		$extras = join(':', static::getFormTokenExtras());
 		$hash = sha1("$t:$salt:$form_id:$url:$extras");
@@ -147,11 +165,13 @@ class Form
 	 */
 	protected static function getFormTokenExtras()
 	{
+		// All this is relatively easy to guess, but at least this will 
+		// be the same accross mutliple server instances.
 		return array(
-			@ $_SERVER['REMOTE_ADDR'],
-			@ $_SERVER['HTTP_USER_AGENT'],
-			@ $_SERVER['SERVER_NAME'],	// easy to guess
-			@ $_SERVER['DOCUMENT_ROOT'],	// easy to guess
+			isset($_SERVER['REMOTE_ADDR'])     ? $_SERVER['REMOTE_ADDR']     : '',
+			isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '',
+			isset($_SERVER['SERVER_NAME'])     ? $_SERVER['SERVER_NAME']     : '',
+			isset($_SERVER['DOCUMENT_ROOT'])   ? $_SERVER['DOCUMENT_ROOT']   : '',
 		);
 	}
 
@@ -169,16 +189,23 @@ class Form
 		$extras = join(':', static::getFormTokenExtras());
 
 		// First try using current URL (empty string when not in web server)
-		$url = @$_SERVER['SERVER_NAME'].@$_SERVER['REQUEST_URI'];
+		if (isset($_SERVER['SERVER_NAME']) && isset($_SERVER['REQUEST_URI'])) {
+			$url = $_SERVER['SERVER_NAME'].$_SERVER['REQUEST_URI'];
+		} else {
+			$url = '';
+		}
+
 		if ($token_hash === sha1("$t:$salt:$form_id:$url:$extras")) {
 			return (int) $t;
 		}
 
 		// Second try using referer URL
-		$referer = parse_url($_SERVER['HTTP_REFERER']);
-		$url = $referer['host'].$referer['path'];
-		if ($token_hash === sha1("$t:$salt:$form_id:$url:$extras")) {
-			return (int) $t;
+		if (isset($_SERVER['HTTP_REFERER'])) {
+			$referer = parse_url($_SERVER['HTTP_REFERER']);
+			$url = $referer['host'].$referer['path'];
+			if ($token_hash === sha1("$t:$salt:$form_id:$url:$extras")) {
+				return (int) $t;
+			}
 		}
 
 		return FALSE;
@@ -234,7 +261,7 @@ class Form
 		if ($this->use_defaults) {
 			foreach ($this->form_def['field_groups'] as $gi => $g) {
 				// Read-only values are input-only
-				if (!empty($g['readonly'])) {
+				if ($this->readonly || !empty($g['readonly'])) {
 					continue;
 				}
 
@@ -262,7 +289,7 @@ class Form
 				//$this->field_values = $this->raw_input;
 
 				foreach ($this->form_def['field_groups'] as $gi => $g) {
-					if (!empty($g['readonly'])) {
+					if ($this->readonly || !empty($g['readonly'])) {
 						// Read-only values are input-only
 						continue;
 					}
@@ -351,7 +378,7 @@ class Form
 	 */
 	public function getRawData($group, $field = null, $force_default = false)
 	{
-		if ($this->use_defaults || $force_default || !empty($this->form_def['field_groups'][$group]['readonly'])) {
+		if ($this->readonly || $this->use_defaults || $force_default || !empty($this->form_def['field_groups'][$group]['readonly'])) {
 			// Default values need to be converted to raw form data.
 			if (!isset($this->raw_defaults[$group])) {
 				// TODO: Call pre-process functions to produce raw form data ...
@@ -398,21 +425,20 @@ class Form
 		if ($raw_input !== null) {
 			$this->raw_input = $raw_input;
 		} else {
-			switch (@ $this->form_def['form']['http_method']) {
+			$method = isset($this->form_def['form']['http_method']) ? $this->form_def['form']['http_method'] : 'post';
+			switch ($method) {
 				case 'get':
 				case 'GET':
 				case 'Get':
 					$this->raw_input = $_GET;
 					break;
-				case null:
 				case 'post':
 				case 'POST':
 				case 'Post':
 					$this->raw_input = $_POST;
 					break;
 				default:
-					throw new \InvalidArgumentException('Unknown HTTP method: '
-						.$this->form_def['form']['http_method']);
+					throw new \InvalidArgumentException('Unknown HTTP method: '.$method);
 			}
 		}
 	}
@@ -441,7 +467,12 @@ class Form
 	 */
 	public function isSubmitted()
 	{
-		foreach ((array) @ $this->raw_input['__'] as $token => $x) {
+		if (isset($this->raw_input['__'])) {
+			$__ = $this->raw_input['__'];
+		} else {
+			return FALSE;
+		}
+		foreach ((array) $__ as $token => $x) {
 			$t = static::validateFormToken($token, $this->id);
 			if ($t !== FALSE) {
 				// Submitted
@@ -471,14 +502,14 @@ class Form
 		
 		$values = $this->getValues();
 
-		foreach ($this->form_def['field_groups'] as $group_id => $group_config) {
-			if (!empty($group_config['readonly'])) {
+		foreach ($this->form_def['field_groups'] as $group_id => $group_def) {
+			if ($this->readonly || !empty($group_def['readonly'])) {
 				// Ignore read-only group, it is not included in values anyway.
 				continue;
 			}
-			foreach ($group_config['fields'] as $field_id => $field_def) {
+			foreach ($group_def['fields'] as $field_id => $field_def) {
 				$validators = $this->toolbox->getFieldValidators($field_def['type']);
-				$value = @ $values[$group_id][$field_id];
+				$value = isset($values[$group_id][$field_id]) ? $values[$group_id][$field_id] : null;
 				foreach ($validators as $v => $validator) {
 					$validator::validateField($this, $group_id, $field_id, $field_def, $value);
 				}
@@ -571,10 +602,13 @@ class Form
 	 */
 	public function render($template_engine = null)
 	{
+		// Get form renderer
+		$form_renderer = $this->toolbox->getFormRenderer($this->readonly ? '@view' : '@edit');
+
+		// Render
 		$this->common_field_renderers = $this->toolbox->getFormCommonFieldRenderers();
-		$form_renderer = $this->toolbox->getFormRenderer();
 		if (is_a($form_renderer, 'Duf\\Renderer\\IFormRenderer', TRUE)) {
-			$form_renderer::renderForm($this, $template_engine, $this->form_def['layout']);
+			$form_renderer::renderForm($this, $template_engine);
 		} else {
 			throw new RendererException('Form renderer '.$form_renderer.' must implement Duf\\Renderer\\IFormRenderer inteface.');
 		}
@@ -597,8 +631,9 @@ class Form
 	public function renderWidget($template_engine, $widget_conf)
 	{
 		// Lookup renderer in toolbox
-		$renderer_name = @ $widget_conf['#!'];
-		if ($renderer_name === null) {
+		if (isset($widget_conf['#!'])) {
+			$renderer_name = $widget_conf['#!'];
+		} else {
 			throw new \InvalidArgumentException('Shebang is missing in widget configuration.');
 		}
 
@@ -623,9 +658,13 @@ class Form
 			}
 			$field_def = $group_def['fields'][$field_id];
 
-			// Substitution for read-only groups
-			if (!empty($group_def['readonly']) && $renderer_name == '@edit') {
-				$renderer_name = '@view';
+			// Renderer substitution for read-only groups
+			if ($this->readonly || !empty($group_def['readonly'])) {
+				switch ($renderer_name) {
+					case '@edit':
+						$renderer_name = '@view';
+						break;
+				}
 			}
 
 			// Get renderer class
