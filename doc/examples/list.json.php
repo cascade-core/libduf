@@ -145,6 +145,7 @@
                                 }
                             },
                             "username": {
+                                "width": "60%",
                                 "thead": {
                                     "widgets": [
                                         {

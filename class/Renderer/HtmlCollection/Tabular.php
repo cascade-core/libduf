@@ -52,7 +52,11 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 		echo "<thead>\n";
 		echo "<tr>\n";
 		foreach ($columns as $c => $col) {
-			echo "<th>";
+			echo "<th";
+			if (isset($col['width'])) {
+				echo " width=\"", htmlspecialchars($col['width']), "\"";
+			}
+			echo ">";
 			if (isset($col['thead']['widgets'])) {
 				$form->renderWidgets($template_engine, $col['thead']['widgets']);
 			}
