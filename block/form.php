@@ -46,17 +46,20 @@ class B_duf__form extends \Cascade\Core\Block {
 		$form->loadInput();
 
 		$is_submitted = $form->isSubmitted();
+		$is_valid = $is_submitted && $form->isValid();	// Validate only submitted form
 
 		if ($is_submitted) {
 			$form->useInput();
-			$this->outAll($form->getValues());
 		} else {
 			$form->useDefaults();
 		}
 
+		if ($is_valid) {
+			$this->outAll($form->getValues());
+		}
 		$this->out('form', $form);
 		$this->out('submitted', $is_submitted);
-		$this->out('done', $is_submitted && $form->isValid());
+		$this->out('done', $is_valid);
 	}
 
 }

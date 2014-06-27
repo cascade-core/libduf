@@ -261,8 +261,6 @@ class Form
 		} else {
 			$this->field_defaults[$group] = $custom_defaults;
 		}
-
-		//debug_dump($this->field_defaults);
 	}
 
 
@@ -308,13 +306,13 @@ class Form
 					}
 					if (empty($g['collection_dimensions'])) {
 						// Simple group -- even if missing, use defaults.
-						$this->getValues_processCollection($this->raw_input[$gi], 0, $g['fields'],
+						$this->getValues_processCollection($this->raw_input[$gi], 0, $gi, $g['fields'],
 							$this->field_values[$gi], $this->field_defaults[$gi]);
 					} else if ($g['collection_dimensions'] >= 1) {
 						// Validate fields for each item in collection.
 						if (isset($this->raw_input[$gi])) {
 							// Non-empty collection, walk it recursively.
-							$this->getValues_processCollection($this->raw_input[$gi], $g['collection_dimensions'], $g['fields'],
+							$this->getValues_processCollection($this->raw_input[$gi], $g['collection_dimensions'], $gi, $g['fields'],
 								$this->field_values[$gi], $this->field_defaults[$gi]);
 						} else {
 							// Missing data, it should not happen, but whatever ... use empty collection instead.
@@ -323,7 +321,6 @@ class Form
 					}
 				}
 			}
-
 			return $this->field_values;
 		}
 	}
@@ -332,26 +329,42 @@ class Form
 	/**
 	 * Recursively walk the collections in raw input and populate field values.
 	 */
-	private function getValues_processCollection($raw_input, $remaining_depth, $group_fields, & $field_values, & $field_defaults)
+	private function getValues_processCollection($raw_input, $remaining_depth, $group_id, $group_fields, & $field_values, & $field_defaults, & $path = null)
 	{
 		if ($remaining_depth > 0) {
 			// We need to go deeper ...
+			if ($path === null) {
+				$path = array();
+			}
 			foreach($raw_input as $i => $raw_input_subtree) {
-				$this->getValues_processCollection($raw_input_subtree, $remaining_depth - 1, $group_fields,
-					$field_values[$i], $field_defaults[$i]);
+				$path[] = $i;
+				$this->getValues_processCollection($raw_input_subtree, $remaining_depth - 1, $group_id, $group_fields,
+					$field_values[$i], $field_defaults[$i], $path);
+				array_pop($path);
 			}
 		} else {
 			// Deep enough.
 			foreach ($group_fields as $fi => $f) {
-				$v = isset($raw_input[$fi]) ? $raw_input[$fi] : null;
+				// Retrieve value
+				$value = isset($raw_input[$fi]) ? $raw_input[$fi] : null;
 				// TODO: Call post-process functions on $v.
 				// TODO: First validation, populate $this->field_errors.
-				if ($v !== null) {
-					$field_values[$fi] = $v;
+				if ($value !== null) {
+					$field_values[$fi] = $value;
 				} else if (isset($this->field_defaults[$fi])) {
-					$field_values[$fi] = $field_defaults[$fi];
+					$value = $field_values[$fi] = $field_defaults[$fi];
+				}
+
+				// Validate value
+				$validators = $this->toolbox->getFieldValidators($f['type']);
+				if (!empty($validators)) {
+					$this->setCollectionKey($group_id, $path);
+					foreach ($validators as $vi => $v) {
+						$v::validateField($this, $group_id, $fi, $f, $value);
+					}
 				}
 			}
+			$this->unsetCollectionKey($group_id);
 		}
 	}
 
@@ -509,27 +522,13 @@ class Form
 	{
 		// TODO: Validate $this->field_values (post-processed values, second stage of validation).
 
-
 		// TODO: http://www.the-art-of-web.com/html/html5-form-validation/
 		// TODO: http://cz2.php.net/manual/en/book.filter.php
-		
-		$values = $this->getValues();
 
-		foreach ($this->form_def['field_groups'] as $group_id => $group_def) {
-			if ($this->readonly || !empty($group_def['readonly'])) {
-				// Ignore read-only group, it is not included in values anyway.
-				continue;
-			}
-			foreach ($group_def['fields'] as $field_id => $field_def) {
-				$validators = $this->toolbox->getFieldValidators($field_def['type']);
-				$value = isset($values[$group_id][$field_id]) ? $values[$group_id][$field_id] : null;
-				foreach ($validators as $v => $validator) {
-					$validator::validateField($this, $group_id, $field_id, $field_def, $value);
-				}
-			}
-		}
+		// Make sure values are processed and validated.
+		$this->getValues();
 
-		return empty($this->field_errors);
+		return empty($this->form_errors) && empty($this->field_errors);
 	}
 
 
@@ -538,8 +537,12 @@ class Form
 	 */
 	public function setFieldError($group_id, $field_id, $error, $args = true)
 	{
-		// TODO: Respect group_keys.
-		$this->field_errors[$group_id][$field_id][$error] = $args;
+		if (!$group_id || !$field_id) {
+			throw new \InvalidArgumentException('Field not specified.');
+		}
+		$e = & $this->refArrayItemByPath($this->field_errors, $group_id,
+			isset($this->group_keys[$group_id]) ? $this->group_keys[$group_id] : null, $field_id);
+		$e[$error] = $args;
 	}
 
 	/**
@@ -547,8 +550,8 @@ class Form
 	 */
 	public function getFieldErrors($group_id, $field_id)
 	{
-		// TODO: Respect group_keys.
-		return isset($this->field_errors[$group_id][$field_id]) ? $this->field_errors[$group_id][$field_id] : array();
+		return $this->getArrayItemByPath($this->field_errors, $group_id,
+			isset($this->group_keys[$group_id]) ? $this->group_keys[$group_id] : null, $field_id);
 	}
 
 
@@ -559,7 +562,6 @@ class Form
 	{
 		$group_keys = isset($this->group_keys[$group]) ? '__'.join('__', $this->group_keys[$group]) : '';
 
-		// TODO: Handle collections
 		if ($field_component) {
 			return htmlspecialchars("{$this->id}__{$group}{$group_keys}__{$field}__{$field_component}");
 		} else {
@@ -575,7 +577,6 @@ class Form
 	{
 		$group_keys = isset($this->group_keys[$group]) ? '['.join('][', $this->group_keys[$group]).']' : '';
 
-		// TODO: Handle collections
 		if ($field_component) {
 			return htmlspecialchars("${group}{$group_keys}[$field][$field_component]");
 		} else {
@@ -742,9 +743,7 @@ class Form
 
 
 	/**
-	 * Returns item of multidimensional $array specified by keys.
-	 *
-	 * TODO: Add index checks.
+	 * Returns item of multidimensional $array specified by keys, or null when item is not found.
 	 *
 	 * @param $array is an array to walk.
 	 * @param ... Additional parameters are keys. If key is array, all its 
@@ -761,10 +760,55 @@ class Form
 			}
 			if (is_array($k)) {
 				foreach ($k as $kk) {
-					$p = $p[$kk];
+					if (isset($p[$kk])) {
+						$p = $p[$kk];
+					} else {
+						return null;
+					}
 				}
 			} else {
-				$p = $p[$k];
+				if (isset($p[$k])) {
+					$p = $p[$k];
+				} else {
+					return null;
+				}
+			}
+		}
+
+		return $p;
+	}
+
+
+	/**
+	 * Returns reference to item of multidimensional $array specified by 
+	 * keys. If item is missing, it is created. Created values are empty 
+	 * arrays.
+	 *
+	 * @param $array is an array to walk.
+	 * @param ... Additional parameters are keys. If key is array, all its 
+	 * 	items are used as keys. `null` values are skipped.
+	 */
+	private function & refArrayItemByPath(& $array)
+	{
+		$p = & $array;
+		$argc = func_num_args();
+		for ($i = 1; $i < $argc; $i++) {
+			$k = func_get_arg($i);
+			if ($k === null) {
+				continue;
+			}
+			if (is_array($k)) {
+				foreach ($k as $kk) {
+					if (!isset($p[$kk])) {
+						$p[$kk] = array();
+					}
+					$p = & $p[$kk];
+				}
+			} else {
+				if (!isset($p[$k])) {
+					$p[$k] = array();
+				}
+				$p = & $p[$k];
 			}
 		}
 

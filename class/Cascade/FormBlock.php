@@ -91,17 +91,21 @@ class FormBlock extends \Cascade\Core\Block implements \Cascade\Core\IShebangHan
 		$this->form->loadInput();
 
 		$is_submitted = $this->form->isSubmitted();
+		$is_valid = $is_submitted && $this->form->isValid();	// Validate only submitted form
 
 		if ($is_submitted) {
 			$this->form->useInput();
-			$this->outAll($this->form->getValues());
 		} else {
 			$this->form->useDefaults();
 		}
 
+		if ($is_valid) {
+			$this->outAll($this->form->getValues());
+		}
+
 		$this->out('duf_form', $this->form);
 		$this->out('submitted', $is_submitted);
-		$this->out('done', $is_submitted && $this->form->isValid());
+		$this->out('done', $is_valid);
 	}
 }
 

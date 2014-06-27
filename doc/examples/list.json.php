@@ -98,6 +98,18 @@
                                                 "#!": "@edit",
                                                 "group_id": "users",
                                                 "field_id": "role"
+                                            }, {
+                                                "#!": "@error",
+                                                "group_id": "users",
+                                                "field_id": "id"
+                                            }, {
+                                                "#!": "@error",
+                                                "group_id": "users",
+                                                "field_id": "username"
+                                            }, {
+                                                "#!": "@error",
+                                                "group_id": "users",
+                                                "field_id": "role"
                                             }
                                         ]
                                     }
