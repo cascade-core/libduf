@@ -73,7 +73,13 @@
                     {
                         "#!": "plain_collection",
                         "group_id": "users",
-                        "class": "collection_item",
+                        "dimensions": [
+                            {
+                                "class": "collection"
+                            }, {
+                                "class": "item"
+                            }
+                        ],
                         "widgets": [
                             {
                                 "#!": "plain_layout",

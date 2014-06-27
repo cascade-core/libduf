@@ -268,50 +268,51 @@ class Form
 					}
 
 					if (empty($g['collection_dimensions'])) {
-						// Simple group
-						foreach ($g['fields'] as $fi => $f) {
-							$v = isset($this->raw_input[$gi][$fi]) ? $this->raw_input[$gi][$fi] : null;
-							// TODO: Call post-process functions on $v.
-							// TODO: First validation, populate $this->field_errors.
-							if ($v !== null) {
-								$this->field_values[$gi][$fi] = $v;
-							} else if (isset($this->field_defaults[$gi][$fi])) {
-								$this->field_values[$gi][$fi] = $this->field_defaults[$gi][$fi];
-							}
-						}
+						// Simple group -- even if missing, use defaults.
+						$this->getValues_processCollection($this->raw_input[$gi], 0, $g['fields'],
+							$this->field_values[$gi], $this->field_defaults[$gi]);
 					} else if ($g['collection_dimensions'] >= 1) {
+						// Validate fields for each item in collection.
 						if (isset($this->raw_input[$gi])) {
-							// Validate fields for each item in collection.
-
-							/* TODO: Allow more than one dimensions.
-							 * $iterator = new \RecursiveIteratorIterator($this->raw_input[$gi]);
-							 * $iterator->setMaxDepth($g['collection_dimensions']);
-							 * ... or write recursive function.
-							 */
-							foreach ($this->raw_input[$gi] as $ii => $item) {
-								foreach ($g['fields'] as $fi => $f) {
-									$v = isset($item[$fi]) ? $item[$fi] : null;
-									// TODO: Call post-process functions on $v.
-									// TODO: First validation, populate $this->field_errors.
-									if ($v !== null) {
-										$this->field_values[$gi][$ii][$fi] = $v;
-									} else if (isset($this->field_defaults[$gi][$ii][$fi])) {
-										$this->field_values[$gi][$ii][$fi] = $this->field_defaults[$gi][$ii][$fi];
-									}
-								}
-							}
+							// Non-empty collection, walk it recursively.
+							$this->getValues_processCollection($this->raw_input[$gi], $g['collection_dimensions'], $g['fields'],
+								$this->field_values[$gi], $this->field_defaults[$gi]);
 						} else {
 							// Missing data, it should not happen, but whatever ... use empty collection instead.
 							$this->field_values[$gi] = array();
 						}
-					} else {
-						// TODO: Handle collections of higher dimensions. We have only lists for now.
-						throw new \Exception('Not implemented: Only 1 dimensional collections are supported.');
 					}
 				}
 			}
 
 			return $this->field_values;
+		}
+	}
+
+
+	/**
+	 * Recursively walk the collections in raw input and populate field values.
+	 */
+	private function getValues_processCollection($raw_input, $remaining_depth, $group_fields, & $field_values, & $field_defaults)
+	{
+		if ($remaining_depth > 0) {
+			// We need to go deeper ...
+			foreach($raw_input as $i => $raw_input_subtree) {
+				$this->getValues_processCollection($raw_input_subtree, $remaining_depth - 1, $group_fields,
+					$field_values[$i], $field_defaults[$i]);
+			}
+		} else {
+			// Deep enough.
+			foreach ($group_fields as $fi => $f) {
+				$v = isset($raw_input[$fi]) ? $raw_input[$fi] : null;
+				// TODO: Call post-process functions on $v.
+				// TODO: First validation, populate $this->field_errors.
+				if ($v !== null) {
+					$field_values[$fi] = $v;
+				} else if (isset($this->field_defaults[$fi])) {
+					$field_values[$fi] = $field_defaults[$fi];
+				}
+			}
 		}
 	}
 
@@ -328,7 +329,7 @@ class Form
 	 */
 	public function setCollectionKey($group, $key)
 	{
-		$this->group_keys[$group] = $key;
+		$this->group_keys[$group] = (array) $key;
 	}
 
 
@@ -513,7 +514,7 @@ class Form
 	 */
 	public function getHtmlFieldId($group, $field, $field_component = null)
 	{
-		$group_keys = isset($this->group_keys[$group]) ? '__'.join('__', $this->group_keys) : '';
+		$group_keys = isset($this->group_keys[$group]) ? '__'.join('__', $this->group_keys[$group]) : '';
 
 		// TODO: Handle collections
 		if ($field_component) {
@@ -529,7 +530,7 @@ class Form
 	 */
 	public function getHtmlFieldName($group, $field, $field_component = null)
 	{
-		$group_keys = isset($this->group_keys[$group]) ? '['.join('][', $this->group_keys).']' : '';
+		$group_keys = isset($this->group_keys[$group]) ? '['.join('][', $this->group_keys[$group]).']' : '';
 
 		// TODO: Handle collections
 		if ($field_component) {

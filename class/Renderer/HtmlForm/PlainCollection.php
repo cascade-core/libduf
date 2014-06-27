@@ -38,14 +38,43 @@ class PlainCollection implements \Duf\Renderer\IWidgetRenderer
 			throw new \Exception('Not implemented: Only 1 dimensional collections are supported.');
 		}
 
-		foreach($items as $i => $item) {
-			$form->setCollectionKey($group_id, $i);
+		$collection_key = array();
+		self::walkCollection($form, $template_engine, $widget_conf, $group_id,
+			$items, $group['collection_dimensions'], 0, $collection_key);
+		$form->unsetCollectionKey($group_id);
+	}
+
+
+	private static function walkCollection($form, $template_engine, $widget_conf, $group_id, $items, $remaining_depth, $depth, & $collection_key)
+	{
+		if ($remaining_depth > 0) {
+			// We need to go deeper ...
 			echo "<div";
-			if (isset($widget_conf['class'])) {
-				if (is_array($widget_conf['class'])) {
-					echo " class=\"", htmlspecialchars(join(' ', $widget_conf['class'])), "\"";
+			if (isset($widget_conf['dimensions'][$depth]['class'])) {
+				$class = $widget_conf['dimensions'][$depth]['class'];
+				if (is_array($class)) {
+					echo " class=\"", htmlspecialchars(join(' ', $class)), "\"";
 				} else {
-					echo " class=\"", htmlspecialchars($widget_conf['class']), "\"";
+					echo " class=\"", htmlspecialchars($class), "\"";
+				}
+			}
+			echo ">\n";
+			foreach($items as $i => $item) {
+				$collection_key[$depth] = $i;
+				self::walkCollection($form, $template_engine, $widget_conf, $group_id,
+					$item, $remaining_depth - 1, $depth + 1, $collection_key);
+			}
+			echo "</div>\n";
+		} else {
+			// Deep enough.
+			$form->setCollectionKey($group_id, $collection_key);
+			echo "<div";
+			if (isset($widget_conf['dimensions'][$depth]['class'])) {
+				$class = $widget_conf['dimensions'][$depth]['class'];
+				if (is_array($class)) {
+					echo " class=\"", htmlspecialchars(join(' ', $class)), "\"";
+				} else {
+					echo " class=\"", htmlspecialchars($class), "\"";
 				}
 			}
 			echo ">\n";
@@ -54,8 +83,6 @@ class PlainCollection implements \Duf\Renderer\IWidgetRenderer
 
 			echo "</div>\n";
 		}
-		$form->unsetCollectionKey($group_id);
-
 	}
 
 }
