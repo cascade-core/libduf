@@ -262,11 +262,10 @@ class Form
 				//$this->field_values = $this->raw_input;
 
 				foreach ($this->form_def['field_groups'] as $gi => $g) {
-					// Read-only values are input-only
 					if (!empty($g['readonly'])) {
+						// Read-only values are input-only
 						continue;
 					}
-
 					if (empty($g['collection_dimensions'])) {
 						// Simple group -- even if missing, use defaults.
 						$this->getValues_processCollection($this->raw_input[$gi], 0, $g['fields'],
@@ -350,9 +349,9 @@ class Form
 	/**
 	 * Get raw data for HTML form field.
 	 */
-	public function getRawData($group, $field = null)
+	public function getRawData($group, $field = null, $force_default = false)
 	{
-		if ($this->use_defaults) {
+		if ($this->use_defaults || $force_default || !empty($this->form_def['field_groups'][$group]['readonly'])) {
 			// Default values need to be converted to raw form data.
 			if ($this->raw_defaults === null) {
 				// TODO: Call pre-process functions to produce raw form data ...
@@ -380,7 +379,6 @@ class Form
 				isset($this->group_keys[$group]) ? $this->group_keys[$group] : null,
 				$field);
 		} else {
-			// Do not process raw data. It is what user entered and it is what she expects to see again.
 			return $this->getArrayItemByPath($this->raw_input[$group],
 				isset($this->group_keys[$group]) ? $this->group_keys[$group] : null,
 				$field);
@@ -609,12 +607,28 @@ class Form
 			if (empty($widget_conf['group_id']) || empty($widget_conf['field_id'])) {
 				throw new RendererException('No field specified.');
 			}
+			
 			$group_id = $widget_conf['group_id'];
 			$field_id = $widget_conf['field_id'];
-			if (empty($this->form_def['field_groups'][$group_id]['fields'][$field_id])) {
-				throw new RendererException('Unknown field.');
+
+			// Get group definition
+			if (!isset($this->form_def['field_groups'][$group_id])) {
+				throw new RendererException('Unknown field group: '.$group_id);
 			}
-			$field_def = $this->form_def['field_groups'][$group_id]['fields'][$field_id];
+			$group_def = $this->form_def['field_groups'][$group_id];
+
+			// Get field definition
+			if (!isset($group_def['fields'][$field_id])) {
+				throw new RendererException('Unknown field: '.$field_id);
+			}
+			$field_def = $group_def['fields'][$field_id];
+
+			// Substitution for read-only groups
+			if (!empty($group_def['readonly']) && $renderer_name == '@edit') {
+				$renderer_name = '@view';
+			}
+
+			// Get renderer class
 			$renderer_class = $this->toolbox->getFieldRenderer($field_def['type'], $renderer_name);
 
 			// Add field identification to widget configuration
@@ -654,6 +668,8 @@ class Form
 
 	/**
 	 * Render a field widget.
+	 *
+	 * @warning Not all field rendering goes thru this!
 	 *
 	 * FIXME: This is completely wrong.
 	 */

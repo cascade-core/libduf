@@ -52,11 +52,11 @@
                 "class": "first",
                 "widgets": [
                     {
-                        "#!": "@control",
+                        "#!": "@edit",
                         "group_id": "contact",
                         "field_id": "from"
                     }, {
-                        "#!": "@control",
+                        "#!": "@edit",
                         "group_id": "contact",
                         "field_id": "subject"
                     }
@@ -64,7 +64,7 @@
             }, {
                 "widgets": [
                     {
-                        "#!": "@control",
+                        "#!": "@edit",
                         "group_id": "submit",
                         "field_id": "submit"
                     }

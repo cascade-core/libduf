@@ -24,7 +24,7 @@
         },
         "email": {
             "renderers": {
-                "@control": "\\Duf\\Renderer\\HtmlForm\\Input"
+                "@edit": "\\Duf\\Renderer\\HtmlForm\\Input"
             },
             "validators": {
                 "html5": "\\Duf\\FieldValidator\\EmailInput"
@@ -59,7 +59,7 @@
         },
         "password": {
             "renderers": {
-                "@control": "\\Duf\\Renderer\\HtmlForm\\Input"
+                "@edit": "\\Duf\\Renderer\\HtmlForm\\Input"
             },
             "validators": {
                 "html5": "\\Duf\\FieldValidator\\TextInput"
@@ -79,14 +79,16 @@
         },
         "select": {
             "renderers": {
-                "@control": "\\Duf\\Renderer\\HtmlForm\\Select"
+                "@edit": "\\Duf\\Renderer\\HtmlForm\\Select",
+                "@view": "\\Duf\\Renderer\\HtmlView\\Select"
             },
             "validators": {
             }
         },
         "submit": {
             "renderers": {
-                "@control": "\\Duf\\Renderer\\HtmlForm\\Input",
+                "@edit": "\\Duf\\Renderer\\HtmlForm\\Input",
+                "@view": false,
                 "@label": false
             },
             "validators": {
@@ -97,7 +99,8 @@
         },
         "text": {
             "renderers": {
-                "@control": "\\Duf\\Renderer\\HtmlForm\\Input"
+                "@edit": "\\Duf\\Renderer\\HtmlForm\\Input",
+                "@view": "\\Duf\\Renderer\\HtmlView\\Input"
             },
             "validators": {
                 "html5": "\\Duf\\FieldValidator\\TextInput"
@@ -105,7 +108,8 @@
         },
         "textarea": {
             "renderers": {
-                "@control": "\\Duf\\Renderer\\HtmlForm\\TextArea"
+                "@edit": "\\Duf\\Renderer\\HtmlForm\\TextArea",
+                "@view": "\\Duf\\Renderer\\HtmlView\\TextArea"
             },
             "validators": {
             }

@@ -21,6 +21,7 @@
             }
         },
         "users": {
+            "readonly": true,
             "collection_dimensions": 1,
             "fields": {
                 "id": {
@@ -87,15 +88,15 @@
                                     {
                                         "widgets": [
                                             {
-                                                "#!": "@control",
+                                                "#!": "@edit",
                                                 "group_id": "users",
                                                 "field_id": "id"
                                             }, {
-                                                "#!": "@control",
+                                                "#!": "@edit",
                                                 "group_id": "users",
                                                 "field_id": "username"
                                             }, {
-                                                "#!": "@control",
+                                                "#!": "@edit",
                                                 "group_id": "users",
                                                 "field_id": "role"
                                             }
@@ -110,7 +111,7 @@
                 "class": "submit",
                 "widgets": [
                     {
-                        "#!": "@control",
+                        "#!": "@edit",
                         "group_id": "submit",
                         "field_id": "submit"
                     }

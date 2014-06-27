@@ -40,7 +40,7 @@ class DefaultLayout implements \Duf\Renderer\IWidgetRenderer
 				$form->renderField($template_engine, $group_id, $field_id, '@label');
 				echo "</th>\n";
 				echo "<td>\n";
-				$form->renderField($template_engine, $group_id, $field_id, '@control');
+				$form->renderField($template_engine, $group_id, $field_id, '@edit');
 				$form->renderField($template_engine, $group_id, $field_id, '@error');
 				echo "</td>\n";
 				echo "</tr>\n";

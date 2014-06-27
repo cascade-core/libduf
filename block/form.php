@@ -41,6 +41,8 @@ class B_duf__form extends \Cascade\Core\Block {
 		// TODO: Refactor using FormBlock.
 
 		$form = new \Duf\Form($this->fullId(), $this->in('form_def'), $this->context->duf_toolbox);
+
+		$form->setDefaults($this->inAll());
 		$form->loadInput();
 
 		$is_submitted = $form->isSubmitted();
@@ -49,7 +51,6 @@ class B_duf__form extends \Cascade\Core\Block {
 			$form->useInput();
 			$this->outAll($form->getValues());
 		} else {
-			$form->setDefaults($this->inAll());
 			$form->useDefaults();
 		}
 

@@ -70,6 +70,8 @@ class FormBlock extends \Cascade\Core\Block implements \Cascade\Core\IShebangHan
 	public function main()
 	{
 		$this->form->setId($this->fullId());
+
+		$this->form->setDefaults($this->inAll());
 		$this->form->loadInput();
 
 		$is_submitted = $this->form->isSubmitted();
@@ -78,7 +80,6 @@ class FormBlock extends \Cascade\Core\Block implements \Cascade\Core\IShebangHan
 			$this->form->useInput();
 			$this->outAll($this->form->getValues());
 		} else {
-			$this->form->setDefaults($this->inAll());
 			$this->form->useDefaults();
 		}
 
