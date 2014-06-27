@@ -19,6 +19,12 @@ Defaults and the Values are of the same structure.
 
 ![Data flow during form processing](doc/figures/data-flow.png)
 
+@note Please note that [isSubmitted](@ref Duf\Form::isSubmitted)() does not
+	mean that form data are valid. And also [isValid](@ref Duf\Form::isValid)()
+	does not mean that form has been submitted. It is possible to get
+	submitted form with invalid data as well as non-submitted form with
+	valid data (for example filtering form).
+
 
 Form definition
 ---------------
@@ -50,7 +56,7 @@ Form anatomy
 Fields in a form are not objects. They are represented only by configuration
 and the form iterates over this configuration during validation and rendering.
 This way it is easier to put various renderers and validators together. Also
-there is no overhed with per-field object instantiation.
+there is no overhead with per-field object instantiation.
 
 If there is complex hierarchy of field types in your application, the toolbox
 configuration should be pre-generated from more elegant configuration files.

@@ -37,6 +37,12 @@ namespace Duf;
  *       4a. If input is not valid, set form to use submitted values and show the form.
  *       4b. Otherwise pass values to application.
  *
+ * 
+ * @note Please note that [isSubmitted](@ref Duf\Form::isSubmitted)() does not
+ * 	mean that form data are valid. And also [isValid](@ref Duf\Form::isValid)()
+ * 	does not mean that form has been submitted. It is possible to get
+ * 	submitted form with invalid data as well as non-submitted form with
+ * 	valid data (for example filtering form).
  */
 class Form
 {
@@ -48,7 +54,7 @@ class Form
 	protected $toolbox;			///< Listing of all available tools to build forms. Fields, layouts, helpers, etc.
 	
 	protected $form_def;			///< Definition of the form. What fields in what layouts.
-	protected $field_defaults = array();	///< Default values used if form is not submitted.
+	protected $field_defaults = array();	///< Default values used if form is not submitted. (single item dimension)
 	protected $field_values = null;		///< Current value of the field (array, but it will be created very late).
 	
 	public $field_errors = array();		///< Errors from all fields; 2D structure (group, field).
@@ -57,6 +63,7 @@ class Form
 	protected $raw_input = null;		///< Submitted input from user. Data are not modified in any way.
 	protected $raw_defaults = null;		///< Preprocessed default values. These data go directly to HTML form.
 	protected $use_defaults = false;	///< Use default (true) or submitted (false) values.
+	protected $group_keys = array();	///< Group keys used for accessing fields in collections.
 
 	/**
 	 * @name Errors
@@ -197,25 +204,6 @@ class Form
 
 
 	/**
-	 * Collect default values from form definition. Used when user has not submitted anything else. 
-	 */
-	public function loadDefaults()
-	{
-		// Collect default values from the form definition
-		$def_defaults = array();
-		foreach ($this->form_def['field_groups'] as $group_id => $group_config) {
-			foreach ($group_config['fields'] as $field_id => $field) {
-				if (isset($field['default'])) {
-					$def_defaults[$group_id][$field_id] = $field['default'];
-				}
-			}
-		}
-
-		$this->field_defaults = $def_defaults;
-	}
-
-
-	/**
 	 * Set custom default values.
 	 *
 	 * Does array_merge() definition defaults with custom defaults.
@@ -228,11 +216,173 @@ class Form
 	{
 		// Merge definition defaults with custom defaults -- custom defaults win
 		if ($group === null) {
-			foreach ($custom_defaults as $k => $v) {
-				$this->field_defaults[$k] = array_merge((array) @ $this->field_defaults[$k], (array) @ $custom_defaults[$k]);
-			}
+			$this->raw_defaults = null; // Reset cache (just to make sure it is empty)
+			$this->field_defaults = $custom_defaults;
 		} else {
-			$this->field_defaults[$group] = array_merge((array) @ $this->field_defaults[$group], (array) $custom_defaults);
+			$this->field_defaults[$group] = $custom_defaults;
+		}
+
+		//debug_dump($this->field_defaults);
+	}
+
+
+	/**
+	 * Returns values submitted by user.
+	 */
+	public function getValues()
+	{
+		if ($this->use_defaults) {
+			foreach ($this->form_def['field_groups'] as $gi => $g) {
+				// Read-only values are input-only
+				if (!empty($g['readonly'])) {
+					continue;
+				}
+
+				// $this->field_defaults should contain all defaults by now, but maybe some of values are missing.
+				if (!isset($this->field_defaults[$gi])) {
+					$this->field_defaults[$gi] = array();
+					if (empty($g['collection_dimensions'])) {
+						// Values for the group are missing, use defaults from the form definition.
+						foreach ($g['fields'] as $fi => $f) {
+							if (isset($f['default'])) {
+								$this->field_defaults[$gi][$fi] = $f['default'];
+							}
+						}
+					} else {
+						// Empty collection by default.
+						$this->field_defaults[$gi] = array();
+					}
+				}
+			}
+
+			return $this->field_defaults;
+		} else {
+			if ($this->field_values === null) {
+				$this->field_values = array();
+				//$this->field_values = $this->raw_input;
+
+				foreach ($this->form_def['field_groups'] as $gi => $g) {
+					// Read-only values are input-only
+					if (!empty($g['readonly'])) {
+						continue;
+					}
+
+					if (empty($g['collection_dimensions'])) {
+						// Simple group
+						foreach ($g['fields'] as $fi => $f) {
+							$v = isset($this->raw_input[$gi][$fi]) ? $this->raw_input[$gi][$fi] : null;
+							// TODO: Call post-process functions on $v.
+							// TODO: First validation, populate $this->field_errors.
+							if ($v !== null) {
+								$this->field_values[$gi][$fi] = $v;
+							} else if (isset($this->field_defaults[$gi][$fi])) {
+								$this->field_values[$gi][$fi] = $this->field_defaults[$gi][$fi];
+							}
+						}
+					} else if ($g['collection_dimensions'] >= 1) {
+						if (isset($this->raw_input[$gi])) {
+							// Validate fields for each item in collection.
+
+							/* TODO: Allow more than one dimensions.
+							 * $iterator = new \RecursiveIteratorIterator($this->raw_input[$gi]);
+							 * $iterator->setMaxDepth($g['collection_dimensions']);
+							 * ... or write recursive function.
+							 */
+							foreach ($this->raw_input[$gi] as $ii => $item) {
+								foreach ($g['fields'] as $fi => $f) {
+									$v = isset($item[$fi]) ? $item[$fi] : null;
+									// TODO: Call post-process functions on $v.
+									// TODO: First validation, populate $this->field_errors.
+									if ($v !== null) {
+										$this->field_values[$gi][$ii][$fi] = $v;
+									} else if (isset($this->field_defaults[$gi][$ii][$fi])) {
+										$this->field_values[$gi][$ii][$fi] = $this->field_defaults[$gi][$ii][$fi];
+									}
+								}
+							}
+						} else {
+							// Missing data, it should not happen, but whatever ... use empty collection instead.
+							$this->field_values[$gi] = array();
+						}
+					} else {
+						// TODO: Handle collections of higher dimensions. We have only lists for now.
+						throw new \Exception('Not implemented: Only 1 dimensional collections are supported.');
+					}
+				}
+			}
+
+			return $this->field_values;
+		}
+	}
+
+
+	/**
+	 * Set collection key. This key will be used to access particular item 
+	 * when accessing group field.
+	 *
+	 * @param $group is field group id which is beiing iterated.
+	 * @param $key is collection key (current index). Use array for 
+	 * 	multidimensional collections.
+	 *
+	 * @see unsetCollectionKey(), getRawData()
+	 */
+	public function setCollectionKey($group, $key)
+	{
+		$this->group_keys[$group] = $key;
+	}
+
+
+	/**
+	 * Unset collection key. It is a good idea to unset the key after group 
+	 * is rendered to allow error detection.
+	 *
+	 * @param $group is field group id which is beiing iterated.
+	 *
+	 * @see setCollectionKey(), getRawData()
+	 */
+	public function unsetCollectionKey($group)
+	{
+		unset($this->group_keys[$group]);
+	}
+
+
+	/**
+	 * Get raw data for HTML form field.
+	 */
+	public function getRawData($group, $field = null)
+	{
+		if ($this->use_defaults) {
+			// Default values need to be converted to raw form data.
+			if ($this->raw_defaults === null) {
+				// TODO: Call pre-process functions to produce raw form data ...
+				foreach ($this->form_def['field_groups'] as $gi => $g) {
+					if (isset($this->field_defaults[$gi])) {
+						// Values for the group are set, use them.
+						$this->raw_defaults[$gi] = $this->field_defaults[$gi];	// TODO: ... here ...
+					} else {
+						if (empty($g['collection_dimensions'])) {
+							// Values for the group are missing, use defaults from the form definition.
+							foreach ($g['fields'] as $fi => $f) {
+								if (isset($f['default'])) {
+									$this->raw_defaults[$gi][$fi] = $f['default'];	// TODO: ... and here.
+								}
+							}
+						} else {
+							// Empty collection by default.
+							$this->raw_defaults[$gi] = array();
+						}
+					}
+				}
+			}
+
+			return $this->getArrayItemByPath($this->raw_defaults[$group],
+				isset($this->group_keys[$group]) ? $this->group_keys[$group] : null,
+				$field);
+		} else {
+			// Do not process raw data. It is what user entered and it is what she expects to see again.
+			return $this->getArrayItemByPath($this->raw_input[$group],
+				isset($this->group_keys[$group]) ? $this->group_keys[$group] : null,
+				$field);
 		}
 	}
 
@@ -323,6 +473,10 @@ class Form
 		$values = $this->getValues();
 
 		foreach ($this->form_def['field_groups'] as $group_id => $group_config) {
+			if (!empty($group_config['readonly'])) {
+				// Ignore read-only group, it is not included in values anyway.
+				continue;
+			}
 			foreach ($group_config['fields'] as $field_id => $field_def) {
 				$validators = $this->toolbox->getFieldValidators($field_def['type']);
 				$value = @ $values[$group_id][$field_id];
@@ -341,6 +495,7 @@ class Form
 	 */
 	public function setFieldError($group_id, $field_id, $error, $args = true)
 	{
+		// TODO: Respect group_keys.
 		$this->field_errors[$group_id][$field_id][$error] = $args;
 	}
 
@@ -348,42 +503,8 @@ class Form
 	 */
 	public function getFieldErrors($group_id, $field_id)
 	{
+		// TODO: Respect group_keys.
 		return isset($this->field_errors[$group_id][$field_id]) ? $this->field_errors[$group_id][$field_id] : array();
-	}
-
-
-	/**
-	 * Returns values submitted by user.
-	 */
-	public function getValues()
-	{
-		if ($this->use_defaults) {
-			return $this->field_defaults;
-		} else {
-			if ($this->field_values === null) {
-				// TODO: Call post-process functions, populate $this->field_errors (first stage of validation).
-				$this->field_values = $this->raw_input;
-			}
-
-			return $this->field_values;
-		}
-	}
-
-
-	/**
-	 * Get raw data for HTML form field.
-	 */
-	public function getRawData($group, $field)
-	{
-		if ($this->use_defaults) {
-			if ($this->raw_defaults === null) {
-				// TODO: Call pre-process functions to produce raw form data
-				$this->raw_defaults = $this->field_defaults;
-			}
-			return isset($this->raw_defaults[$group][$field]) ? $this->raw_defaults[$group][$field] : null;
-		} else {
-			return isset($this->raw_input[$group][$field]) ? $this->raw_input[$group][$field] : null;
-		}
 	}
 
 
@@ -392,10 +513,13 @@ class Form
 	 */
 	public function getHtmlFieldId($group, $field, $field_component = null)
 	{
+		$group_keys = isset($this->group_keys[$group]) ? '__'.join('__', $this->group_keys) : '';
+
+		// TODO: Handle collections
 		if ($field_component) {
-			return htmlspecialchars("{$this->id}__{$group}__{$field}__{$field_component}");
+			return htmlspecialchars("{$this->id}__{$group}{$group_keys}__{$field}__{$field_component}");
 		} else {
-			return htmlspecialchars("{$this->id}__{$group}__{$field}");
+			return htmlspecialchars("{$this->id}__{$group}{$group_keys}__{$field}");
 		}
 	}
 
@@ -405,10 +529,13 @@ class Form
 	 */
 	public function getHtmlFieldName($group, $field, $field_component = null)
 	{
+		$group_keys = isset($this->group_keys[$group]) ? '['.join('][', $this->group_keys).']' : '';
+
+		// TODO: Handle collections
 		if ($field_component) {
-			return htmlspecialchars("${group}[$field][$field_component]");
+			return htmlspecialchars("${group}{$group_keys}[$field][$field_component]");
 		} else {
-			return htmlspecialchars("${group}[$field]");
+			return htmlspecialchars("${group}{$group_keys}[$field]");
 		}
 	}
 
@@ -512,6 +639,19 @@ class Form
 
 
 	/**
+	 * Helper method to render list of widgets.
+	 */
+	public function renderWidgets($template_engine, $widget_conf_list)
+	{
+		if (isset($widget_conf_list)) {
+			foreach ($widget_conf_list as $widget_conf) {
+				$this->renderWidget($template_engine, $widget_conf);
+			}
+		}
+	}
+
+
+	/**
 	 * Render a field widget.
 	 *
 	 * FIXME: This is completely wrong.
@@ -533,6 +673,37 @@ class Form
 		$widget_conf['field_id'] = $field_id;
 
 		$renderer_class::renderWidget($this, $template_engine, $widget_conf);
+	}
+
+
+	/**
+	 * Returns item of multidimensional $array specified by keys.
+	 *
+	 * TODO: Add index checks.
+	 *
+	 * @param $array is an array to walk.
+	 * @param ... Additional parameters are keys. If key is array, all its 
+	 * 	items are used as keys. `null` values are skipped.
+	 */
+	private function getArrayItemByPath($array)
+	{
+		$p = $array;
+		$argc = func_num_args();
+		for ($i = 1; $i < $argc; $i++) {
+			$k = func_get_arg($i);
+			if ($k === null) {
+				continue;
+			}
+			if (is_array($k)) {
+				foreach ($k as $kk) {
+					$p = $p[$kk];
+				}
+			} else {
+				$p = $p[$k];
+			}
+		}
+
+		return $p;
 	}
 
 }

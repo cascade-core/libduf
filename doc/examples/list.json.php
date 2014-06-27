@@ -21,16 +21,29 @@
             }
         },
         "users": {
-            "collection": "list",
+            "collection_dimensions": 1,
             "fields": {
+                "id": {
+                    "type": "text",
+                    "label": "id",
+                    "required": true,
+                    "placeholder": "ID",
+                    "size": 5
+                },
                 "username": {
                     "type": "text",
                     "label": "Username",
-                    "required": true
+                    "required": true,
+                    "placeholder": "Username"
                 },
                 "role": {
-                    "type": "text",
-                    "label": "Role"
+                    "type": "select",
+                    "label": "Role",
+                    "placeholder": "Role",
+                    "options": {
+                        "admin": "Admin",
+                        "firma": "Firma"
+                    }
                 }
             }
         },
@@ -58,8 +71,33 @@
                 "label": "Users",
                 "widgets": [
                     {
-                        "#!": "default_layout",
-                        "field_group": "users"
+                        "#!": "plain_collection",
+                        "group_id": "users",
+                        "class": "collection_item",
+                        "widgets": [
+                            {
+                                "#!": "plain_layout",
+                                "rows": [
+                                    {
+                                        "widgets": [
+                                            {
+                                                "#!": "@control",
+                                                "group_id": "users",
+                                                "field_id": "id"
+                                            }, {
+                                                "#!": "@control",
+                                                "group_id": "users",
+                                                "field_id": "username"
+                                            }, {
+                                                "#!": "@control",
+                                                "group_id": "users",
+                                                "field_id": "role"
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
                     }
                 ]
             }, {

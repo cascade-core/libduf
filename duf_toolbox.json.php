@@ -136,6 +136,9 @@
         },
         "fieldsets_layout": {
             "renderer": "\\Duf\\Renderer\\HtmlForm\\FieldsetsLayout"
+        },
+        "plain_collection": {
+            "renderer": "\\Duf\\Renderer\\HtmlForm\\PlainCollection"
         }
     }
 }

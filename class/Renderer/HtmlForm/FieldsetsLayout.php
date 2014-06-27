@@ -42,9 +42,7 @@ class FieldsetsLayout implements \Duf\Renderer\IWidgetRenderer
 				echo "<legend>", htmlspecialchars($set['label']), "</legend>\n";
 			}
 
-			foreach ($set['widgets'] as $widget) {
-				$form->renderWidget($template_engine, $widget);
-			}
+			$form->renderWidgets($template_engine, $set['widgets']);
 
 			echo "</fieldset>\n";
 		}

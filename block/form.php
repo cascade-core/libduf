@@ -47,13 +47,12 @@ class B_duf__form extends \Cascade\Core\Block {
 
 		if ($is_submitted) {
 			$form->useInput();
+			$this->outAll($form->getValues());
 		} else {
-			$form->loadDefaults();
 			$form->setDefaults($this->inAll());
 			$form->useDefaults();
 		}
 
-		$this->outAll($form->getValues());
 		$this->out('form', $form);
 		$this->out('submitted', $is_submitted);
 		$this->out('done', $is_submitted && $form->isValid());

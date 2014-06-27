@@ -5,6 +5,9 @@
             "block": "duf/form",
             "x": 222,
             "y": 224,
+            "in_val": {
+                "enable": false
+            },
             "in_con": {
                 "form_def": [
                     "config",
@@ -17,6 +20,10 @@
             "x": 481,
             "y": 196,
             "in_con": {
+                "enable": [
+                    "form1",
+                    "form"
+                ],
                 "form": [
                     "form1",
                     "form"
@@ -33,7 +40,7 @@
             "in_con": {
                 "enable": [
                     "form1",
-                    "done"
+                    "form"
                 ],
                 "data": [
                     "form1",
@@ -54,6 +61,10 @@
                 "form_def": [
                     "config",
                     "doc/examples/list"
+                ],
+                "users": [
+                    "listing2",
+                    "list"
                 ]
             }
         },
@@ -62,6 +73,10 @@
             "x": 475,
             "y": 664,
             "in_con": {
+                "enable": [
+                    "form2",
+                    "form"
+                ],
                 "form": [
                     "form2",
                     "form"
@@ -78,14 +93,14 @@
             "in_con": {
                 "enable": [
                     "form2",
-                    "done"
+                    "form"
                 ],
                 "data": [
                     ":array",
                     "form2",
                     "quest",
                     "form2",
-                    "objectives"
+                    "users"
                 ]
             },
             "in_val": {
@@ -98,6 +113,12 @@
             "block": "core/out/header",
             "x": 472,
             "y": 466,
+            "in_con": {
+                "enable": [
+                    "form2",
+                    "form"
+                ]
+            },
             "in_val": {
                 "level": 2,
                 "text": "List Form",
@@ -108,6 +129,12 @@
             "block": "core/out/header",
             "x": 476,
             "y": 0,
+            "in_con": {
+                "enable": [
+                    "form1",
+                    "form"
+                ]
+            },
             "in_val": {
                 "level": 2,
                 "text": "Simple Form",
@@ -124,8 +151,8 @@
         },
         "print_collection": {
             "block": "core/out/print_r",
-            "x": 247,
-            "y": 928,
+            "x": 251,
+            "y": 917,
             "in_con": {
                 "data": [
                     "listing2",
