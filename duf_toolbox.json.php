@@ -146,6 +146,12 @@
         },
         "plain_collection": {
             "renderer": "\\Duf\\Renderer\\HtmlCollection\\Plain"
+        },
+        "tabular_collection": {
+            "renderer": "\\Duf\\Renderer\\HtmlCollection\\Tabular"
+        },
+        "text": {
+            "renderer": "\\Duf\\Renderer\\HtmlDecoration\\Text"
         }
     }
 }

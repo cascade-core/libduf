@@ -119,6 +119,73 @@
                     }
                 ]
             }, {
+                "label": "Users in table",
+                "widgets": [
+                    {
+                        "#!": "tabular_collection",
+                        "group_id": "users",
+                        "columns": {
+                            "id": {
+                                "thead": {
+                                    "widgets": [
+                                        {
+                                            "#!": "text",
+                                            "text": "ID"
+                                        }
+                                    ]
+                                },
+                                "tbody": {
+                                    "widgets": [
+                                        {
+                                            "#!": "@view",
+                                            "group_id": "users",
+                                            "field_id": "id"
+                                        }
+                                    ]
+                                }
+                            },
+                            "username": {
+                                "thead": {
+                                    "widgets": [
+                                        {
+                                            "#!": "text",
+                                            "text": "User name"
+                                        }
+                                    ]
+                                },
+                                "tbody": {
+                                    "widgets": [
+                                        {
+                                            "#!": "@view",
+                                            "group_id": "users",
+                                            "field_id": "username"
+                                        }
+                                    ]
+                                }
+                            },
+                            "role": {
+                                "thead": {
+                                    "widgets": [
+                                        {
+                                            "#!": "text",
+                                            "text": "Role"
+                                        }
+                                    ]
+                                },
+                                "tbody": {
+                                    "widgets": [
+                                        {
+                                            "#!": "@view",
+                                            "group_id": "users",
+                                            "field_id": "role"
+                                        }
+                                    ]
+                                }
+                            }
+                        }
+                    }
+                ]
+            }, {
                 "class": "submit",
                 "widgets": [
                     {
