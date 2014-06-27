@@ -21,7 +21,6 @@
             }
         },
         "users": {
-            "readonly": true,
             "collection_dimensions": 1,
             "fields": {
                 "id": {

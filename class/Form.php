@@ -61,7 +61,7 @@ class Form
 	public $form_errors = array();		///< Global errors; simple list.
 
 	protected $raw_input = null;		///< Submitted input from user. Data are not modified in any way.
-	protected $raw_defaults = null;		///< Preprocessed default values. These data go directly to HTML form.
+	protected $raw_defaults = array();	///< Preprocessed default values. These data go directly to HTML form.
 	protected $use_defaults = false;	///< Use default (true) or submitted (false) values.
 	protected $group_keys = array();	///< Group keys used for accessing fields in collections.
 
@@ -353,7 +353,7 @@ class Form
 	{
 		if ($this->use_defaults || $force_default || !empty($this->form_def['field_groups'][$group]['readonly'])) {
 			// Default values need to be converted to raw form data.
-			if ($this->raw_defaults === null) {
+			if (!isset($this->raw_defaults[$group])) {
 				// TODO: Call pre-process functions to produce raw form data ...
 				foreach ($this->form_def['field_groups'] as $gi => $g) {
 					if (isset($this->field_defaults[$gi])) {
