@@ -16,12 +16,14 @@
  *
  */
 
-namespace Duf\Renderer\HtmlForm;
+namespace Duf\Renderer\HtmlLayout;
 
 /**
- * Render plain layout made of divs.
+ * Render plain layout made of `<div>`s.
+ *
+ * @see Fieldsets layout is usually more useful.
  */
-class PlainLayout implements \Duf\Renderer\IWidgetRenderer
+class Plain implements \Duf\Renderer\IWidgetRenderer
 {
 
 	/// @copydoc \Duf\Renderer\IWidgetRenderer::renderWidget

@@ -16,12 +16,12 @@
  *
  */
 
-namespace Duf\Renderer\HtmlForm;
+namespace Duf\Renderer\HtmlLayout;
 
 /**
- * Render <fieldset> layout.
+ * Render `<fieldset>` layout.
  */
-class FieldsetsLayout implements \Duf\Renderer\IWidgetRenderer
+class Fieldsets implements \Duf\Renderer\IWidgetRenderer
 {
 
 	/// @copydoc \Duf\Renderer\IWidgetRenderer::renderWidget

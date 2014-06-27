@@ -19,7 +19,7 @@
 namespace Duf\Renderer\HtmlForm;
 
 /**
- * HTML5 Form, the root element.
+ * HTML5 `<form>`, the root element.
  */
 class Form implements \Duf\Renderer\IFormRenderer
 {

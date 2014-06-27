@@ -126,8 +126,8 @@
     },
     "form": {
         "renderers": {
-            "@edit": "Duf\\Renderer\\HtmlForm\\Form",
-            "@view": "Duf\\Renderer\\HtmlView\\Form"
+            "@edit": "\\Duf\\Renderer\\HtmlForm\\Form",
+            "@view": "\\Duf\\Renderer\\HtmlView\\Form"
         },
         "common_field_renderers": {
             "@label": "\\Duf\\Renderer\\HtmlForm\\Label",
@@ -136,16 +136,16 @@
     },
     "widgets": {
         "default_layout": {
-            "renderer": "\\Duf\\Renderer\\HtmlForm\\DefaultLayout"
+            "renderer": "\\Duf\\Renderer\\HtmlLayout\\DefaultTable"
         },
         "plain_layout": {
-            "renderer": "\\Duf\\Renderer\\HtmlForm\\PlainLayout"
+            "renderer": "\\Duf\\Renderer\\HtmlLayout\\Plain"
         },
         "fieldsets_layout": {
-            "renderer": "\\Duf\\Renderer\\HtmlForm\\FieldsetsLayout"
+            "renderer": "\\Duf\\Renderer\\HtmlLayout\\Fieldsets"
         },
         "plain_collection": {
-            "renderer": "\\Duf\\Renderer\\HtmlForm\\PlainCollection"
+            "renderer": "\\Duf\\Renderer\\HtmlCollection\\Plain"
         }
     }
 }

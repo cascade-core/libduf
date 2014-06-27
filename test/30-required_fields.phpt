@@ -37,7 +37,7 @@ $form_def = array(
 		),
 	),
 	'layout' => array(
-		'#!' => 'default',
+		'#!' => 'default_layout',
 	),
 );
 

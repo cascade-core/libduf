@@ -19,7 +19,7 @@
 namespace Duf\Renderer\HtmlForm;
 
 /**
- * Default <input> field renderer.
+ * Default `<input>` field renderer.
  */
 class Input implements \Duf\Renderer\IWidgetRenderer
 {

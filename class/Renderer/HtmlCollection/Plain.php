@@ -16,12 +16,12 @@
  *
  */
 
-namespace Duf\Renderer\HtmlForm;
+namespace Duf\Renderer\HtmlCollection;
 
 /**
- * Render collection using usual widgets.
+ * Render collection using usual widgets, wrapping items in `<div>`s.
  */
-class PlainCollection implements \Duf\Renderer\IWidgetRenderer
+class Plain implements \Duf\Renderer\IWidgetRenderer
 {
 
 	/// @copydoc \Duf\Renderer\IWidgetRenderer::renderWidget

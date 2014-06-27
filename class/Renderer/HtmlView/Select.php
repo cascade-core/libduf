@@ -19,7 +19,7 @@
 namespace Duf\Renderer\HtmlView;
 
 /**
- * Default <select> field renderer.
+ * Render `<select>` field value using `<span>`.
  */
 class Select extends Input implements \Duf\Renderer\IWidgetRenderer
 {

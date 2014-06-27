@@ -19,7 +19,7 @@
 namespace Duf\Renderer\HtmlForm;
 
 /**
- * HTML5 Form, the root element.
+ * Render `<label>` for a field.
  */
 class Label implements \Duf\Renderer\IWidgetRenderer
 {

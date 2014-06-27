@@ -24,14 +24,27 @@ namespace Duf\Cascade;
 class FormBlock extends \Cascade\Core\Block implements \Cascade\Core\IShebangHandler
 {
 
+	/**
+	 * List of inputs and their default values
+	 */
 	protected $inputs = array(
 	);
 
+	/**
+	 * List of outputs (no default values)
+	 */
 	protected $outputs = array(
 	);
 
+	/**
+	 * Always execute this block.
+	 */
 	const force_exec = true;
 
+
+	/**
+	 * The Form.
+	 */
 	protected $form;
 
 
@@ -67,6 +80,9 @@ class FormBlock extends \Cascade\Core\Block implements \Cascade\Core\IShebangHan
 	}
 
 
+	/**
+	 * Main of the Block.
+	 */
 	public function main()
 	{
 		$this->form->setId($this->fullId());

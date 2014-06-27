@@ -16,12 +16,12 @@
  *
  */
 
-namespace Duf\Renderer\HtmlForm;
+namespace Duf\Renderer\HtmlLayout;
 
 /**
  * Render simple tabular layout containing all fields.
  */
-class DefaultLayout implements \Duf\Renderer\IWidgetRenderer
+class DefaultTable implements \Duf\Renderer\IWidgetRenderer
 {
 
 	/// @copydoc \Duf\Renderer\IWidgetRenderer::renderWidget

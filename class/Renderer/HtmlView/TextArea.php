@@ -19,7 +19,7 @@
 namespace Duf\Renderer\HtmlView;
 
 /**
- * Default <textarea> field renderer.
+ * Render `<textarea>` field value using `<div>`.
  */
 class TextArea extends Input implements \Duf\Renderer\IWidgetRenderer
 {

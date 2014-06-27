@@ -29,6 +29,7 @@ class Smalldb implements IFieldSource
 	 *
 	 * @param $group_config must contain 'machine_type' key to lookup 
 	 * 	required machine type.
+	 * @param $context is global context where Smalldb Backend instance is stored.
 	 */
 	static function generateFieldGroup($group_config, $context)
 	{

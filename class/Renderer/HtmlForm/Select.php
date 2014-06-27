@@ -19,7 +19,7 @@
 namespace Duf\Renderer\HtmlForm;
 
 /**
- * Default <select> field renderer.
+ * Default `<select>` field renderer.
  */
 class Select extends Input implements \Duf\Renderer\IWidgetRenderer
 {

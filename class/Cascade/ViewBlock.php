@@ -64,6 +64,9 @@ class FormBlock extends \Cascade\Core\Block implements \Cascade\Core\IShebangHan
 	}
 
 
+	/**
+	 * Main of the Block.
+	 */
 	public function main()
 	{
 		$this->form = new \Duf\Form($this->fullId(), $this->in('form_def'), $this->context->duf_toolbox, \Duf\Form::READ_ONLY);

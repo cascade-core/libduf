@@ -19,7 +19,7 @@
 namespace Duf\Renderer\HtmlView;
 
 /**
- * Default <input> field renderer.
+ * Render `<input>` field value using `<span>`.
  */
 class Input implements \Duf\Renderer\IWidgetRenderer
 {

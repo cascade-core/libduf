@@ -543,6 +543,7 @@ class Form
 	}
 
 	/**
+	 * Get all errors assigned to a field
 	 */
 	public function getFieldErrors($group_id, $field_id)
 	{
