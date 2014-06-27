@@ -503,7 +503,6 @@ class Form
 			if ($t !== FALSE) {
 				// Submitted
 				if ($this->form_ttl !== null && time() - $t >$this->form_ttl) {
-					// TODO: Set expiration error
 					$this->form_errors[self::E_FORM_EXPIRED] = array(
 						'message' => _('The form has expired, please check entered data and submit it again.')
 					);
@@ -517,14 +516,16 @@ class Form
 
 	/**
 	 * Returns true when all data are valid. The form may not be submitted.
+	 *
+	 * Validation is done by getValues(), which is called automatically by 
+	 * this method.
+	 *
+	 * @see
+	 * 	- http://www.the-art-of-web.com/html/html5-form-validation/
+	 * 	- http://cz2.php.net/manual/en/book.filter.php
 	 */
 	public function isValid()
 	{
-		// TODO: Validate $this->field_values (post-processed values, second stage of validation).
-
-		// TODO: http://www.the-art-of-web.com/html/html5-form-validation/
-		// TODO: http://cz2.php.net/manual/en/book.filter.php
-
 		// Make sure values are processed and validated.
 		$this->getValues();
 
@@ -640,7 +641,7 @@ class Form
 
 
 	/**
-	 * Render a widget using given configuration. Key `'#!'` determines 
+	 * Render a widget using given configuration. Key `#!` determines 
 	 * renderer which will render the widget.
 	 */
 	public function renderWidget($template_engine, $widget_conf)
@@ -726,11 +727,7 @@ class Form
 
 
 	/**
-	 * Render a field widget.
-	 *
-	 * @warning Not all field rendering goes thru this!
-	 *
-	 * FIXME: This is completely wrong.
+	 * Helper method to render a field widget.
 	 */
 	public function renderField($template_engine, $group_id, $field_id, $renderer)
 	{

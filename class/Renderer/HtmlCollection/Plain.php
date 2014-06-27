@@ -33,11 +33,6 @@ class Plain implements \Duf\Renderer\IWidgetRenderer
 
 		$items = $form->getRawData($group_id);
 
-		if ($group['collection_dimensions'] != 1) {
-			// TODO: Allow more than one dimensions.
-			throw new \Exception('Not implemented: Only 1 dimensional collections are supported.');
-		}
-
 		$collection_key = array();
 		self::walkCollection($form, $template_engine, $widget_conf, $group_id,
 			$items, $group['collection_dimensions'], 0, $collection_key);

@@ -33,8 +33,6 @@ class TextArea extends Input implements \Duf\Renderer\IWidgetRenderer
 		echo "<div",
 			" id=\"", $form->getHtmlFieldId($group_id, $field_id), "\"";
 
-		// TODO: Add class by type
-
 		static::commonAttributes($widget_conf);
 
 		echo ">";

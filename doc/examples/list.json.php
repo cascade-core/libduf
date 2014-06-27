@@ -13,7 +13,7 @@
                     "required": true
                 },
                 "description": {
-                    "type": "text",
+                    "type": "textarea",
                     "label": "Description",
                     "default": "Find the oldest written message in recorded history.",
                     "required": true
