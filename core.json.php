@@ -11,7 +11,8 @@
     "context": {
         "resources": {
             "duf_toolbox": {
-                "factory": "\\Duf\\Toolbox::createFromContext"
+                "class": "\\Duf\\Toolbox",
+                "_load_config": "duf_toolbox"
             }
         }
     }

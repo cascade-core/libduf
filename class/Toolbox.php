@@ -47,20 +47,6 @@ class Toolbox
 
 
 	/**
-	 * Create Toolbox and initialize it using context.
-	 *
-	 * @warning This loads configuration using config_loader from 
-	 * 	duf_toolbox.
-	 */
-	public static function createFromContext($config, $context)
-	{
-		// TODO: Use proper factory. This should not be here.
-		$toolbox_config = $context->config_loader->load('duf_toolbox');
-		return new self($toolbox_config, $context);
-	}
-
-
-	/**
 	 * Generate fileds (one field group) for an entity type.
 	 */
 	public function getFieldsFromSource($source_name, $group_config)
