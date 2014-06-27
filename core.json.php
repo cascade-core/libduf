@@ -3,6 +3,9 @@
     "shebangs": {
         "duf_form": {
             "class": "\\Duf\\Cascade\\FormBlock"
+        },
+        "duf_view": {
+            "class": "\\Duf\\Cascade\\ViewBlock"
         }
     },
     "context": {

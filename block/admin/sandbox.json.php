@@ -5,9 +5,6 @@
             "block": "duf/form",
             "x": 222,
             "y": 224,
-            "in_val": {
-                "enable": false
-            },
             "in_con": {
                 "form_def": [
                     "config",
@@ -163,6 +160,24 @@
                 "title": "Collection",
                 "header_level": 3,
                 "slot_weight": 47
+            }
+        },
+        "view2": {
+            "block": "duf/view",
+            "x": 243,
+            "y": 600,
+            "in_con": {
+                "form_def": [
+                    "config",
+                    "doc/examples/list"
+                ],
+                "users": [
+                    "listing2",
+                    "list"
+                ]
+            },
+            "in_val": {
+                "slot_weight": 43
             }
         }
     }

@@ -70,17 +70,28 @@ class Form
 	 * @name Errors
 	 * @{
 	 */
-	const E_FORM_EXPIRED = 'form_expired';		// Error: The XSRF token has expired.
-	const E_FIELD_REQUIRED = 'field_required';	// Error: The empty field is required.
-	const E_FIELD_MALFORMED = 'field_malformed';	// Error: The field value is malformed (does not match pattern or so).
+	const E_FORM_EXPIRED = 'form_expired';		///< Error: The XSRF token has expired.
+	const E_FIELD_REQUIRED = 'field_required';	///< Error: The empty field is required.
+	const E_FIELD_MALFORMED = 'field_malformed';	///< Error: The field value is malformed (does not match pattern or so).
 	/// @}
+
+	/**
+	 * @name Form flags
+	 * @{
+	 */
+	const READ_ONLY = 0x0001;		///< Form must be read only
+	/// @}
+
 
 	/**
 	 * Create form described by $form_def using $toolbox.
 	 *
-	 * You can set $id to null here and set it later using setId().
+	 * @param $id is form id. You can set $id to null here and set it later using setId().
+	 * @param $form_def is the form definition.
+	 * @param $toolbox is Toolbox used for form rendering.
+	 * @param $form_flags is bitmap of [@ref Form flags].
 	 */
-	public function __construct($id, $form_def, Toolbox $toolbox)
+	public function __construct($id, $form_def, Toolbox $toolbox, $form_flags = 0)
 	{
 		$this->id = $id;
 		$this->form_def = $form_def;
@@ -94,7 +105,9 @@ class Form
 		}
 
 		// Detect read only form
-		if (isset($this->form_def['form']['readonly'])) {
+		if ($form_flags & self::READ_ONLY) {
+			$this->readonly = true;
+		} else if (isset($this->form_def['form']['readonly'])) {
 			$this->readonly = $this->form_def['form']['readonly'];
 		} else {
 			$this->readonly = true;
@@ -669,6 +682,9 @@ class Form
 
 			// Get renderer class
 			$renderer_class = $this->toolbox->getFieldRenderer($field_def['type'], $renderer_name);
+			if (!isset($renderer_class)) {
+				throw new RendererException('Renderer class not specified for renderer "'.$renderer_name.'" of field type "'.$field_def['type'].'".');
+			}
 
 			// Add field identification to widget configuration
 			$widget_conf = $field_def;
@@ -679,16 +695,18 @@ class Form
 		} else {
 			// Widget
 			$renderer_class = $this->toolbox->getWidgetRenderer($renderer_name);
+			if (!isset($renderer_class)) {
+				throw new RendererException('Renderer class not specified for renderer "'.$renderer_name.'".');
+			}
 		}
 
 		// Execute renderer
-		if (empty($renderer_class)) {
-			throw new RendererException('Renderer class not specified for renderer "'.$renderer_name.'".');
+		if ($renderer_class !== false) {
+			if (!is_a($renderer_class, '\\Duf\\Renderer\\IWidgetRenderer', TRUE)) {
+				throw new RendererException('Widget renderer '.$renderer_class.' must implement Duf\\Renderer\\IWidgetRenderer inteface.');
+			}
+			$renderer_class::renderWidget($this, $template_engine, $widget_conf);
 		}
-		if (!is_a($renderer_class, '\\Duf\\Renderer\\IWidgetRenderer', TRUE)) {
-			throw new RendererException('Widget renderer '.$renderer_class.' must implement Duf\\Renderer\\IWidgetRenderer inteface.');
-		}
-		$renderer_class::renderWidget($this, $template_engine, $widget_conf);
 	}
 
 
@@ -714,21 +732,11 @@ class Form
 	 */
 	public function renderField($template_engine, $group_id, $field_id, $renderer)
 	{
-		$widget_conf = $this->form_def['field_groups'][$group_id]['fields'][$field_id];
-		$type = $widget_conf['type'];
-
-		$renderer_class = $this->toolbox->getFieldRenderer($type, $renderer);
-		if (!$renderer_class) {
-			return;
-		}
-		if (!is_a($renderer_class, '\\Duf\\Renderer\\IWidgetRenderer', TRUE)) {
-			throw new RendererException('Field renderer '.$renderer_class.' must implement Duf\\Renderer\\IWidgetRenderer inteface.');
-		}
-
-		$widget_conf['group_id'] = $group_id;
-		$widget_conf['field_id'] = $field_id;
-
-		$renderer_class::renderWidget($this, $template_engine, $widget_conf);
+		$this->renderWidget($template_engine, array(
+				'#!' => $renderer,
+				'group_id' => $group_id,
+				'field_id' => $field_id,
+			));
 	}
 
 
