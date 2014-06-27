@@ -5,6 +5,24 @@ DUF is a library for creating HTML5 forms and views. Everything in DUF is
 designed to be declarative, so it is easy to connect your forms and views with
 visual editor, store them in database or generate them from model metadata.
 
+
+Features
+--------
+
+  - **Declarative** specification of a **form**.
+  - Form can act as a **view** -- one configuration for both editing and displaying.
+  - Multi-dimensional **collections** supported.
+  - Separated specification of fields and form layout -- use same fields in multiple forms.
+  - Field specification can be generated from a model -- the Single Source of Truth.
+  - Fully configurable form **layout**.
+  - HTML5 form validation.
+  - **Extensible**. All parts replacable via configuration.
+  - Simple and machine-friendly configuration in JSON files.
+  - Fast by design.
+  - Framework independent.
+  - WYSIWYG form editor (TODO).
+
+
 Data Flow
 ---------
 
