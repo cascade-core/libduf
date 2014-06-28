@@ -19,7 +19,7 @@
 namespace Duf\Renderer\HtmlCollection;
 
 /**
- * Render collection into HTML `<table>` with additional control elements 
+ * Render collection into HTML `&lt;table>` with additional control elements 
  * around. Multi-dimensional collections are flattened into simple list of 
  * table rows.
  */

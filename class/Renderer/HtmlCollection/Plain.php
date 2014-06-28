@@ -32,12 +32,13 @@ class Plain implements \Duf\Renderer\IWidgetRenderer
 		$dimensions = isset($group['collection_dimensions']) ? (int) $group['collection_dimensions'] : 0;
 
 		$collection_key = array();
-		\Duf\CollectionWalker::walkCollection($form->getRawData($group_id), $group['collection_dimensions'],
-			function($collection_key) use ($form, $template_engine, $widget_conf, $group_id) {
+		$dimensions = $group['collection_dimensions'];
+		\Duf\CollectionWalker::walkCollection($form->getRawData($group_id), $dimensions,
+			function($collection_key) use ($form, $template_engine, $widget_conf, $group_id, $dimensions) {
 				$form->setCollectionKey($group_id, $collection_key);
 				echo "<div";
-				if (isset($widget_conf['dimensions'][$depth]['class'])) {
-					$class = $widget_conf['dimensions'][$depth]['class'];
+				if (isset($widget_conf['dimensions'][$dimensions]['class'])) {
+					$class = $widget_conf['dimensions'][$dimensions]['class'];
 					if (is_array($class)) {
 						echo " class=\"", htmlspecialchars(join(' ', $class)), "\"";
 					} else {

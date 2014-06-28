@@ -46,7 +46,7 @@ class CollectionWalker
 	 *		$group = $form->getFieldGroup($group_id);
 	 *
 	 *	 	self::walkCollection($form->getRawData($group_id), $group['collection_dimensions'],
-	 *	 		function($collection_key) use ($form, $template_engine, $group_id, $widget_conf) {
+	 *	 		function($collection_key, $item) use ($form, $template_engine, $group_id, $widget_conf) {
 	 *				$form->setCollectionKey($group_id, $collection_key);
 	 *	 		      	$form->renderWidgets($template_engine, $widget_conf['widgets']);
 	 *	 		},
@@ -63,7 +63,7 @@ class CollectionWalker
 	 *
 	 * @param $collection is the collection to walk.
 	 * @param $dimension is amount of dimensions to traverse (0 = single item, 1 = list, 2 = matrix, ...).
-	 * @param $render_function is `function($collection_key)` called for each item in collection.
+	 * @param $render_function is `function($collection_key, $item)` called for each item in collection.
 	 * @param $on_enter is `function($depth)` called when going deeper.
 	 * @param $on_leave is `function($depth)` called when going back.
 	 * @param $depth is for internal use, leave it unspecified.
@@ -88,7 +88,7 @@ class CollectionWalker
 			}
 		} else {
 			// Deep enough.
-			$render_function($collection_key);
+			$render_function($collection_key, $collection);
 		}
 	}
 

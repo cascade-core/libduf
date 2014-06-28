@@ -29,15 +29,15 @@
                     "required": true,
                     "placeholder": "ID",
                     "size": 5,
-                    "tabular_column_enabled": false
+                    "tabular_hidden": true
                 },
                 "username": {
                     "type": "text",
                     "label": "Username",
                     "required": true,
                     "placeholder": "Username",
-                    "tabular_column_weight": 60,
-                    "tabular_link_fmt": "/user/{id}"
+                    "weight": 60,
+                    "link_fmt": "/user/{id}"
                 },
                 "role": {
                     "type": "select",
@@ -47,7 +47,38 @@
                         "admin": "Admin",
                         "firma": "Firma"
                     },
-                    "tabular_column_weight": 40
+                    "weight": 40
+                }
+            }
+        },
+        "no_users": {
+            "collection_dimensions": 1,
+            "fields": {
+                "id": {
+                    "type": "text",
+                    "label": "id",
+                    "required": true,
+                    "placeholder": "ID",
+                    "size": 5,
+                    "tabular_hidden": true
+                },
+                "username": {
+                    "type": "text",
+                    "label": "Username",
+                    "required": true,
+                    "placeholder": "Username",
+                    "weight": 60,
+                    "link_fmt": "/user/{id}"
+                },
+                "role": {
+                    "type": "select",
+                    "label": "Role",
+                    "placeholder": "Role",
+                    "options": {
+                        "admin": "Admin",
+                        "firma": "Firma"
+                    },
+                    "weight": 40
                 }
             }
         },
@@ -127,7 +158,62 @@
                 "widgets": [
                     {
                         "#!": "auto_tabular_collection",
-                        "group_id": "users"
+                        "group_id": "users",
+                        "option_prefix": "tabular",
+                        "columns_from_fields": true,
+                        "thead": {
+                            "hidden": false
+                        },
+                        "columns": {
+                            "smile": {
+                                "label": "Smile",
+                                "width": "1",
+                                "thead_widgets": [
+                                    {
+                                        "#!": "@edit",
+                                        "group_id": "submit",
+                                        "field_id": "submit"
+                                    }
+                                ],
+                                "tbody_widgets": [
+                                    {
+                                        "#!": "text",
+                                        "text": "☺"
+                                    }
+                                ]
+                            },
+                            "username": {
+                                "label": "Username wich looks like an e-mail"
+                            }
+                        }
+                    }
+                ]
+            }, {
+                "label": "Users in table (automatic configuration; empty collection)",
+                "widgets": [
+                    {
+                        "#!": "auto_tabular_collection",
+                        "group_id": "no_users",
+                        "option_prefix": "tabular",
+                        "columns_from_fields": true,
+                        "thead": {
+                            "hidden": false
+                        },
+                        "columns": {
+                            "smile": {
+                                "label": "Smile",
+                                "width": "1",
+                                "tbody_widgets": [
+                                    {
+                                        "#!": "text",
+                                        "text": "☺"
+                                    }
+                                ]
+                            },
+                            "username": {
+                                "label": "Username wich looks like an e-mail"
+                            }
+                        }
                     }
                 ]
             }, {
