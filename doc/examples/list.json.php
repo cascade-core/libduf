@@ -157,7 +157,7 @@
                 "label": "Users in table (automatic configuration)",
                 "widgets": [
                     {
-                        "#!": "auto_tabular_collection",
+                        "#!": "tabular_collection",
                         "group_id": "users",
                         "option_prefix": "tabular",
                         "columns_from_fields": true,
@@ -168,13 +168,6 @@
                             "smile": {
                                 "label": "Smile",
                                 "width": "1",
-                                "thead_widgets": [
-                                    {
-                                        "#!": "@edit",
-                                        "group_id": "submit",
-                                        "field_id": "submit"
-                                    }
-                                ],
                                 "tbody_widgets": [
                                     {
                                         "#!": "text",
@@ -192,7 +185,7 @@
                 "label": "Users in table (automatic configuration; empty collection)",
                 "widgets": [
                     {
-                        "#!": "auto_tabular_collection",
+                        "#!": "tabular_collection",
                         "group_id": "no_users",
                         "option_prefix": "tabular",
                         "columns_from_fields": true,
@@ -222,93 +215,78 @@
                     {
                         "#!": "tabular_collection",
                         "group_id": "users",
+                        "columns_from_fields": false,
                         "columns": {
                             "selection": {
                                 "width": "1",
-                                "thead": {
-                                    "widgets": [
-                                    ]
-                                },
-                                "tbody": {
-                                    "widgets": [
-                                        {
-                                            "#!": "action_link",
-                                            "group_id": "users",
-                                            "link_fmt": "/user/{id}!edit",
-                                            "widgets": [
-                                                {
-                                                    "#!": "text",
-                                                    "text": "edit"
-                                                }
-                                            ]
-                                        }
-                                    ]
-                                }
+                                "thead_widgets": [
+                                ],
+                                "tbody_widgets": [
+                                    {
+                                        "#!": "action_link",
+                                        "group_id": "users",
+                                        "link_fmt": "/user/{id}!edit",
+                                        "widgets": [
+                                            {
+                                                "#!": "text",
+                                                "text": "edit"
+                                            }
+                                        ]
+                                    }
+                                ]
                             },
                             "id": {
-                                "thead": {
-                                    "widgets": [
-                                        {
-                                            "#!": "text",
-                                            "text": "ID"
-                                        }
-                                    ]
-                                },
-                                "tbody": {
-                                    "widgets": [
-                                        {
-                                            "#!": "@view",
-                                            "group_id": "users",
-                                            "field_id": "id"
-                                        }
-                                    ]
-                                }
+                                "thead_widgets": [
+                                    {
+                                        "#!": "text",
+                                        "text": "ID"
+                                    }
+                                ],
+                                "tbody_widgets": [
+                                    {
+                                        "#!": "@view",
+                                        "group_id": "users",
+                                        "field_id": "id"
+                                    }
+                                ]
                             },
                             "username": {
                                 "width": "60%",
-                                "thead": {
-                                    "widgets": [
-                                        {
-                                            "#!": "text",
-                                            "text": "User name"
-                                        }
-                                    ]
-                                },
-                                "tbody": {
-                                    "widgets": [
-                                        {
-                                            "#!": "action_link",
-                                            "group_id": "users",
-                                            "link_fmt": "/user/{id}",
-                                            "widgets": [
-                                                {
-                                                    "#!": "@view",
-                                                    "group_id": "users",
-                                                    "field_id": "username"
-                                                }
-                                            ]
-                                        }
-                                    ]
-                                }
+                                "thead_widgets": [
+                                    {
+                                        "#!": "text",
+                                        "text": "User name"
+                                    }
+                                ],
+                                "tbody_widgets": [
+                                    {
+                                        "#!": "action_link",
+                                        "group_id": "users",
+                                        "link_fmt": "/user/{id}",
+                                        "widgets": [
+                                            {
+                                                "#!": "@view",
+                                                "group_id": "users",
+                                                "field_id": "username"
+                                            }
+                                        ]
+                                    }
+                                ]
                             },
                             "role": {
-                                "thead": {
-                                    "widgets": [
-                                        {
-                                            "#!": "text",
-                                            "text": "Role"
-                                        }
-                                    ]
-                                },
-                                "tbody": {
-                                    "widgets": [
-                                        {
-                                            "#!": "@view",
-                                            "group_id": "users",
-                                            "field_id": "role"
-                                        }
-                                    ]
-                                }
+                                "thead_widgets": [
+                                    {
+                                        "#!": "text",
+                                        "text": "Role"
+                                    }
+                                ],
+                                "tbody_widgets": [
+                                    {
+                                        "#!": "@view",
+                                        "group_id": "users",
+                                        "field_id": "role"
+                                    }
+                                ]
                             }
                         }
                     }

@@ -150,9 +150,6 @@
         "tabular_collection": {
             "renderer": "\\Duf\\Renderer\\HtmlCollection\\Tabular"
         },
-        "auto_tabular_collection": {
-            "renderer": "\\Duf\\Renderer\\HtmlCollection\\AutoTabular"
-        },
         "text": {
             "renderer": "\\Duf\\Renderer\\HtmlDecoration\\Text"
         },
