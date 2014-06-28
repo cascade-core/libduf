@@ -109,6 +109,17 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 			echo "</thead>\n";
 		}
 
+		// Header
+		if (empty($widget_conf['tfoot']['hidden']) && !empty($widget_conf['tfoot']['widgets'])) {
+			echo "<tfoot>\n";
+			echo "<tr>\n";
+			echo "<th colspan=\"", count($columns), "\">\n";
+			$form->renderWidgets($template_engine, $widget_conf['tfoot']['widgets']);
+			echo "</th>\n";
+			echo "</tr>\n";
+			echo "</tfoot>\n";
+		}
+
 		// Collection - table body
 		echo "<tbody>\n";
 		$collection = $form->getRawData($group_id);

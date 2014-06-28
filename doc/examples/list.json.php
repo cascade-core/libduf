@@ -164,6 +164,14 @@
                         "thead": {
                             "hidden": false
                         },
+                        "tfoot": {
+                            "widgets": [
+                                {
+                                    "#!": "text",
+                                    "text": "Paginator here."
+                                }
+                            ]
+                        },
                         "columns": {
                             "smile": {
                                 "label": "Smile",
