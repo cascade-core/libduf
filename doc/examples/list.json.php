@@ -28,13 +28,16 @@
                     "label": "id",
                     "required": true,
                     "placeholder": "ID",
-                    "size": 5
+                    "size": 5,
+                    "tabular_column_enabled": false
                 },
                 "username": {
                     "type": "text",
                     "label": "Username",
                     "required": true,
-                    "placeholder": "Username"
+                    "placeholder": "Username",
+                    "tabular_column_weight": 60,
+                    "tabular_link_fmt": "/user/{id}"
                 },
                 "role": {
                     "type": "select",
@@ -43,7 +46,8 @@
                     "options": {
                         "admin": "Admin",
                         "firma": "Firma"
-                    }
+                    },
+                    "tabular_column_weight": 40
                 }
             }
         },
@@ -119,7 +123,15 @@
                     }
                 ]
             }, {
-                "label": "Users in table",
+                "label": "Users in table (automatic configuration)",
+                "widgets": [
+                    {
+                        "#!": "auto_tabular_collection",
+                        "group_id": "users"
+                    }
+                ]
+            }, {
+                "label": "Users in table (manual configuration)",
                 "widgets": [
                     {
                         "#!": "tabular_collection",

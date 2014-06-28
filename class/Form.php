@@ -328,8 +328,11 @@ class Form
 
 	/**
 	 * Recursively walk the collections in raw input and populate field values.
+	 *
+	 * TODO: Replace this with CollectionWalker::walkCollection().
 	 */
-	private function getValues_processCollection($raw_input, $remaining_depth, $group_id, $group_fields, & $field_values, & $field_defaults, & $path = null)
+	private function getValues_processCollection($raw_input, $remaining_depth, $group_id, $group_fields,
+			& $field_values, & $field_defaults, & $path = null, $depth = 0)
 	{
 		if ($remaining_depth > 0) {
 			// We need to go deeper ...
@@ -337,10 +340,9 @@ class Form
 				$path = array();
 			}
 			foreach($raw_input as $i => $raw_input_subtree) {
-				$path[] = $i;
+				$path[$depth] = $i;
 				$this->getValues_processCollection($raw_input_subtree, $remaining_depth - 1, $group_id, $group_fields,
-					$field_values[$i], $field_defaults[$i], $path);
-				array_pop($path);
+					$field_values[$i], $field_defaults[$i], $path, $depth + 1);
 			}
 		} else {
 			// Deep enough.

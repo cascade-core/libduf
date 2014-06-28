@@ -32,7 +32,7 @@ namespace Duf\Renderer;
  *
  * Where `$child_widget_conf` is subtree of `$widget_conf`.
  *
- * @see IFormRenderer
+ * @see IFormRenderer, CollectionWalker
  */
 interface IWidgetRenderer
 {

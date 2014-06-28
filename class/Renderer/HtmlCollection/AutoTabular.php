@@ -23,7 +23,7 @@ namespace Duf\Renderer\HtmlCollection;
  * around. Multi-dimensional collections are flattened into simple list of 
  * table rows.
  */
-class Tabular implements \Duf\Renderer\IWidgetRenderer
+class AutoTabular implements \Duf\Renderer\IWidgetRenderer
 {
 
 	/// @copydoc \Duf\Renderer\IWidgetRenderer::renderWidget
@@ -32,21 +32,29 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 		$group_id = $widget_conf['group_id'];
 		$group = $form->getFieldGroup($group_id);
 
-		if (!isset($widget_conf['columns'])) {
-			throw new InvalidArgumentException('Missing columns configuration.');
+		if (empty($group['fields'])) {
+			return;
 		}
-		$columns = $widget_conf['columns'];
+		$fields = $group['fields'];
 
-		// Scan columns for table features
-		$has_thead = false;
-		$has_tfoot = false;
-		foreach ($columns as $c => $col) {
-			$has_thead |= !empty($col['thead']['widgets']);
-			$has_tfoot |= !empty($col['tfoot']['widgets']);
-			if ($has_thead && $has_tfoot) {
-				break;
+		$column_weight_key  = isset($widget_conf['column_weight_key'])  ? $widget_conf['column_weight_key']  : 'tabular_column_weight';
+		$column_enabled_key = isset($widget_conf['column_enabled_key']) ? $widget_conf['column_enabled_key'] : 'tabular_column_enabled';
+		$column_width_key   = isset($widget_conf['column_width_key'])   ? $widget_conf['column_width_key']   : 'tabular_column_width';
+		$column_link_key    = isset($widget_conf['column_link_key'])    ? $widget_conf['column_link_key']    : 'tabular_column_link';
+
+		// Get column list
+		$columns = array();
+		foreach ($fields as $fi => $f) {
+			if (isset($f[$column_enabled_key]) && !$f[$column_enabled_key]) {
+				// columns are enabled by default
+				continue;
 			}
+			$columns[$fi] = $f;
 		}
+		uasort($columns, function ($a, $b) use ($column_weight_key) {
+			return (isset($a[$column_weight_key]) ? $a[$column_weight_key] : 50)
+				- (isset($b[$column_weight_key]) ? $b[$column_weight_key] : 50);
+		});
 
 		// Begin
 		echo "<table";
@@ -60,38 +68,22 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 		}
 
 		// Header
-		if ($has_thead) {
-			echo "<thead>\n";
-			echo "<tr>\n";
-			foreach ($columns as $c => $col) {
-				echo "<th";
-				if (isset($col['width'])) {
-					echo " width=\"", htmlspecialchars($col['width']), "\"";
-				}
-				echo ">";
-				if (isset($col['thead']['widgets'])) {
-					$form->renderWidgets($template_engine, $col['thead']['widgets']);
-				}
-				echo "</th>\n";
+		echo "<thead>\n";
+		echo "<tr>\n";
+		foreach ($columns as $fi => $field) {
+			echo "<th";
+			if (isset($field[$column_width_key])) {
+				echo " width=\"", htmlspecialchars($field[$column_width_key]), "\"";
 			}
-			echo "</tr>\n";
-			echo "</thead>\n";
-		}
-
-		// Footer
-		if ($has_tfoot) {
-			echo "<tfoot>\n";
-			echo "<tr>\n";
-			foreach ($columns as $c => $col) {
-				echo "<th>";
-				if (isset($col['tfoot']['widgets'])) {
-					$form->renderWidgets($template_engine, $col['tfoot']['widgets']);
-				}
-				echo "</th>\n";
+			echo ">";
+			if (isset($field['label'])) {
+				echo htmlspecialchars($field['label']);
+				//$form->renderWidgets($template_engine, $col['thead']['widgets']);
 			}
-			echo "</tr>\n";
-			echo "</tfoot>\n";
+			echo "</th>\n";
 		}
+		echo "</tr>\n";
+		echo "</thead>\n";
 
 		// Collection - table body
 		echo "<tbody>\n";
@@ -99,11 +91,12 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 			function($collection_key) use ($form, $template_engine, $group_id, $columns) {
 				$form->setCollectionKey($group_id, $collection_key);
 				echo "<tr>\n";
-				foreach ($columns as $c => $col) {
+				foreach ($columns as $fi => $field) {
 					echo "<td>";
-					if (isset($col['tbody']['widgets'])) {
-						$form->renderWidgets($template_engine, $col['tbody']['widgets']);
-					}
+					$form->renderField($template_engine, $group_id, $fi, '@view');
+					//if (isset($col['tbody']['widgets'])) {
+					//	$form->renderWidgets($template_engine, $col['tbody']['widgets']);
+					//}
 					echo "</td>\n";
 				}
 				echo "</tr>\n";

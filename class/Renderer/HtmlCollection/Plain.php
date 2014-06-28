@@ -31,53 +31,39 @@ class Plain implements \Duf\Renderer\IWidgetRenderer
 		$group = $form->getFieldGroup($group_id);
 		$dimensions = isset($group['collection_dimensions']) ? (int) $group['collection_dimensions'] : 0;
 
-		$items = $form->getRawData($group_id);
-
 		$collection_key = array();
-		self::walkCollection($form, $template_engine, $widget_conf, $group_id,
-			$items, $group['collection_dimensions'], 0, $collection_key);
+		\Duf\CollectionWalker::walkCollection($form->getRawData($group_id), $group['collection_dimensions'],
+			function($collection_key) use ($form, $template_engine, $widget_conf, $group_id) {
+				$form->setCollectionKey($group_id, $collection_key);
+				echo "<div";
+				if (isset($widget_conf['dimensions'][$depth]['class'])) {
+					$class = $widget_conf['dimensions'][$depth]['class'];
+					if (is_array($class)) {
+						echo " class=\"", htmlspecialchars(join(' ', $class)), "\"";
+					} else {
+						echo " class=\"", htmlspecialchars($class), "\"";
+					}
+				}
+				echo ">\n";
+				$form->renderWidgets($template_engine, $widget_conf['widgets']);
+				echo "</div>\n";
+			},
+			function($depth) use ($widget_conf) {
+				echo "<div";
+				if (isset($widget_conf['dimensions'][$depth]['class'])) {
+					$class = $widget_conf['dimensions'][$depth]['class'];
+					if (is_array($class)) {
+						echo " class=\"", htmlspecialchars(join(' ', $class)), "\"";
+					} else {
+						echo " class=\"", htmlspecialchars($class), "\"";
+					}
+				}
+				echo ">\n";
+			},
+			function($depth) {
+				echo "</div>\n";
+			});
 		$form->unsetCollectionKey($group_id);
-	}
-
-
-	private static function walkCollection($form, $template_engine, $widget_conf, $group_id, $items, $remaining_depth, $depth, & $collection_key)
-	{
-		if ($remaining_depth > 0) {
-			// We need to go deeper ...
-			echo "<div";
-			if (isset($widget_conf['dimensions'][$depth]['class'])) {
-				$class = $widget_conf['dimensions'][$depth]['class'];
-				if (is_array($class)) {
-					echo " class=\"", htmlspecialchars(join(' ', $class)), "\"";
-				} else {
-					echo " class=\"", htmlspecialchars($class), "\"";
-				}
-			}
-			echo ">\n";
-			foreach($items as $i => $item) {
-				$collection_key[$depth] = $i;
-				self::walkCollection($form, $template_engine, $widget_conf, $group_id,
-					$item, $remaining_depth - 1, $depth + 1, $collection_key);
-			}
-			echo "</div>\n";
-		} else {
-			// Deep enough.
-			$form->setCollectionKey($group_id, $collection_key);
-			echo "<div";
-			if (isset($widget_conf['dimensions'][$depth]['class'])) {
-				$class = $widget_conf['dimensions'][$depth]['class'];
-				if (is_array($class)) {
-					echo " class=\"", htmlspecialchars(join(' ', $class)), "\"";
-				} else {
-					echo " class=\"", htmlspecialchars($class), "\"";
-				}
-			}
-			echo ">\n";
-
-			$form->renderWidgets($template_engine, $widget_conf['widgets']);
-
-			echo "</div>\n";
-		}
 	}
 
 }
