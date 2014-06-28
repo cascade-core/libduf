@@ -152,6 +152,12 @@
         },
         "text": {
             "renderer": "\\Duf\\Renderer\\HtmlDecoration\\Text"
+        },
+        "selection_checkbox": {
+            "renderer": "\\Duf\\Renderer\\HtmlCollection\\SelectionCheckbox"
+        },
+        "action_link": {
+            "renderer": "\\Duf\\Renderer\\HtmlCollection\\ActionLink"
         }
     }
 }

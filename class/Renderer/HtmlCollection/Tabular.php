@@ -37,6 +37,17 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 		}
 		$columns = $widget_conf['columns'];
 
+		// Scan columns for table features
+		$has_thead = false;
+		$has_tfoot = false;
+		foreach ($columns as $c => $col) {
+			$has_thead |= !empty($col['thead']['widgets']);
+			$has_tfoot |= !empty($col['tfoot']['widgets']);
+			if ($has_thead && $has_tfoot) {
+				break;
+			}
+		}
+
 		// Begin
 		echo "<table";
 		$class = isset($widget_conf['class']) ? (array) $widget_conf['class'] : array();
@@ -49,25 +60,38 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 		}
 
 		// Header
-		echo "<thead>\n";
-		echo "<tr>\n";
-		foreach ($columns as $c => $col) {
-			echo "<th";
-			if (isset($col['width'])) {
-				echo " width=\"", htmlspecialchars($col['width']), "\"";
+		if ($has_thead) {
+			echo "<thead>\n";
+			echo "<tr>\n";
+			foreach ($columns as $c => $col) {
+				echo "<th";
+				if (isset($col['width'])) {
+					echo " width=\"", htmlspecialchars($col['width']), "\"";
+				}
+				echo ">";
+				if (isset($col['thead']['widgets'])) {
+					$form->renderWidgets($template_engine, $col['thead']['widgets']);
+				}
+				echo "</th>\n";
 			}
-			echo ">";
-			if (isset($col['thead']['widgets'])) {
-				$form->renderWidgets($template_engine, $col['thead']['widgets']);
-			}
-			echo "</th>\n";
+			echo "</tr>\n";
+			echo "</thead>\n";
 		}
-		echo "</tr>\n";
-		echo "</thead>\n";
 
 		// Footer
-		echo "<tfoot>\n";
-		echo "</tfoot>\n";
+		if ($has_tfoot) {
+			echo "<tfoot>\n";
+			echo "<tr>\n";
+			foreach ($columns as $c => $col) {
+				echo "<th>";
+				if (isset($col['tfoot']['widgets'])) {
+					$form->renderWidgets($template_engine, $col['tfoot']['widgets']);
+				}
+				echo "</th>\n";
+			}
+			echo "</tr>\n";
+			echo "</tfoot>\n";
+		}
 
 		// Collection - table body
 		echo "<tbody>\n";

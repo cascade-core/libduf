@@ -125,6 +125,28 @@
                         "#!": "tabular_collection",
                         "group_id": "users",
                         "columns": {
+                            "selection": {
+                                "width": "1",
+                                "thead": {
+                                    "widgets": [
+                                    ]
+                                },
+                                "tbody": {
+                                    "widgets": [
+                                        {
+                                            "#!": "action_link",
+                                            "group_id": "users",
+                                            "link_fmt": "/user/{id}!edit",
+                                            "widgets": [
+                                                {
+                                                    "#!": "text",
+                                                    "text": "edit"
+                                                }
+                                            ]
+                                        }
+                                    ]
+                                }
+                            },
                             "id": {
                                 "thead": {
                                     "widgets": [
@@ -157,9 +179,16 @@
                                 "tbody": {
                                     "widgets": [
                                         {
-                                            "#!": "@view",
+                                            "#!": "action_link",
                                             "group_id": "users",
-                                            "field_id": "username"
+                                            "link_fmt": "/user/{id}",
+                                            "widgets": [
+                                                {
+                                                    "#!": "@view",
+                                                    "group_id": "users",
+                                                    "field_id": "username"
+                                                }
+                                            ]
                                         }
                                     ]
                                 }

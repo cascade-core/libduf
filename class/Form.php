@@ -377,7 +377,7 @@ class Form
 	 * @param $key is collection key (current index). Use array for 
 	 * 	multidimensional collections.
 	 *
-	 * @see unsetCollectionKey(), getRawData()
+	 * @see unsetCollectionKey(), getCollectionKey(), getRawData()
 	 */
 	public function setCollectionKey($group, $key)
 	{
@@ -386,12 +386,24 @@ class Form
 
 
 	/**
+	 * Retrieve collection key for given group.
+	 *
+	 * @param $group is field group id which is beiing iterated.
+	 *
+	 * @see setCollectionKey(), unsetCollectionKey(), getRawData()
+	 */
+	public function getCollectionKey($group)
+	{
+		return $this->group_keys[$group];
+	}
+
+	/**
 	 * Unset collection key. It is a good idea to unset the key after group 
 	 * is rendered to allow error detection.
 	 *
 	 * @param $group is field group id which is beiing iterated.
 	 *
-	 * @see setCollectionKey(), getRawData()
+	 * @see setCollectionKey(), getCollectionKey(), getRawData()
 	 */
 	public function unsetCollectionKey($group)
 	{

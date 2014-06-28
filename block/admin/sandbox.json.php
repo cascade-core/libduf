@@ -47,6 +47,7 @@
             "in_val": {
                 "title": "Submitted data",
                 "header_level": 3,
+                "pretty": true,
                 "slot_weight": 35
             }
         },
@@ -103,6 +104,7 @@
             "in_val": {
                 "title": "Submitted data",
                 "header_level": 3,
+                "pretty": true,
                 "slot_weight": 45
             }
         },
@@ -159,6 +161,7 @@
             "in_val": {
                 "title": "Collection",
                 "header_level": 3,
+                "pretty": true,
                 "slot_weight": 47
             }
         },
@@ -178,6 +181,28 @@
             },
             "in_val": {
                 "slot_weight": 43
+            }
+        },
+        "post": {
+            "block": "core/in/post",
+            "x": 102,
+            "y": 1124
+        },
+        "post_dump": {
+            "block": "core/out/print_r",
+            "x": 285,
+            "y": 1110,
+            "in_con": {
+                "data": [
+                    "post",
+                    "all"
+                ]
+            },
+            "in_val": {
+                "title": "Raw Post Data",
+                "header_level": 2,
+                "pretty": true,
+                "slot_weight": 80
             }
         }
     }

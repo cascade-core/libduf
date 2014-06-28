@@ -27,7 +27,13 @@ class Text implements \Duf\Renderer\IWidgetRenderer
 	/// @copydoc \Duf\Renderer\IWidgetRenderer::renderWidget
 	public static function renderWidget(\Duf\Form $form, $template_engine, $widget_conf)
 	{
-		$holder_tag = isset($widget_conf['holder_tag']) ? $widget_conf['holder_tag'] : null;
+		if (isset($widget_conf['link'])) {
+			$link = $widget_conf['link'];
+			$holder_tag = 'a';
+		} else {
+			$link = null;
+			$holder_tag = isset($widget_conf['holder_tag']) ? $widget_conf['holder_tag'] : null;
+		}
 
 		if ($holder_tag) {
 			echo "<$holder_tag";
