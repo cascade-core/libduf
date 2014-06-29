@@ -158,6 +158,9 @@
         },
         "action_link": {
             "renderer": "\\Duf\\Renderer\\HtmlCollection\\ActionLink"
+        },
+        "switch": {
+            "renderer": "\\Duf\\Renderer\\Utils\\SwitchWidget"
         }
     }
 }

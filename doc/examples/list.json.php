@@ -178,8 +178,30 @@
                                 "width": "1",
                                 "tbody_widgets": [
                                     {
-                                        "#!": "text",
-                                        "text": "☺"
+                                        "#!": "switch",
+                                        "map_function": null,
+                                        "group_id": "users",
+                                        "field_id": "role",
+                                        "widgets_map": {
+                                            "admin": [
+                                                {
+                                                    "#!": "text",
+                                                    "text": ":)"
+                                                }
+                                            ],
+                                            "firma": [
+                                                {
+                                                    "#!": "text",
+                                                    "text": ":("
+                                                }
+                                            ]
+                                        },
+                                        "default_widgets": [
+                                            {
+                                                "#!": "text",
+                                                "text": "?"
+                                            }
+                                        ]
                                     }
                                 ]
                             },
