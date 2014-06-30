@@ -35,7 +35,11 @@ class ActionLink implements \Duf\Renderer\IWidgetRenderer
 		$link = filename_format($link_fmt, array_merge($key, $item));
 
 		echo "<a href=\"", $link, "\">\n";
-		$form->renderWidgets($template_engine, $widget_conf['widgets']);
+		if (isset($widget_conf['text'])) {
+			echo htmlspecialchars($widget_conf['text']);
+		} else {
+			$form->renderWidgets($template_engine, $widget_conf['widgets']);
+		}
 		echo "</a>\n";
 	}
 

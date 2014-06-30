@@ -27,10 +27,15 @@ class Label implements \Duf\Renderer\IWidgetRenderer
 	/// @copydoc \Duf\Renderer\IWidgetRenderer::renderWidget
 	public static function renderWidget(\Duf\Form $form, $template_engine, $widget_conf)
 	{
-		echo "<label ",
-			"for=\"", $form->getHtmlFieldId($widget_conf['group_id'], $widget_conf['field_id']), "\">",
-			htmlspecialchars(sprintf(_('%s:'), $widget_conf['label'])),
-			"</label>\n";
+		echo "<label",
+			" for=\"", $form->getHtmlFieldId($widget_conf['group_id'], $widget_conf['field_id']), "\"",
+			">";
+		if (!empty($widget_conf['label_undecorated'])) {
+			echo htmlspecialchars($widget_conf['label']);
+		} else {
+			echo htmlspecialchars(sprintf(_('%s:'), $widget_conf['label']));
+		}
+		echo "</label>\n";
 	}
 
 }

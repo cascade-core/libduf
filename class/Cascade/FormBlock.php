@@ -65,6 +65,7 @@ class FormBlock extends \Cascade\Core\Block implements \Cascade\Core\IShebangHan
 			$this->inputs[$group] = null;
 			$this->outputs[$group] = true;
 		}
+		$this->inputs['action_url'] = '';
 		$this->outputs['submitted'] = true;
 		$this->outputs['done'] = true;
 	}
@@ -86,6 +87,7 @@ class FormBlock extends \Cascade\Core\Block implements \Cascade\Core\IShebangHan
 	public function main()
 	{
 		$this->form->setId($this->fullId());
+		$this->form->action_url = $this->in('action_url');
 
 		$this->form->setDefaults($this->inAll());
 		$this->form->loadInput();

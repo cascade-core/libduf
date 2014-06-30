@@ -37,6 +37,9 @@ class Text implements \Duf\Renderer\IWidgetRenderer
 
 		if ($holder_tag) {
 			echo "<$holder_tag";
+			if ($link !== null) {
+				echo " href=\"", htmlspecialchars($link), "\"";
+			}
 			if (isset($set['class'])) {
 				if (is_array($set['class'])) {
 					echo " class=\"", htmlspecialchars(join(' ', $set['class'])), "\"";
