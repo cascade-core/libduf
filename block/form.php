@@ -25,6 +25,8 @@ class B_duf__form extends \Cascade\Core\Block {
 
 	protected $inputs = array(
 		'form_def' => array(),
+		'action_url' => '',
+		'target_form_id' => null,
 		'*' => null,
 	);
 
@@ -41,6 +43,7 @@ class B_duf__form extends \Cascade\Core\Block {
 		// TODO: Refactor using FormBlock.
 
 		$form = new \Duf\Form($this->fullId(), $this->in('form_def'), $this->context->duf_toolbox);
+		$this->form->action_url = $this->in('action_url');
 
 		$form->setDefaults($this->inAll());
 		$form->loadInput();

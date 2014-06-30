@@ -50,6 +50,7 @@ class Form
 	public $id;				///< Global form ID (HTML attribute)
 	public $form_ttl = 750;			///< XSRF protection window (15 minutes by default)
 	public $action_url = '';		///< Form target URL (empty = the same page)
+	public $target_form_id = null;		///< Specify target form when action_url is specified (this form may have different ID on another URL).
 	public $http_method = 'post';		///< Form submit method
 	public $readonly = false;		///< Is form a read-only view ?
 	protected $toolbox;			///< Listing of all available tools to build forms. Fields, layouts, helpers, etc.
@@ -230,7 +231,7 @@ class Form
 	 */
 	public function getToken()
 	{
-		return static::createFormToken($this->id);
+		return static::createFormToken($this->target_form_id ? $this->target_form_id : $this->id);
 	}
 
 
