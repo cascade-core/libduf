@@ -161,6 +161,9 @@
         },
         "switch": {
             "renderer": "\\Duf\\Renderer\\Utils\\SwitchWidget"
+        },
+        "radiotabs": {
+            "renderer": "\\Duf\\Renderer\\HtmlLayout\\RadioTabs"
         }
     }
 }

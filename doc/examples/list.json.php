@@ -17,6 +17,15 @@
                     "label": "Description",
                     "default": "Find the oldest written message in recorded history.",
                     "required": true
+                },
+                "state": {
+                    "type": "select",
+                    "label": "Type",
+                    "default": "a",
+                    "options": {
+                        "a": "One",
+                        "b": "Two"
+                    }
                 }
             }
         },
@@ -100,6 +109,31 @@
                     {
                         "#!": "default_layout",
                         "field_group": "quest"
+                    },
+                    {
+                        "#!": "radiotabs",
+                        "group_id": "quest",
+                        "field_id": "state",
+                        "tabs": {
+                            "a": {
+                                "label": "One",
+                                "widgets": [
+                                    {
+                                        "#!": "text",
+                                        "text": "The first tab"
+                                    }
+                                ]
+                            },
+                            "b": {
+                                "label": "Two",
+                                "widgets": [
+                                    {
+                                        "#!": "text",
+                                        "text": "The second tab"
+                                    }
+                                ]
+                            }
+                        }
                     }
                 ]
             }, {
