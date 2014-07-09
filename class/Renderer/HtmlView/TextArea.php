@@ -21,19 +21,16 @@ namespace Duf\Renderer\HtmlView;
 /**
  * Render `<textarea>` field value using `<div>`.
  */
-class TextArea extends Input implements \Duf\Renderer\IWidgetRenderer
+class TextArea extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 {
 
-	/// @copydoc \Duf\Renderer\IWidgetRenderer::renderWidget
-	public static function renderWidget(\Duf\Form $form, $template_engine, $widget_conf)
+	/// @copydoc \Duf\Renderer\IFieldWidgetRenderer::renderFieldWidget
+	public static function renderFieldWidget(\Duf\Form $form, $template_engine, $widget_conf, $group_id, $field_id, $field_conf)
 	{
-		$group_id = $widget_conf['group_id'];
-		$field_id = $widget_conf['field_id'];
-
 		echo "<div",
 			" id=\"", $form->getHtmlFieldId($group_id, $field_id), "\"";
 
-		static::commonAttributes($widget_conf);
+		static::commonAttributes($field_conf);
 
 		echo ">";
 		echo htmlspecialchars($form->getRawData($group_id, $field_id, true));

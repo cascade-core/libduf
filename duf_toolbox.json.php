@@ -85,6 +85,14 @@
             "validators": {
             }
         },
+        "radiotabs": {
+            "renderers": {
+                "@edit": "\\Duf\\Renderer\\HtmlForm\\RadioTabs",
+                "@view": false
+            },
+            "validators": {
+            }
+        },
         "submit": {
             "renderers": {
                 "@edit": "\\Duf\\Renderer\\HtmlForm\\Input",
@@ -161,9 +169,6 @@
         },
         "switch": {
             "renderer": "\\Duf\\Renderer\\Utils\\SwitchWidget"
-        },
-        "radiotabs": {
-            "renderer": "\\Duf\\Renderer\\HtmlLayout\\RadioTabs"
         }
     }
 }

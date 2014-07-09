@@ -20,16 +20,19 @@ namespace Duf\Renderer\HtmlForm;
 
 /**
  * Default `<input>` field renderer.
+ *
+ * TODO: Suffix & prefix for a field -- simply wrap input in
+ * <label> with specific class to make it part of the field and
+ * prepend/append some string in span. For example units,
+ * currency, ...
  */
-class Input implements \Duf\Renderer\IWidgetRenderer
+class Input implements \Duf\Renderer\IFieldWidgetRenderer
 {
 
-	/// @copydoc \Duf\Renderer\IWidgetRenderer::renderWidget
-	public static function renderWidget(\Duf\Form $form, $template_engine, $widget_conf)
+	/// @copydoc \Duf\Renderer\IFieldWidgetRenderer::renderFieldWidget
+	public static function renderFieldWidget(\Duf\Form $form, $template_engine, $widget_conf, $group_id, $field_id, $field_conf)
 	{
-		$type = $widget_conf['type'];
-		$group_id = $widget_conf['group_id'];
-		$field_id = $widget_conf['field_id'];
+		$type = $field_conf['type'];
 
 		echo "<input",
 			" type=\"", htmlspecialchars($type), "\"",
@@ -39,7 +42,7 @@ class Input implements \Duf\Renderer\IWidgetRenderer
 		// Value
 		switch ($type) {
 			case 'submit':
-				echo " value=\"", htmlspecialchars($widget_conf['label']), "\"";
+				echo " value=\"", htmlspecialchars($field_conf['label']), "\"";
 				break;
 
 			case 'checkbox':
@@ -56,10 +59,10 @@ class Input implements \Duf\Renderer\IWidgetRenderer
 				break;
 		}
 
-		static::commonAttributes($widget_conf);
+		static::commonAttributes($field_conf);
 
 		// Specific HTML attributes
-		foreach ($widget_conf as $k => $v) {
+		foreach ($field_conf as $k => $v) {
 			if ($v === null) {
 				// null means 'not specified'
 				continue;
@@ -113,9 +116,9 @@ class Input implements \Duf\Renderer\IWidgetRenderer
 	/**
 	 * Render common attributes, prefixed with space.
 	 */
-	static protected function commonAttributes($widget_conf)
+	static protected function commonAttributes($field_conf)
 	{
-		foreach ($widget_conf as $k => $v) {
+		foreach ($field_conf as $k => $v) {
 			if ($v === null) {
 				// null means 'not specified'
 				continue;

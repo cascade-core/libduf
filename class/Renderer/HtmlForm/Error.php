@@ -21,14 +21,12 @@ namespace Duf\Renderer\HtmlForm;
 /**
  * Render error message related to a field.
  */
-class Error implements \Duf\Renderer\IWidgetRenderer
+class Error implements \Duf\Renderer\IFieldWidgetRenderer
 {
 
-	/// @copydoc \Duf\Renderer\IWidgetRenderer::renderWidget
-	public static function renderWidget(\Duf\Form $form, $template_engine, $widget_conf)
+	/// @copydoc \Duf\Renderer\IFieldWidgetRenderer::renderFieldWidget
+	public static function renderFieldWidget(\Duf\Form $form, $template_engine, $widget_conf, $group_id, $field_id, $field_conf)
 	{
-		$group_id = $widget_conf['group_id'];
-		$field_id = $widget_conf['field_id'];
 		$errors = $form->getFieldErrors($group_id, $field_id);
 
 		//static public function error(Form $form, $group_id, $field_id, $field_def, $value, $errors, $template_engine = null)

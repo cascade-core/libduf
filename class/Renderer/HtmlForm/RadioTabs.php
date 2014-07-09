@@ -16,25 +16,22 @@
  *
  */
 
-namespace Duf\Renderer\HtmlLayout;
+namespace Duf\Renderer\HtmlForm;
 
 /**
- * CSS-only tabs controled by radio inputs.
- *
- * FIXME: Is this field or layout ?
+ * CSS-only tabs controled by radio inputs - it is half-field, half-layout. It
+ * makes tab using widget configuration, but a lot of other stuff is from field
+ * configuration.
  */
-class RadioTabs implements \Duf\Renderer\IWidgetRenderer
+class RadioTabs implements \Duf\Renderer\IFieldWidgetRenderer
 {
 
 	/// @copydoc \Duf\Renderer\IWidgetRenderer::renderWidget
-	public static function renderWidget(\Duf\Form $form, $template_engine, $widget_conf)
+	public static function renderFieldWidget(\Duf\Form $form, $template_engine, $widget_conf, $group_id, $field_id, $field_conf)
 	{
-		$group_id = $widget_conf['group_id'];
-		$field_id = $widget_conf['field_id'];
-
 		$id = $form->getHtmlFieldId($group_id, $field_id);
 		$input_name = $form->getHtmlFieldName($group_id, $field_id);
-                $value = $form->getRawData($group_id, $field_id);
+                $field_value = $form->getRawData($group_id, $field_id);
 
 		// Top-level wrapper
 		echo "<div class=\"duf-radiotabs\" id=\"", $id, "\"";
@@ -47,19 +44,35 @@ class RadioTabs implements \Duf\Renderer\IWidgetRenderer
 		}
 		echo ">\n";
 
-		// Tabs
-		foreach ($widget_conf['tabs'] as $key => $tab) {
-			$tab_id = $id.'__'.htmlspecialchars($key);
-			$tab_value = isset($tab['value']) ? $tab['value'] : $key;
-			$tab_label = isset($tab['label']) ? $tab['label'] : $tab_value;
-			$tab_widgets = $tab['widgets'];
+		// Tabs by widget configuration
+		foreach ($widget_conf['tabs'] as $tab_value => $tab) {
+			if (isset($field_conf['options'][$tab_value])) {
+				$option = $field_conf['options'][$tab_value];
+			} else {
+				throw new \InvalidArgumentException('Tab key is not valid value for this field.');
+			}
+			$tab_id = $id.'__'.htmlspecialchars($tab_value);
+
+			// Get tab label
+			if (isset($tab['label'])) {
+				$tab_label = $tab['label'];
+			} else {
+				if (is_array($option)) {
+					$tab_label = isset($option['label']) ? $option['label'] : $tab_value;
+				} else {
+					$tab_label = $option;
+				}
+			}
 
 			// Tab wrapper
 			echo "<div class=\"duf-radiotab\">\n";
 	
 			// The input
-			echo "<input class=\"duf-radiotab-input\" type=\"radio\" name=\"", $input_name, "\" id=\"", $tab_id, "\"";
-			if ($tab_value == $value) {
+			echo "<input class=\"duf-radiotab-input\" type=\"radio\"",
+				" name=\"", $input_name, "\"",
+				" id=\"", $tab_id, "\"",
+				" value=\"", htmlspecialchars($tab_value), "\"";
+			if ($tab_value == $field_value) {
 				echo " checked";
 			}
 			echo "/>";
@@ -69,7 +82,7 @@ class RadioTabs implements \Duf\Renderer\IWidgetRenderer
 
 			// Tab content
 			echo "<div class=\"duf-radiotab-content\">\n";
-			$form->renderWidgets($template_engine, $tab_widgets);
+			$form->renderWidgets($template_engine, $tab['widgets']);
 			echo "</div>\n";
 			echo "</div>\n";
 		}

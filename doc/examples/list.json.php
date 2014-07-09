@@ -111,12 +111,13 @@
                         "field_group": "quest"
                     },
                     {
-                        "#!": "radiotabs",
+                        "#!": "@edit",
                         "group_id": "quest",
                         "field_id": "state",
+                        "type": "radiotabs",
                         "tabs": {
                             "a": {
-                                "label": "One",
+                                "label": "Tab One",
                                 "widgets": [
                                     {
                                         "#!": "text",
@@ -125,7 +126,7 @@
                                 ]
                             },
                             "b": {
-                                "label": "Two",
+                                "label": "Tab Two",
                                 "widgets": [
                                     {
                                         "#!": "text",

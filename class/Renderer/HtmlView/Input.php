@@ -21,20 +21,19 @@ namespace Duf\Renderer\HtmlView;
 /**
  * Render `<input>` field value using `<span>`.
  */
-class Input implements \Duf\Renderer\IWidgetRenderer
+class Input implements \Duf\Renderer\IFieldWidgetRenderer
 {
 
-	/// @copydoc \Duf\Renderer\IWidgetRenderer::renderWidget
-	public static function renderWidget(\Duf\Form $form, $template_engine, $widget_conf)
+	/// @copydoc \Duf\Renderer\IFieldWidgetRenderer::renderFieldWidget
+	public static function renderFieldWidget(\Duf\Form $form, $template_engine, $widget_conf, $group_id, $field_id, $field_conf)
 	{
-		$type = $widget_conf['type'];
-		$group_id = $widget_conf['group_id'];
-		$field_id = $widget_conf['field_id'];
+		// FIXME: This should not be here
+		$type = $field_conf['type'];
 
 		echo "<span",
 			" id=\"", $form->getHtmlFieldId($group_id, $field_id), "\"";
 
-		static::commonAttributes($widget_conf);
+		static::commonAttributes($field_conf);
 
 		echo ">";
 
@@ -46,8 +45,8 @@ class Input implements \Duf\Renderer\IWidgetRenderer
 				break;
 
 			case 'checkbox':
-				if (isset($widget_conf['values'])) {
-					echo htmlspecialchars($widget_conf['values'][$form->getRawData($group_id, $field_id, true)]);
+				if (isset($field_conf['values'])) {
+					echo htmlspecialchars($field_conf['values'][$form->getRawData($group_id, $field_id, true)]);
 				} else {
 					echo $form->getRawData($group_id, $field_id, true) ? _('yes') : _('no');
 				}
@@ -69,9 +68,9 @@ class Input implements \Duf\Renderer\IWidgetRenderer
 	/**
 	 * Render common attributes, prefixed with space.
 	 */
-	static protected function commonAttributes($widget_conf)
+	static protected function commonAttributes($field_conf)
 	{
-		foreach ($widget_conf as $k => $v) {
+		foreach ($field_conf as $k => $v) {
 			if ($v === null) {
 				// null means 'not specified'
 				continue;

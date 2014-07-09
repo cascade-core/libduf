@@ -21,26 +21,23 @@ namespace Duf\Renderer\HtmlView;
 /**
  * Render `<select>` field value using `<span>`.
  */
-class Select extends Input implements \Duf\Renderer\IWidgetRenderer
+class Select extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 {
 
-	/// @copydoc \Duf\Renderer\IWidgetRenderer::renderWidget
-	public static function renderWidget(\Duf\Form $form, $template_engine, $widget_conf)
+	/// @copydoc \Duf\Renderer\IFieldWidgetRenderer::renderFieldWidget
+	public static function renderFieldWidget(\Duf\Form $form, $template_engine, $widget_conf, $group_id, $field_id, $field_conf)
 	{
-		$group_id = $widget_conf['group_id'];
-		$field_id = $widget_conf['field_id'];
-
                 echo "<span",
                         " id=\"", $form->getHtmlFieldId($group_id, $field_id), "\"";
 
-                static::commonAttributes($widget_conf);
+                static::commonAttributes($field_conf);
 
 		echo ">\n";
 
 		$value = $form->getRawData($group_id, $field_id, true);
 
-		if (isset($widget_conf['options'][$value])) {
-			$option = $widget_conf['options'][$value];
+		if (isset($field_conf['options'][$value])) {
+			$option = $field_conf['options'][$value];
 			if (is_array($option)) {
 				echo htmlspecialchars($option['label']);
 			} else {

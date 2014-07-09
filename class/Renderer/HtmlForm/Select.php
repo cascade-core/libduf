@@ -21,23 +21,20 @@ namespace Duf\Renderer\HtmlForm;
 /**
  * Default `<select>` field renderer.
  */
-class Select extends Input implements \Duf\Renderer\IWidgetRenderer
+class Select extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 {
 
-	/// @copydoc \Duf\Renderer\IWidgetRenderer::renderWidget
-	public static function renderWidget(\Duf\Form $form, $template_engine, $widget_conf)
+	/// @copydoc \Duf\Renderer\IFieldWidgetRenderer::renderFieldWidget
+	public static function renderFieldWidget(\Duf\Form $form, $template_engine, $widget_conf, $group_id, $field_id, $field_conf)
 	{
-		$group_id = $widget_conf['group_id'];
-		$field_id = $widget_conf['field_id'];
-
                 echo "<select",
                         " id=\"", $form->getHtmlFieldId($group_id, $field_id), "\"",
                         " name=\"", $form->getHtmlFieldName($group_id, $field_id), "\"";
 
-                static::commonAttributes($widget_conf);
+                static::commonAttributes($field_conf);
                 
                 // Other HTML attributes
-                foreach ($widget_conf as $k => $v) {
+                foreach ($field_conf as $k => $v) {
                         if ($v === null) {
                                 // null means 'not specified'
                                 continue;
@@ -60,7 +57,7 @@ class Select extends Input implements \Duf\Renderer\IWidgetRenderer
 		echo ">\n";
 
                 $value = $form->getRawData($group_id, $field_id);
-                foreach ($widget_conf['options'] as $key => $option) {
+                foreach ($field_conf['options'] as $key => $option) {
                         if (is_array($option)) {
                                 $opt_label = $option['label'];
                                 $opt_value = $option['value'];
