@@ -21,7 +21,7 @@ namespace Duf\Cascade;
 /**
  * Interpreter for Cascade::Core::JsonBlockStorage using shebang feature.
  */
-class FormBlock extends \Cascade\Core\Block implements \Cascade\Core\IShebangHandler
+class ViewBlock extends \Cascade\Core\Block implements \Cascade\Core\IShebangHandler
 {
 
 	protected $inputs = array(
@@ -69,8 +69,6 @@ class FormBlock extends \Cascade\Core\Block implements \Cascade\Core\IShebangHan
 	 */
 	public function main()
 	{
-		$this->form = new \Duf\Form($this->fullId(), $this->in('form_def'), $this->context->duf_toolbox, \Duf\Form::READ_ONLY);
-
 		$this->form->setDefaults($this->inAll());
 		$this->form->useDefaults();
 

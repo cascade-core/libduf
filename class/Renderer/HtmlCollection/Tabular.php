@@ -59,7 +59,8 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 				$columns[$field_id] = array(
 					'weight'   => isset($f[$k_weight])   ? $f[$k_weight]   : (isset($f['weight'])   ? $f['weight']   : 50),
 					'width'    => isset($f[$k_width])    ? $f[$k_width]    : (isset($f['width'])    ? $f['width']    : null),
-					'label'    => isset($f[$k_label])    ? $f[$k_label]    : (isset($f['label'])    ? $f['label']    : null),
+					'label'    => isset($f[$k_label])    ? $f[$k_label]    : (isset($f['label'])    ? $f['label']    :
+					                                                         (isset($f['name'])     ? $f['name']     : $field_id)),
 					'link_fmt' => isset($f[$k_link_fmt]) ? $f[$k_link_fmt] : (isset($f['link_fmt']) ? $f['link_fmt'] : null),
 				);
 			}
@@ -70,10 +71,22 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 			$columns = array_replace_recursive($columns, (array) $widget_conf['columns']);
 		}
 
-		// Sort columns by weight (light on top/left)
+		// Make sure weights are set and add fractions to stabilize unstable uasort().
+		$fraction_step = 1 / (2 + count($columns));
+		$fraction = 0;
+		foreach ($columns as & $c) {
+			if (isset($c['weight'])) {
+				$c['weight'] += $fraction;
+			} else {
+				$c['weight'] = 50 + $fraction;
+			}
+			$fraction += $fraction_step;
+		}
+
+		// Sort columns by weight (light on top/left).
+		// This MUST be a stable sort!
 		uasort($columns, function ($a, $b) {
-			return (isset($a['weight']) ? $a['weight'] : 50)
-				- (isset($b['weight']) ? $b['weight'] : 50);
+			return $a['weight'] > $b['weight'] ? 1 : -1;	// never equal because of fractions
 		});
 
 		// Begin

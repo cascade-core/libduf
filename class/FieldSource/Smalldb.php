@@ -36,7 +36,11 @@ class Smalldb implements IFieldSource
 		if (empty($group_config['machine_type'])) {
 			throw new \InvalidArgumentException('Missing machine_type in field group configuration.');
 		}
-		return $context->smalldb->getMachine($group_config['machine_type'])->describeAllMachineProperties();
+		$machine = $context->smalldb->getMachine($group_config['machine_type']);
+		if (!$machine) {
+			return array();
+		}
+		return $machine->describeAllMachineProperties();
 	}
 
 }
