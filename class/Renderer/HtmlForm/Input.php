@@ -42,7 +42,7 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 		// Value
 		switch ($type) {
 			case 'submit':
-				echo " value=\"", htmlspecialchars($field_conf['label']), "\"";
+				echo " value=\"", htmlspecialchars(isset($field_conf['label']) ? $field_conf['label'] : $field_conf['name']), "\"";
 				break;
 
 			case 'checkbox':

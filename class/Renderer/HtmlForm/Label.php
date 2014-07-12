@@ -30,10 +30,11 @@ class Label implements \Duf\Renderer\IFieldWidgetRenderer
 		echo "<label",
 			" for=\"", $form->getHtmlFieldId($group_id, $field_id), "\"",
 			">";
+		$label = isset($field_conf['label']) ? $field_conf['label'] : $field_conf['name'];
 		if (!empty($field_conf['label_undecorated'])) {
-			echo htmlspecialchars($field_conf['label']);
+			echo htmlspecialchars($label);
 		} else {
-			echo htmlspecialchars(sprintf(_('%s:'), $field_conf['label']));
+			echo htmlspecialchars(sprintf(_('%s:'), $label));
 		}
 		echo "</label>\n";
 	}

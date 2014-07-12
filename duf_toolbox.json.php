@@ -8,7 +8,13 @@
 
         },
         "checkbox": {
-
+            "renderers": {
+                "@edit": "\\Duf\\Renderer\\HtmlForm\\Input",
+                "@view": "\\Duf\\Renderer\\HtmlView\\Input"
+            },
+            "validators": {
+                "html5": "\\Duf\\FieldValidator\\TextInput"
+            }
         },
         "color": {
 
@@ -55,7 +61,13 @@
 
         },
         "number": {
-
+            "renderers": {
+                "@edit": "\\Duf\\Renderer\\HtmlForm\\Input",
+                "@view": "\\Duf\\Renderer\\HtmlView\\Input"
+            },
+            "validators": {
+                "html5": "\\Duf\\FieldValidator\\NumberInput"
+            }
         },
         "password": {
             "renderers": {
