@@ -24,15 +24,20 @@ namespace Duf\Cascade;
 class ViewBlock extends \Cascade\Core\Block implements \Cascade\Core\IShebangHandler
 {
 
+	/// Inputs.
 	protected $inputs = array(
 	);
 
+	/// Outputs.
 	protected $outputs = array(
 		'done' => true,
 	);
 
+	/// Must be executed (it is view).
 	const force_exec = true;
 
+
+	/// DUF Form prepared in constructor.
 	protected $form;
 
 

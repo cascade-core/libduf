@@ -26,7 +26,7 @@ namespace Duf\Renderer\HtmlForm;
 class RadioTabs implements \Duf\Renderer\IFieldWidgetRenderer
 {
 
-	/// @copydoc \Duf\Renderer\IWidgetRenderer::renderWidget
+	/// @copydoc \Duf\Renderer\IFieldWidgetRenderer::renderFieldWidget
 	public static function renderFieldWidget(\Duf\Form $form, $template_engine, $widget_conf, $group_id, $field_id, $field_conf)
 	{
 		$id = $form->getHtmlFieldId($group_id, $field_id);

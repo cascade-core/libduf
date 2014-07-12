@@ -22,7 +22,7 @@ namespace Duf\Renderer\HtmlForm;
  * Default `<input>` field renderer.
  *
  * TODO: Suffix & prefix for a field -- simply wrap input in
- * <label> with specific class to make it part of the field and
+ * `<label>` with specific class to make it part of the field and
  * prepend/append some string in span. For example units,
  * currency, ...
  */
