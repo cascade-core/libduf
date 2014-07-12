@@ -22,6 +22,11 @@ namespace Duf;
  * Form gets everything it needs from this toolbox.
  *
  * Renderers starting with '@' are field renderers.
+ *
+ * FIXME: Update docs.
+ *
+ * TODO: Check class interfaces.
+ *
  */
 class Toolbox
 {
@@ -47,17 +52,18 @@ class Toolbox
 
 
 	/**
-	 * Generate fileds (one field group) for an entity type.
+	 * Use field group generator to generate complete field group from
+	 * its partial definition.
 	 */
-	public function getFieldsFromSource($source_name, $group_config)
+	public function updateFieldGroup($generator_name, & $field_group)
 	{
-		if (isset($this->config['field_sources'][$source_name])) {
-			$source_class = $this->config['field_sources'][$source_name];
-			return $source_class::generateFieldGroup($group_config, $this->context);
+		if (isset($this->config['field_group_generators'][$generator_name])) {
+			$generator = $this->config['field_group_generators'][$generator_name];
+			return $generator::updateFieldGroup($field_group, $this->context);
 		}
-		throw new \RuntimeException('Unknown field source: '.$source_name);
-
+		throw new \RuntimeException('Unknown field group generator: '.$generator_name);
 	}
+
 
 	/**
 	 * Retrieve validator for given field type.

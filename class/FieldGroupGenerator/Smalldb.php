@@ -16,22 +16,16 @@
  *
  */
 
-namespace Duf\FieldSource;
+namespace Duf\FieldGroupGenerator;
 
 /**
  * Connector to make DUF work with Smalldb.
  */
-class Smalldb implements IFieldSource
+class Smalldb implements IFieldGroupGenerator
 {
 
-	/**
-	 * Create field group from state machine properties.
-	 *
-	 * @param $group_config must contain 'machine_type' key to lookup 
-	 * 	required machine type.
-	 * @param $context is global context where Smalldb Backend instance is stored.
-	 */
-	static function generateFieldGroup($group_config, $context)
+	/// @copydoc IFieldGroupGenerator::updateFieldGroup
+	static function updateFieldGroup(& $group_config, $context)
 	{
 		if (empty($group_config['machine_type'])) {
 			throw new \InvalidArgumentException('Missing machine_type in field group configuration.');
@@ -40,7 +34,8 @@ class Smalldb implements IFieldSource
 		if (!$machine) {
 			return array();
 		}
-		return $machine->describeAllMachineProperties();
+
+		$group_config['fields'] = $machine->describeAllMachineProperties();
 	}
 
 }

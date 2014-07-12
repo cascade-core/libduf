@@ -123,10 +123,10 @@ class Form
 			}
 		}
 
-		// Load field sources
+		// Apply field group generators
 		foreach ($this->form_def['field_groups'] as $group => & $group_def) {
-			if (isset($group_def['field_source'])) {
-				$group_def['fields'] = $this->toolbox->getFieldsFromSource($group_def['field_source'], $group_def);
+			if (isset($group_def['field_group_generator'])) {
+				$this->toolbox->updateFieldGroup($group_def['field_group_generator'], $group_def);
 			}
 		}
 	}

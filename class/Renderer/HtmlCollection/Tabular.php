@@ -136,6 +136,7 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 		// Collection - table body
 		echo "<tbody>\n";
 		$collection = $form->getRawData($group_id);
+		$is_row_even = true;
 		if (empty($collection)) {
 			echo "<tr>\n";
 			echo "<td colspan=\"", count($columns), "\" class=\"empty_collection\">\n";
@@ -152,9 +153,9 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 			echo "</tr>\n";
 		} else {
 			\Duf\CollectionWalker::walkCollection($collection, $group['collection_dimensions'],
-				function($collection_key, $item) use ($form, $template_engine, $group_id, $columns) {
+				function($collection_key, $item) use ($form, $template_engine, $group_id, $columns, & $is_row_even) {
 					$form->setCollectionKey($group_id, $collection_key);
-					echo "<tr>\n";
+					echo "<tr class=\"", $is_row_even ? 'even':'odd', "\">\n";
 					foreach ($columns as $field_id => $col) {
 						echo "<td>";
 						if (isset($col['link_fmt'])) {
@@ -172,6 +173,7 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 						echo "</td>\n";
 					}
 					echo "</tr>\n";
+					$is_row_even = ! $is_row_even;
 				});
 			$form->unsetCollectionKey($group_id);
 		}
