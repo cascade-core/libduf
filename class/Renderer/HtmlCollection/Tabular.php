@@ -92,7 +92,7 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 		// Begin
 		echo "<table";
 		$class = isset($widget_conf['class']) ? (array) $widget_conf['class'] : array();
-		$class[] = 'duf_table';
+		$class[] = 'table';
 		echo " class=\"", htmlspecialchars(join(' ', $class)), "\"";
 		echo ">\n";
 

@@ -43,7 +43,7 @@ class ItemActions implements \Duf\Renderer\IWidgetRenderer
 		$item = $form->getRawData($group_id);
 		$actions = $form->getFieldGroupOption($group_id, 'item_actions');
 
-		echo "<span class=\"duf_actions\">\n";
+		echo "<span class=\"actions\">\n";
 		static::renderActions($actions, $item);
 		echo "</span>\n";
 

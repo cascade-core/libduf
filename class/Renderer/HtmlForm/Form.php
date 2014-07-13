@@ -29,7 +29,7 @@ class Form implements \Duf\Renderer\IFormRenderer
 	{
 		echo "<form",
 			" id=\"", htmlspecialchars($form->id), "\"",
-			" class=\"duf_form\"",
+			" class=\"form\"",
 			" action=\"", htmlspecialchars($form->action_url), "\"",
 			" method=\"", htmlspecialchars($form->http_method), "\"",
 			">\n";

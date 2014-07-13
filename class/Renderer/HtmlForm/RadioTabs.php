@@ -34,7 +34,7 @@ class RadioTabs implements \Duf\Renderer\IFieldWidgetRenderer
                 $field_value = $form->getRawData($group_id, $field_id);
 
 		// Top-level wrapper
-		echo "<div class=\"duf-radiotabs\" id=\"", $id, "\"";
+		echo "<div class=\"radiotabs\" id=\"", $id, "\"";
 		if (isset($set['class'])) {
 			if (is_array($set['class'])) {
 				echo " class=\"", htmlspecialchars(join(' ', $set['class'])), "\"";
@@ -65,10 +65,10 @@ class RadioTabs implements \Duf\Renderer\IFieldWidgetRenderer
 			}
 
 			// Tab wrapper
-			echo "<div class=\"duf-radiotab\">\n";
+			echo "<div class=\"radiotab\">\n";
 	
 			// The input
-			echo "<input class=\"duf-radiotab-input\" type=\"radio\"",
+			echo "<input class=\"radiotab-input\" type=\"radio\"",
 				" name=\"", $input_name, "\"",
 				" id=\"", $tab_id, "\"",
 				" value=\"", htmlspecialchars($tab_value), "\"";
@@ -78,10 +78,10 @@ class RadioTabs implements \Duf\Renderer\IFieldWidgetRenderer
 			echo "/>";
 	
 			// Tab label
-			echo "<label class=\"duf-radiotab-label\" for=\"", $tab_id, "\">", htmlspecialchars($tab_label), "</label>\n";
+			echo "<label class=\"radiotab-label\" for=\"", $tab_id, "\">", htmlspecialchars($tab_label), "</label>\n";
 
 			// Tab content
-			echo "<div class=\"duf-radiotab-content\">\n";
+			echo "<div class=\"radiotab-content\">\n";
 			$form->renderWidgets($template_engine, $tab['widgets']);
 			echo "</div>\n";
 			echo "</div>\n";

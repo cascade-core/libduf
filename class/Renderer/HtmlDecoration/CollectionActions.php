@@ -35,7 +35,7 @@ class CollectionActions extends ItemActions implements \Duf\Renderer\IWidgetRend
 		$group_id = $widget_conf['group_id'];
 		$actions = $form->getFieldGroupOption($group_id, 'collection_actions');
 
-		echo "<div class=\"duf_actions\">\n";
+		echo "<div class=\"actions\">\n";
 		static::renderActions($actions, array());
 		echo "</div>\n";
 

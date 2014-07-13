@@ -27,7 +27,7 @@ class DefaultTable implements \Duf\Renderer\IWidgetRenderer
 	/// @copydoc \Duf\Renderer\IWidgetRenderer::renderWidget
 	public static function renderWidget(\Duf\Form $form, $template_engine, $widget_conf)
 	{
-		echo "<table class=\"duf_form\">\n";
+		echo "<table class=\"form\">\n";
 		if (isset($widget_conf['field_group'])) {
 			$groups = array($widget_conf['field_group'] => $form->getFieldGroup($widget_conf['field_group']));
 		} else {
