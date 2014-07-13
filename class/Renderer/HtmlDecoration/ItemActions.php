@@ -70,7 +70,7 @@ class ItemActions implements \Duf\Renderer\IWidgetRenderer
 			echo ">";
 
 			// Label
-			echo htmlspecialchars($action['label']);
+			echo "<span>", htmlspecialchars($action['label']), "</span>";
 
 			echo "</a>\n";
 		}
