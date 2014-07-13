@@ -64,6 +64,9 @@ class ItemActions implements \Duf\Renderer\IWidgetRenderer
 			$class[] = 'action_'.$a;
 			echo " class=\"", htmlspecialchars(join(' ', $class)), "\"";
 
+			// Title (label is usually very short)
+			echo " title=\"", htmlspecialchars($action['description']), "\"";
+
 			echo ">";
 
 			// Label

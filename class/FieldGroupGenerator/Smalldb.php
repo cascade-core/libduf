@@ -48,6 +48,7 @@ class Smalldb implements IFieldGroupGenerator
 			if (isset($action['transitions'][''])) {
 				$collection_actions[$a] = array(
 					'label' => $action['label'],
+					'description' => $action['description'],
 					'link' => "/$machine_type!$a",
 				);
 				if (count($action['transitions']) == 1) {
@@ -57,6 +58,7 @@ class Smalldb implements IFieldGroupGenerator
 			}
 			$item_actions[$a] = array(
 				'label' => $action['label'],
+				'description' => $action['description'],
 				'link' => "/$machine_type/$id_fmt!$a",
 			);
 		}
