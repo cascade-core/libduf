@@ -181,6 +181,12 @@
         },
         "switch": {
             "renderer": "\\Duf\\Renderer\\Utils\\SwitchWidget"
+        },
+        "item_actions": {
+            "renderer": "\\Duf\\Renderer\\HtmlDecoration\\ItemActions"
+        },
+        "collection_actions": {
+            "renderer": "\\Duf\\Renderer\\HtmlDecoration\\CollectionActions"
         }
     }
 }

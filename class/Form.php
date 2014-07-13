@@ -614,11 +614,24 @@ class Form
 
 
 	/**
-	 * Get field definitions by group.
+	 * Get field group definition.
 	 */
 	public function getFieldGroup($group)
 	{
 		return $this->form_def['field_groups'][$group];
+	}
+
+
+	/**
+	 * Get field group option.
+	 */
+	public function getFieldGroupOption($group, $option)
+	{
+		if (isset($this->form_def['field_groups'][$group][$option])) {
+			return $this->form_def['field_groups'][$group][$option];
+		} else {
+			return null;
+		}
 	}
 
 

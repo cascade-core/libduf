@@ -29,13 +29,46 @@ class Smalldb implements IFieldGroupGenerator
 	{
 		if (empty($group_config['machine_type'])) {
 			throw new \InvalidArgumentException('Missing machine_type in field group configuration.');
+		} else {
+			$machine_type = $group_config['machine_type'];
 		}
-		$machine = $context->smalldb->getMachine($group_config['machine_type']);
+		$machine = $context->smalldb->getMachine($machine_type);
 		if (!$machine) {
 			return array();
 		}
 
 		$group_config['fields'] = $machine->describeAllMachineProperties();
+
+		// TODO: Add permission check to actions
+
+		$item_actions = array();
+		$collection_actions = array();
+		$id_fmt = join('/', array_map(function($x) { return "{{$x}}"; }, $machine->describeId()));
+		foreach ($machine->describeAllMachineActions() as $a => $action) {
+			if (isset($action['transitions'][''])) {
+				$collection_actions[$a] = array(
+					'label' => $action['label'],
+					'link' => "/$machine_type!$a",
+				);
+				if (count($action['transitions']) == 1) {
+					// only collection action, skip items
+					continue;
+				}
+			}
+			$item_actions[$a] = array(
+				'label' => $action['label'],
+				'link' => "/$machine_type/$id_fmt!$a",
+			);
+		}
+
+		/*
+		debug_dump($machine->describeAllMachineActions(), 'Machine actions');
+		debug_dump($collection_actions, 'Collection actions');
+		debug_dump($item_actions, 'Item actions');
+		// */
+
+		$group_config['collection_actions'] = $collection_actions;
+		$group_config['item_actions'] = $item_actions;
 	}
 
 }
