@@ -23,7 +23,7 @@ function TPL_html5__duf__form($t, $id, $d, $so)
 
 	if ($form instanceof \Duf\Form) {
 		$form->render($t);
-	} else {
+	} else if ($form !== null) {
 		echo "<div class=\"placeholder\">&lt;form&gt;</div>\n";
 	}
 }
