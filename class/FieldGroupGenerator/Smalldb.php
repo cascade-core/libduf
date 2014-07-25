@@ -45,10 +45,20 @@ class Smalldb implements IFieldGroupGenerator
 		$collection_actions = array();
 		$id_fmt = join('/', array_map(function($x) { return "{{$x}}"; }, $machine->describeId()));
 		foreach ($machine->describeAllMachineActions() as $a => $action) {
+			if (empty($action['transitions'])) {
+				// Action with no transition -- no button needed
+				continue;
+			}
+
+			// Build labels
+			$label = isset($action['label']) ? $action['label'] : $a;
+			$desc = isset($action['description']) ? $action['description'] : null;
+
+			// Collection actions
 			if (isset($action['transitions'][''])) {
 				$collection_actions[$a] = array(
-					'label' => $action['label'],
-					'description' => $action['description'],
+					'label' => $label,
+					'description' => $desc,
 					'link' => "/$machine_type!$a",
 				);
 				if (count($action['transitions']) == 1) {
@@ -56,9 +66,11 @@ class Smalldb implements IFieldGroupGenerator
 					continue;
 				}
 			}
+
+			// Item actions
 			$item_actions[$a] = array(
-				'label' => $action['label'],
-				'description' => $action['description'],
+				'label' => $label,
+				'description' => $desc,
 				'link' => "/$machine_type/$id_fmt!$a",
 			);
 		}
