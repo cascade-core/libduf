@@ -29,7 +29,7 @@ class Form implements \Duf\Renderer\IFormRenderer
 	{
 		echo "<div",
 			" id=\"", htmlspecialchars($form->id), "\"",
-			" class=\"view\"",
+			" class=\"", htmlspecialchars(is_array($form->html_class) ? join(' ', $form->html_class) : $form->html_class), "\"",
 			">\n";
 
 		if (!empty($form->form_errors)) {

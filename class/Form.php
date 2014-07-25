@@ -56,6 +56,7 @@ class Form
 	public $target_form_id = null;		///< Specify target form when action_url is specified (this form may have different ID on another URL).
 	public $http_method = 'post';		///< Form submit method
 	public $readonly = false;		///< Is form a read-only view ?
+	public $html_class;			///< HTML class attribute (array of 'form', 'view', or anything else)
 	protected $toolbox;			///< Listing of all available tools to build forms. Fields, layouts, helpers, etc.
 	
 	protected $form_def;			///< Definition of the form. What fields in what layouts.
@@ -121,6 +122,13 @@ class Form
 					break;
 				}
 			}
+		}
+
+		// Read-only form has different class
+		if ($this->readonly) {
+			$this->html_class = array('form');
+		} else {
+			$this->html_class = array('view');
 		}
 
 		// Apply field group generators

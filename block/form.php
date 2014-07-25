@@ -45,6 +45,11 @@ class B_duf__form extends \Cascade\Core\Block {
 		$form = new \Duf\Form($this->fullId(), $this->in('form_def'), $this->context->duf_toolbox);
 		$form->action_url = $this->in('action_url');
 
+		$class = $this->in('class');
+		if ($class) {
+			$form->class = $class;
+		}
+
 		$form->setDefaults($this->inAll());
 		$form->loadInput();
 

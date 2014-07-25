@@ -27,9 +27,10 @@ class Form implements \Duf\Renderer\IFormRenderer
 	/// @copydoc \Duf\Renderer\IFormRenderer::renderForm
 	public static function renderForm(\Duf\Form $form, $template_engine)
 	{
+
 		echo "<form",
 			" id=\"", htmlspecialchars($form->id), "\"",
-			" class=\"form\"",
+			" class=\"", htmlspecialchars(is_array($form->html_class) ? join(' ', $form->html_class) : $form->html_class), "\"",
 			" action=\"", htmlspecialchars($form->action_url), "\"",
 			" method=\"", htmlspecialchars($form->http_method), "\"",
 			">\n";

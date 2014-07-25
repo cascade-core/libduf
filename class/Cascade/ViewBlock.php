@@ -54,6 +54,7 @@ class ViewBlock extends \Cascade\Core\Block implements \Cascade\Core\IShebangHan
 		foreach ($this->form->getFieldGroups() as $group => $group_config) {
 			$this->inputs[$group] = null;
 		}
+		$this->inputs['class'] = null;
 		$this->inputs['slot'] = 'default';
 		$this->inputs['slot_weight'] = 50;
 	}
@@ -74,8 +75,14 @@ class ViewBlock extends \Cascade\Core\Block implements \Cascade\Core\IShebangHan
 	 */
 	public function main()
 	{
+		$this->form->id = $this->fullId();
 		$this->form->setDefaults($this->inAll());
 		$this->form->useDefaults();
+
+		$class = $this->in('class');
+		if ($class) {
+			$this->form->html_class = $class;
+		}
 
 		$this->templateAdd(null, 'duf/form', array(
 			'form' => $this->form,

@@ -25,6 +25,7 @@ class B_duf__view extends \Cascade\Core\Block {
 
 	protected $inputs = array(
 		'form_def' => array(),
+		'class' => null,
 		'slot' => 'default',
 		'slot_weight' => 50,
 		'*' => null,
@@ -41,11 +42,17 @@ class B_duf__view extends \Cascade\Core\Block {
 	{
 		$form = new \Duf\Form($this->fullId(), $this->in('form_def'), $this->context->duf_toolbox, \Duf\Form::READ_ONLY);
 
+		$class = $this->in('class');
+		if ($class) {
+			$form->class = $class;
+		}
+
 		$form->setDefaults($this->inAll());
 		$form->useDefaults();
 
 		$this->templateAdd(null, 'duf/form', array(
 			'form' => $form,
+			'class' => $this->in('class'),
 		));
 
 		$this->out('done', true);
