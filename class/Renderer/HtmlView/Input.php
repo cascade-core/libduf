@@ -30,8 +30,19 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 		// FIXME: This should not be here
 		$type = $field_conf['type'];
 
-		echo "<span",
+		if (isset($field_conf['link'])) {
+			$tag = 'a';
+		} else {
+			$tag = 'span';
+		}
+
+
+		echo "<$tag",
 			" id=\"", $form->getHtmlFieldId($group_id, $field_id), "\"";
+
+		if (isset($field_conf['link'])) {
+			echo " href=\"", htmlspecialchars(filename_format($field_conf['link'], $form->getRawData($group_id))), "\"";
+		}
 
 		static::commonAttributes($field_conf);
 
@@ -61,7 +72,7 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 				break;
 		}
 
-		echo "</span>\n";
+		echo "</$tag>\n";
 	}
 
 
