@@ -35,6 +35,9 @@ class DefaultTable implements \Duf\Renderer\IWidgetRenderer
 		}
 		foreach ($groups as $group_id => $group_config) {
 			foreach ($group_config['fields'] as $field_id => $field_def) {
+				if (!empty($field_def['hidden'])) {
+					continue;
+				}
 				echo "<tr>\n";
 				echo "<th>\n";
 				$form->renderField($template_engine, $group_id, $field_id, '@label');
