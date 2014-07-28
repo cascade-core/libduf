@@ -36,6 +36,15 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 			$tag = 'span';
 		}
 
+		// Get value early, so class can be set
+		$raw_value = $form->getRawData($group_id, $field_id, true);
+
+		// add value-specific classes
+		switch ($type) {
+			case 'checkbox':
+				$field_conf['class'][] = $raw_value ? 'true' : 'false';
+				break;
+		}
 
 		echo "<$tag",
 			" id=\"", $form->getHtmlFieldId($group_id, $field_id), "\"";
@@ -57,9 +66,9 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 
 			case 'checkbox':
 				if (isset($field_conf['values'])) {
-					echo htmlspecialchars($field_conf['values'][$form->getRawData($group_id, $field_id, true)]);
+					echo htmlspecialchars($field_conf['values'][$raw_value]);
 				} else {
-					echo $form->getRawData($group_id, $field_id, true) ? _('yes') : _('no');
+					echo $raw_value ? _('yes') : _('no');
 				}
 				break;
 
@@ -67,8 +76,13 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 				// Radio cannot use this method, it needs different handling.
 				throw new \Exception('Not supported.');
 
+			case 'email':
+				echo str_replace(array('@', '.'), array('<span>&#64;</span>', '<span>&#46;</span>'),
+					htmlspecialchars($raw_value));
+				break;
+
 			default:
-				echo htmlspecialchars($form->getRawData($group_id, $field_id, true));
+				echo htmlspecialchars($raw_value);
 				break;
 		}
 

@@ -30,7 +30,8 @@
         },
         "email": {
             "renderers": {
-                "@edit": "\\Duf\\Renderer\\HtmlForm\\Input"
+                "@edit": "\\Duf\\Renderer\\HtmlForm\\Input",
+                "@view": "\\Duf\\Renderer\\HtmlView\\Input"
             },
             "validators": {
                 "html5": "\\Duf\\FieldValidator\\EmailInput"
