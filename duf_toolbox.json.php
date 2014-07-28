@@ -20,13 +20,31 @@
 
         },
         "date": {
-
+            "renderers": {
+                "@edit": "\\Duf\\Renderer\\HtmlForm\\Input",
+                "@view": "\\Duf\\Renderer\\HtmlView\\Input"
+            },
+            "validators": {
+                "html5": "\\Duf\\FieldValidator\\DateInput"
+            }
         },
         "datetime": {
-
+            "renderers": {
+                "@edit": "\\Duf\\Renderer\\HtmlForm\\Input",
+                "@view": "\\Duf\\Renderer\\HtmlView\\Input"
+            },
+            "validators": {
+                "html5": "\\Duf\\FieldValidator\\DateTimeInput"
+            }
         },
         "datetime-local": {
-
+            "renderers": {
+                "@edit": "\\Duf\\Renderer\\HtmlForm\\Input",
+                "@view": "\\Duf\\Renderer\\HtmlView\\Input"
+            },
+            "validators": {
+                "html5": "\\Duf\\FieldValidator\\DateTimeInput"
+            }
         },
         "email": {
             "renderers": {
@@ -59,7 +77,13 @@
 
         },
         "month": {
-
+            "renderers": {
+                "@edit": "\\Duf\\Renderer\\HtmlForm\\Input",
+                "@view": "\\Duf\\Renderer\\HtmlView\\Input"
+            },
+            "validators": {
+                "html5": "\\Duf\\FieldValidator\\MonthInput"
+            }
         },
         "number": {
             "renderers": {
@@ -136,13 +160,25 @@
             }
         },
         "time": {
-
+            "renderers": {
+                "@edit": "\\Duf\\Renderer\\HtmlForm\\Input",
+                "@view": "\\Duf\\Renderer\\HtmlView\\Input"
+            },
+            "validators": {
+                "html5": "\\Duf\\FieldValidator\\TimeInput"
+            }
         },
         "url": {
 
         },
         "week": {
-
+            "renderers": {
+                "@edit": "\\Duf\\Renderer\\HtmlForm\\Input",
+                "@view": "\\Duf\\Renderer\\HtmlView\\Input"
+            },
+            "validators": {
+                "html5": "\\Duf\\FieldValidator\\WeekInput"
+            }
         }
     },
     "form": {
