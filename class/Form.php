@@ -76,6 +76,7 @@ class Form
 	 * @{
 	 */
 	const E_FORM_EXPIRED = 'form_expired';		///< Error: The XSRF token has expired.
+	const E_FORM_FIELD_ERROR = 'form_field_error';	///< Error: Form contains field with error.
 	const E_FIELD_REQUIRED = 'field_required';	///< Error: The empty field is required.
 	const E_FIELD_MALFORMED = 'field_malformed';	///< Error: The field value is malformed (does not match pattern or so).
 	/// @}
@@ -126,9 +127,18 @@ class Form
 
 		// Read-only form has different class
 		if ($this->readonly) {
-			$this->html_class = array('form');
-		} else {
 			$this->html_class = array('view');
+		} else {
+			$this->html_class = array('form');
+		}
+
+		// Add custom class
+		if (!empty($form_def['form']['class'])) {
+			if (is_array($form_def['form']['class'])) {
+				$this->html_class = array_merge($this->html_class, $form_def['form']['class']);
+			} else {
+				$this->html_class[] = $form_def['form']['class'];
+			}
 		}
 
 		// Apply field group generators
@@ -554,6 +564,12 @@ class Form
 	{
 		// Make sure values are processed and validated.
 		$this->getValues();
+
+		if (!empty($this->field_errors)) {
+			$this->form_errors[self::E_FORM_FIELD_ERROR] = array(
+				'message' => _('The form is not correctly filled. Please check marked fields ('.var_export($this->field_errors, true).').'),
+			);
+		}
 
 		return empty($this->form_errors) && empty($this->field_errors);
 	}
