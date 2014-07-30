@@ -34,6 +34,11 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 	{
 		$type = $field_conf['type'];
 
+		if ($type == 'checkbox' && empty($field_conf['readonly']) && empty($field_conf['disabled'])) {
+			// FIXME: Little hack to get false when unchecked checkbox is submitted.
+			echo "<input type=\"hidden\" name=\"", $form->getHtmlFieldName($group_id, $field_id), "\" value=\"\">";
+		}
+
 		echo "<input",
 			" type=\"", htmlspecialchars($type), "\"",
 			" id=\"", $form->getHtmlFieldId($group_id, $field_id), "\"",
