@@ -108,7 +108,7 @@
                 "widgets": [
                     {
                         "#!": "default_layout",
-                        "field_group": "quest"
+                        "group_id": "quest"
                     },
                     {
                         "#!": "@edit",

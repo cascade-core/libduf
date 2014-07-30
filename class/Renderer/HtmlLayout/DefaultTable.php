@@ -28,13 +28,32 @@ class DefaultTable implements \Duf\Renderer\IWidgetRenderer
 	public static function renderWidget(\Duf\Form $form, $template_engine, $widget_conf)
 	{
 		echo "<table class=\"form\">\n";
-		if (isset($widget_conf['field_group'])) {
-			$groups = array($widget_conf['field_group'] => $form->getFieldGroup($widget_conf['field_group']));
+		if (isset($widget_conf['group_id'])) {
+			// Load specified group config
+			$group_id = $widget_conf['group_id'];
+			$group_config = $form->getFieldGroup($group_id);
+			$groups = array($group_id => $group_config);
+
+			// Load specified fields within the group
+			if (isset($widget_conf['field_list'])) {
+				$fields = array();
+				foreach ($widget_conf['field_list'] as $field_id) {
+					if (isset($group_config['fields'][$field_id])) {
+						$fields[$field_id] = $group_config['fields'][$field_id];
+					} else {
+						throw new \InvalidArgumentException('Invalid field ID: '.$field_id);
+					}
+				}
+			} else {
+				$fields = null;
+			}
 		} else {
+			// Load all groups
 			$groups = $form->getAllFieldgroups();
+			$fields = null;
 		}
 		foreach ($groups as $group_id => $group_config) {
-			foreach ($group_config['fields'] as $field_id => $field_def) {
+			foreach ($fields === null ? $group_config['fields'] : $fields as $field_id => $field_def) {
 				if (!empty($field_def['hidden'])) {
 					continue;
 				}
