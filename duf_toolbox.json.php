@@ -4,6 +4,15 @@
         "smalldb": "\\Duf\\FieldGroupGenerator\\Smalldb"
     },
     "field_types": {
+        "reference": {
+            "renderers": {
+                "@edit": "\\Duf\\Renderer\\HtmlForm\\Reference",
+                "@view": "\\Duf\\Renderer\\HtmlView\\Reference"
+            },
+            "validators": {
+                "html5": "\\Duf\\FieldValidator\\Reference"
+            }
+        },
         "button": {
 
         },

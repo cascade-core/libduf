@@ -20,6 +20,8 @@ namespace Duf\FieldGroupGenerator;
 
 /**
  * Connector to make DUF work with Smalldb.
+ *
+ * TODO: Some caching would be nice.
  */
 class Smalldb implements IFieldGroupGenerator
 {
@@ -37,10 +39,22 @@ class Smalldb implements IFieldGroupGenerator
 			return array();
 		}
 
+		// Add properties as form fields
 		$group_config['fields'] = $machine->describeAllMachineProperties();
+
+		// Add relations to form fields
+		foreach ($machine->describeAllMachineReferences() as $ref_name => $ref) {
+			$group_config['fields'];
+			$ref['type'] = 'reference';
+			if (isset($group_config[$ref_name])) {
+				throw new \InvalidArgumentException('Reference name collides with property name: '.$ref_name);
+			}
+			$group_config['fields'][$ref_name] = $ref;
+		}
 
 		// TODO: Add permission check to actions
 
+		// Add actions
 		$item_actions = array();
 		$collection_actions = array();
 		$id_fmt = join('/', array_map(function($x) { return "{{$x}}"; }, $machine->describeId()));
