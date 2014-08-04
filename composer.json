@@ -18,6 +18,9 @@
 	"require": {
 		"cascade/composer-plugin": ">=1.1",
 		"cascade/core": ">=0.11"
-	}
+	},
+    "suggest": {
+        "cascade/smalldb": "Generate field groups from state machine definition."
+    }
 }
 
