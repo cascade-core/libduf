@@ -83,23 +83,43 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 
 			case 'datetime':
 			case 'datetime-local':
-				echo htmlspecialchars(strftime(isset($field_conf['format']) ? $field_conf['format'] : _('%d. %m. %Y %H:%M'), strtotime($raw_value)));
+				if ($raw_value !== null) {
+					echo htmlspecialchars(strftime(
+						isset($field_conf['format']) ? $field_conf['format'] : _('%d. %m. %Y %H:%M'),
+						strtotime($raw_value)));
+				}
 				break;
 
 			case 'time':
-				echo htmlspecialchars(strftime(isset($field_conf['format']) ? $field_conf['format'] : _('%H:%M'), strtotime($raw_value)));
+				if ($raw_value !== null) {
+					echo htmlspecialchars(strftime(
+						isset($field_conf['format']) ? $field_conf['format'] : _('%H:%M'),
+						strtotime($raw_value)));
+				}
 				break;
 
 			case 'date':
-				echo htmlspecialchars(strftime(isset($field_conf['format']) ? $field_conf['format'] : _('%d. %m. %Y'), strtotime($raw_value)));
+				if ($raw_value !== null) {
+					echo htmlspecialchars(strftime(
+						isset($field_conf['format']) ? $field_conf['format'] : _('%d. %m. %Y'),
+						strtotime($raw_value)));
+				}
 				break;
 
 			case 'week':
-				echo htmlspecialchars(strftime(isset($field_conf['format']) ? $field_conf['format'] : _('%V/%Y'), strtotime($raw_value)));
+				if ($raw_value !== null) {
+					echo htmlspecialchars(strftime(
+						isset($field_conf['format']) ? $field_conf['format'] : _('%V/%Y'),
+						strtotime($raw_value)));
+				}
 				break;
 
 			case 'month':
-				echo htmlspecialchars(strftime(isset($field_conf['format']) ? $field_conf['format'] : _('%B %Y'), strtotime($raw_value)));
+				if ($raw_value !== null) {
+					echo htmlspecialchars(strftime(
+						isset($field_conf['format']) ? $field_conf['format'] : _('%B %Y'),
+						strtotime($raw_value)));
+				}
 				break;
 
 
