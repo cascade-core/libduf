@@ -49,6 +49,33 @@ class Smalldb implements IFieldGroupGenerator
 			if (isset($group_config[$ref_name])) {
 				throw new \InvalidArgumentException('Reference name collides with property name: '.$ref_name);
 			}
+
+			// FIXME: Shouldn't we use toolbox?
+			$ref['options_factory'] = function() use ($context, $ref) {
+				$items = array();
+				$machine = $context->smalldb->getMachine($ref['machine_type']);
+				$machine_id_keys = $machine->describeId();
+				if (count($machine_id_keys) != 1) {
+					throw new \Exception('Sorry, only simple primary keys are supported.');
+				}
+				$machine_id_key = reset($machine_id_keys);
+				$machine_value_fmt = $ref['value_fmt'];
+
+				foreach ($context->smalldb->createListing(array(
+						'type' => $ref['machine_type'],
+						'limit' => false,
+					))->query() as $item)
+				{
+					// FIXME: Optimize this.
+					$p = array();
+					foreach ($ref['properties'] as $pk => $pv) {
+						$p[$pk] = $item[$pv];
+					}
+					$items[$item[$machine_id_key]] = filename_format($machine_value_fmt, $p);
+				}
+				return $items;
+			};
+
 			$group_config['fields'][$ref_name] = $ref;
 		}
 

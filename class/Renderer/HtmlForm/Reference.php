@@ -32,19 +32,58 @@ class Reference extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 	/// @copydoc \Duf\Renderer\IFieldWidgetRenderer::renderFieldWidget
 	public static function renderFieldWidget(\Duf\Form $form, $template_engine, $widget_conf, $group_id, $field_id, $field_conf)
 	{
-		// TODO
-		foreach ($field_conf['machine_id'] as $field_id) {
-			echo "<input",
+		// Lazy-load possible values, just like for <select>
+		if (isset($field_conf['options_factory'])) {
+			$of = $field_conf['options_factory'];
+			$options = $of();
+		} else if (isset($field_conf['options'])) {
+			$options = $field_conf['options'];
+		} else {
+			$options = null;
+		}
+
+		if ($options === null) {
+			// Simple text field for each part of ID
+			// FIXME: This expects smalldb, which is wrong.
+			foreach ($field_conf['machine_id'] as $field_id) {
+				echo "<input",
+					" id=\"", $form->getHtmlFieldId($group_id, $field_id), "\"",
+					" name=\"", $form->getHtmlFieldName($group_id, $field_id), "\"";
+
+				// Value
+				echo " value=\"", htmlspecialchars($form->getRawData($group_id, $field_id)), "\"";
+
+				static::commonAttributes($field_conf);
+
+				echo ">\n";
+			}
+		} else {
+			echo "<select",
 				" id=\"", $form->getHtmlFieldId($group_id, $field_id), "\"",
 				" name=\"", $form->getHtmlFieldName($group_id, $field_id), "\"";
-
-			// Value
-			echo " value=\"", htmlspecialchars($form->getRawData($group_id, $field_id)), "\"";
-
 			static::commonAttributes($field_conf);
-
 			echo ">\n";
+
+			$first_id_part = reset($field_conf['machine_id']);
+			$value = $form->getRawData($group_id, $first_id_part);
+
+			echo "<option value=\"\"";
+			if (empty($value)) {
+				echo " selected";
+			}
+			if (empty($field_conf['required'])) {
+				echo " disabled style=\"display: none;\"";
+			}
+			echo "</option>\n";
+
+			foreach ($options as $opt_value => $opt_label) {
+				echo "<option value=\"", htmlspecialchars($opt_value), "\"", ($value == $opt_value ? " selected":""), ">",
+					htmlspecialchars($opt_label), "</option>\n";
+			}
+
+			echo "</select>\n";
 		}
+
 	}
 
 }
