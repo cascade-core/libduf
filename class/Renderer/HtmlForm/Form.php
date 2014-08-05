@@ -45,6 +45,8 @@ class Form implements \Duf\Renderer\IFormRenderer
 				echo ">", htmlspecialchars($error['message']), "</li>\n";
 			}
 			echo "</ul>\n";
+
+			debug_dump($form->field_errors, 'Field errors');
 		}
 
 		$form->renderRootWidget($template_engine);

@@ -79,6 +79,21 @@ class Toolbox
 	}
 
 
+	/**
+	 * Retrieve value processor for given field type.
+	 */
+	public function getFieldValueProcessor($field_type)
+	{
+		if (!isset($this->config['field_types'][$field_type])) {
+			throw new ValidatorException('Undefined field type: '.$field_type);
+		}
+		if (isset($this->config['field_types'][$field_type]['value_processor'])) {
+			return $this->config['field_types'][$field_type]['value_processor'];
+		} else {
+			return null;
+		}
+	}
+
 
 	/**
 	 * Retrieve form renderer.

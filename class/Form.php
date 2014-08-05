@@ -327,15 +327,20 @@ class Form
 						continue;
 					}
 					if (empty($g['collection_dimensions'])) {
-						// Simple group -- even if missing, use defaults.
-						$this->getValues_processCollection($this->raw_input[$gi], 0, $gi, $g['fields'],
-							$this->field_values[$gi], $this->field_defaults[$gi]);
+						// Simple group
+						if (isset($this->raw_input[$gi])) {
+							$this->getValues_processCollection($this->raw_input[$gi], 0, $gi, $g['fields'],
+								$this->field_values[$gi]);
+						} else {
+							// No data, use empty "object"
+							$this->field_values[$gi] = array();
+						}
 					} else if ($g['collection_dimensions'] >= 1) {
 						// Validate fields for each item in collection.
 						if (isset($this->raw_input[$gi])) {
 							// Non-empty collection, walk it recursively.
 							$this->getValues_processCollection($this->raw_input[$gi], $g['collection_dimensions'], $gi, $g['fields'],
-								$this->field_values[$gi], $this->field_defaults[$gi]);
+								$this->field_values[$gi]);
 						} else {
 							// Missing data, it should not happen, but whatever ... use empty collection instead.
 							$this->field_values[$gi] = array();
@@ -354,7 +359,7 @@ class Form
 	 * TODO: Replace this with CollectionWalker::walkCollection().
 	 */
 	private function getValues_processCollection($raw_input, $remaining_depth, $group_id, $group_fields,
-			& $field_values, & $field_defaults, & $path = null, $depth = 0)
+			& $field_values, & $path = null, $depth = 0)
 	{
 		if ($remaining_depth > 0) {
 			// We need to go deeper ...
@@ -364,19 +369,15 @@ class Form
 			foreach($raw_input as $i => $raw_input_subtree) {
 				$path[$depth] = $i;
 				$this->getValues_processCollection($raw_input_subtree, $remaining_depth - 1, $group_id, $group_fields,
-					$field_values[$i], $field_defaults[$i], $path, $depth + 1);
+					$field_values[$i], $path, $depth + 1);
 			}
 		} else {
 			// Deep enough.
 			foreach ($group_fields as $fi => $f) {
-				// Retrieve value
-				$value = isset($raw_input[$fi]) ? $raw_input[$fi] : null;
-				// TODO: Call post-process functions on $v.
-				// TODO: First validation, populate $this->field_errors.
-				if ($value !== null) {
-					$field_values[$fi] = $value;
-				} else if (isset($this->field_defaults[$fi])) {
-					$value = $field_values[$fi] = $field_defaults[$fi];
+				// Is field present in the form ?
+				if (!isset($raw_input[$fi])) {
+					// Ignore missing fields
+					continue;
 				}
 
 				// Validate value
@@ -384,8 +385,16 @@ class Form
 				if (!empty($validators)) {
 					$this->setCollectionKey($group_id, $path);
 					foreach ($validators as $vi => $v) {
-						$v::validateField($this, $group_id, $fi, $f, $value);
+						$v::validateField($this, $group_id, $fi, $f, $raw_input[$fi]);
 					}
+				}
+
+				// Call post-processor, if set
+				$processor_class = $this->toolbox->getFieldValueProcessor($f['type']);
+				if ($processor_class) {
+					$processor_class::valuePostProcess($raw_input, $field_values, $this, $group_id, $fi, $f);
+				} else {
+					$field_values[$fi] = $raw_input[$fi];
 				}
 			}
 			$this->unsetCollectionKey($group_id);
@@ -447,15 +456,17 @@ class Form
 				foreach ($this->form_def['field_groups'] as $gi => $g) {
 					if (isset($this->field_defaults[$gi])) {
 						// Values for the group are set, use them.
-						$this->raw_defaults[$gi] = $this->field_defaults[$gi];	// TODO: ... here ...
+						$this->preProcessGroup($gi, $g, $this->field_defaults[$gi], $this->raw_defaults[$gi]);
 					} else {
 						if (empty($g['collection_dimensions'])) {
 							// Values for the group are missing, use defaults from the form definition.
+							$group_defaults = array();
 							foreach ($g['fields'] as $fi => $f) {
 								if (isset($f['default'])) {
-									$this->raw_defaults[$gi][$fi] = $f['default'];	// TODO: ... and here.
+									$group_defaults[$fi] = $f['default'];
 								}
 							}
+							$this->preProcessGroup($gi, $g, $group_defaults, $this->raw_defaults[$gi]);
 						} else {
 							// Empty collection by default.
 							$this->raw_defaults[$gi] = array();
@@ -474,6 +485,23 @@ class Form
 		}
 	}
 
+
+	/**
+	 * Apply preprocessor on all fields in given group.
+	 */
+	private function preProcessGroup($gi, $g, $default_values, & $raw_values)
+	{
+		foreach ($g['fields'] as $fi => $f) {
+			$processor_class = $this->toolbox->getFieldValueProcessor($f['type']);
+			if ($processor_class) {
+				$processor_class::valuePreProcess($default_values, $raw_values, $this, $gi, $fi, $f);
+			} else if (isset($default_values[$fi])) {
+				$raw_values[$fi] = $default_values[$fi];
+			} else {
+				$raw_values[$fi] = null;
+			}
+		}
+	}
 
 	/**
 	 * Load submitted input
@@ -567,7 +595,7 @@ class Form
 
 		if (!empty($this->field_errors)) {
 			$this->form_errors[self::E_FORM_FIELD_ERROR] = array(
-				'message' => _('The form is not correctly filled. Please check marked fields ('.var_export($this->field_errors, true).').'),
+				'message' => _('The form is not correctly filled. Please check marked fields.'),
 			);
 		}
 

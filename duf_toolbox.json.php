@@ -9,6 +9,7 @@
                 "@edit": "\\Duf\\Renderer\\HtmlForm\\Reference",
                 "@view": "\\Duf\\Renderer\\HtmlView\\Reference"
             },
+            "value_processor": "\\Duf\\FieldValueProcessor\\Reference",
             "validators": {
                 "html5": "\\Duf\\FieldValidator\\Reference"
             }
