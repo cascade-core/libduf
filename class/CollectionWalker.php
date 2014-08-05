@@ -69,7 +69,8 @@ class CollectionWalker
 	 * @param $depth is for internal use, leave it unspecified.
 	 * @param $collection_key is for internal use, leave it unspecified.
 	 */
-	public static function walkCollection($collection, $dimension, $render_function, $on_enter = null, $on_leave = null, $depth = 0, & $collection_key = null)
+	public static function walkCollection($collection, $dimension, $render_function, $on_enter = null, $on_leave = null,
+		$depth = 0, & $collection_key = null)
 	{
 		if ($dimension > 0) {
 			// We need to go deeper ...
@@ -92,5 +93,50 @@ class CollectionWalker
 		}
 	}
 
+
+	/**
+	 * Walk multi-dimensional collection and keep reference to parallel collection.
+	 *
+	 * Just like walkCollection(), but `$target` parameter is walked in
+	 * parallel, which means the `$target_item` reference points to the same
+	 * position as `$item`, but in `$target` structure.
+	 *
+	 * @param $collection is the collection to walk.
+	 * @param $dimension is amount of dimensions to traverse (0 = single item, 1 = list, 2 = matrix, ...).
+	 * @param $render_function is `function($collection_key, $item, $target_item)` called for each item in collection.
+	 * @param $on_enter is `function($depth)` called when going deeper.
+	 * @param $on_leave is `function($depth)` called when going back.
+	 * @param $depth is for internal use, leave it unspecified.
+	 * @param $collection_key is for internal use, leave it unspecified.
+	 *
+	 * @see walkCollection()
+	 */
+	public static function walkCollectionWithTarget($collection, & $target, $dimension, $render_function, $on_enter = null, $on_leave = null,
+		$depth = 0, & $collection_key = null)
+	{
+		if ($dimension > 0) {
+			// We need to go deeper ...
+			if ($collection_key === null) {
+				$collection_key = array();
+			}
+			if ($on_enter !== null) {
+				$on_enter($depth);
+			}
+			foreach($collection as $i => $sub_collection) {
+				$collection_key[$depth] = $i;
+				if (!isset($target[$i])) {
+					$target[$i] = array();
+				}
+				self::walkCollectionWithTarget($sub_collection, $target[$i], $dimension - 1,
+					$render_function, $on_enter, $on_leave, $depth + 1, $collection_key);
+			}
+			if ($on_leave !== null) {
+				$on_leave($depth);
+			}
+		} else {
+			// Deep enough.
+			$render_function($collection_key, $collection, $target);
+		}
+	}
 }
 

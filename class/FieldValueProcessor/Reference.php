@@ -36,7 +36,8 @@ class Reference
 	{
 		// Copy ID properties to field
 		if (count($field_conf['machine_id']) == 1) {
-			$raw_values[$field_id] = $default_values[reset($field_conf['machine_id'])];
+			$id = reset($field_conf['machine_id']);
+			$raw_values[$field_id] = $default_values[$id];
 		} else {
 			throw new \Exception('Not implemented yet.');
 		}

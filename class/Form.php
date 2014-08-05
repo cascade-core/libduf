@@ -356,7 +356,7 @@ class Form
 	/**
 	 * Recursively walk the collections in raw input and populate field values.
 	 *
-	 * TODO: Replace this with CollectionWalker::walkCollection().
+	 * TODO: Replace this with CollectionWalker::walkCollection() or CollectionWalker::walkCollectionWithTarget().
 	 */
 	private function getValues_processCollection($raw_input, $remaining_depth, $group_id, $group_fields,
 			& $field_values, & $path = null, $depth = 0)
@@ -452,7 +452,6 @@ class Form
 		if ($this->readonly || $this->use_defaults || $force_default || !empty($this->form_def['field_groups'][$group]['readonly'])) {
 			// Default values need to be converted to raw form data.
 			if (!isset($this->raw_defaults[$group])) {
-				// TODO: Call pre-process functions to produce raw form data ...
 				foreach ($this->form_def['field_groups'] as $gi => $g) {
 					if (isset($this->field_defaults[$gi])) {
 						// Values for the group are set, use them.
@@ -491,16 +490,23 @@ class Form
 	 */
 	private function preProcessGroup($gi, $g, $default_values, & $raw_values)
 	{
-		foreach ($g['fields'] as $fi => $f) {
-			$processor_class = $this->toolbox->getFieldValueProcessor($f['type']);
-			if ($processor_class) {
-				$processor_class::valuePreProcess($default_values, $raw_values, $this, $gi, $fi, $f);
-			} else if (isset($default_values[$fi])) {
-				$raw_values[$fi] = $default_values[$fi];
-			} else {
-				$raw_values[$fi] = null;
+		$form = $this;
+		$dimensions = isset($g['collection_dimensions']) ? $g['collection_dimensions'] : 0;
+
+		CollectionWalker::walkCollectionWithTarget($default_values, $raw_values, $dimensions,
+			function($collection_key, $default_values, & $raw_values) use ($gi, $g, $form) {
+				foreach ($g['fields'] as $fi => $f) {
+					$processor_class = $this->toolbox->getFieldValueProcessor($f['type']);
+					if ($processor_class) {
+						$processor_class::valuePreProcess($default_values, $raw_values, $form, $gi, $fi, $f);
+					} else if (isset($default_values[$fi])) {
+						$raw_values[$fi] = $default_values[$fi];
+					} else {
+						$raw_values[$fi] = null;
+					}
+				}
 			}
-		}
+		);
 	}
 
 	/**
