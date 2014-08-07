@@ -84,41 +84,41 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 			case 'datetime':
 			case 'datetime-local':
 				if ($raw_value !== null) {
-					echo htmlspecialchars(strftime(
-						isset($field_conf['format']) ? $field_conf['format'] : _('%d. %m. %Y %H:%M'),
-						strtotime($raw_value)));
+					echo strftime(
+						isset($field_conf['format']) ? $field_conf['format'] : _('%d.&nbsp;%m.&nbsp;%Y,&nbsp;%H:%M'),
+						strtotime($raw_value));
 				}
 				break;
 
 			case 'time':
 				if ($raw_value !== null) {
-					echo htmlspecialchars(strftime(
+					echo strftime(
 						isset($field_conf['format']) ? $field_conf['format'] : _('%H:%M'),
-						strtotime($raw_value)));
+						strtotime($raw_value));
 				}
 				break;
 
 			case 'date':
 				if ($raw_value !== null) {
-					echo htmlspecialchars(strftime(
-						isset($field_conf['format']) ? $field_conf['format'] : _('%d. %m. %Y'),
-						strtotime($raw_value)));
+					echo strftime(
+						isset($field_conf['format']) ? $field_conf['format'] : _('%d.&nbsp;%m.&nbsp;%Y'),
+						strtotime($raw_value));
 				}
 				break;
 
 			case 'week':
 				if ($raw_value !== null) {
-					echo htmlspecialchars(strftime(
+					echo strftime(
 						isset($field_conf['format']) ? $field_conf['format'] : _('%V/%Y'),
-						strtotime($raw_value)));
+						strtotime($raw_value));
 				}
 				break;
 
 			case 'month':
 				if ($raw_value !== null) {
-					echo htmlspecialchars(strftime(
-						isset($field_conf['format']) ? $field_conf['format'] : _('%B %Y'),
-						strtotime($raw_value)));
+					echo strftime(
+						isset($field_conf['format']) ? $field_conf['format'] : _('%B&nbsp;%Y'),
+						strtotime($raw_value));
 				}
 				break;
 
