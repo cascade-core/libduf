@@ -72,6 +72,12 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 				// null means 'not specified'
 				continue;
 			}
+
+			// Handle floats
+			if (is_float($v)) {
+				$v = sprintf('%F', $v);
+			}
+
 			switch ($k) {
 				// HTML5 boolean attributes
 				case 'formnovalidate':
@@ -128,6 +134,12 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 				// null means 'not specified'
 				continue;
 			}
+
+			// Handle floats
+			if (is_float($v)) {
+				$v = sprintf('%F', $v);
+			}
+
 			switch ($k) {
 				// HTML5 boolean attributes
 				case 'hidden':
