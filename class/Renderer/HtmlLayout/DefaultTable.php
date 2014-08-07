@@ -54,7 +54,7 @@ class DefaultTable implements \Duf\Renderer\IWidgetRenderer
 		}
 		foreach ($groups as $group_id => $group_config) {
 			foreach ($fields === null ? $group_config['fields'] : $fields as $field_id => $field_def) {
-				if (!empty($field_def['hidden'])) {
+				if (!empty($field_def['hidden']) || (!$form->readonly && !empty($field_def['calculated']))) {
 					continue;
 				}
 				echo "<tr>\n";
