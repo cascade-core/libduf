@@ -37,18 +37,14 @@ class Reference
 		// Copy ID properties to field
 		if (count($field_conf['machine_id']) == 1) {
 			$id = reset($field_conf['machine_id']);
-			$raw_values[$field_id] = $default_values[$id];
+			$raw_values[$field_id] = isset($default_values[$id]) ? $default_values[$id] : null;
 		} else {
 			throw new \Exception('Not implemented yet.');
 		}
 
 		// Copy additional values which are not field data, but they are important for `@view` renderers.
 		foreach ($field_conf['properties'] as $pi => $p) {
-			if (isset($default_values[$pi])) {
-				$raw_values[$pi] = $default_values[$pi];
-			} else {
-				$raw_values[$pi] = null;
-			}
+			$raw_values[$pi] = isset($default_values[$pi]) ? $default_values[$pi] : null;
 		}
 	}
 

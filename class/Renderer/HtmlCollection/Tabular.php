@@ -47,7 +47,7 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 		$k_weight   = $key_prefix.'_weight';
 		$k_width    = $key_prefix.'_width';
 		$k_label    = $key_prefix.'_label';
-		$k_link_fmt = $key_prefix.'_link_fmt';
+		$k_indent   = $key_prefix.'_indent_key';
 
 		// Get column list from group fields
 		if (!empty($widget_conf['columns_from_fields'])) {
@@ -57,11 +57,11 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 					continue;
 				}
 				$columns[$field_id] = array(
-					'weight'   => isset($f[$k_weight])   ? $f[$k_weight]   : (isset($f['weight'])   ? $f['weight']   : 50),
-					'width'    => isset($f[$k_width])    ? $f[$k_width]    : (isset($f['width'])    ? $f['width']    : null),
-					'label'    => isset($f[$k_label])    ? $f[$k_label]    : (isset($f['label'])    ? $f['label']    :
-					                                                         (isset($f['name'])     ? $f['name']     : $field_id)),
-					'link_fmt' => isset($f[$k_link_fmt]) ? $f[$k_link_fmt] : (isset($f['link_fmt']) ? $f['link_fmt'] : null),
+					'weight'     => isset($f[$k_weight])   ? $f[$k_weight]   : (isset($f['weight'])     ? $f['weight']     : 50),
+					'width'      => isset($f[$k_width])    ? $f[$k_width]    : (isset($f['width'])      ? $f['width']      : null),
+					'label'      => isset($f[$k_label])    ? $f[$k_label]    : (isset($f['label'])      ? $f['label']      :
+					                                                           (isset($f['name'])       ? $f['name']       : $field_id)),
+					'indent_key' => isset($f[$k_indent])   ? $f[$k_indent]   : (isset($f['indent_key']) ? $f['indent_key'] : null),
 				);
 			}
 		}
@@ -157,18 +157,17 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 					$form->setCollectionKey($group_id, $collection_key);
 					echo "<tr class=\"", $is_row_even ? 'even':'odd', "\">\n";
 					foreach ($columns as $field_id => $col) {
-						echo "<td>";
-						if (isset($col['link_fmt'])) {
-							$link = filename_format($col['link_fmt'], $item);
-							echo "<a href=\"", htmlspecialchars($link), "\">";
+						echo "<td";
+						if (isset($col['indent_key']) && !empty($item[$col['indent_key']])) {
+							echo " style=\"padding-left: ", 2 * $item[$col['indent_key']], "em;\"";
 						}
-						if (isset($col['tbody_widgets'])) {
-							$form->renderWidgets($template_engine, $col['tbody_widgets']);
-						} else {
-							$form->renderField($template_engine, $group_id, $field_id, '@view');
-						}
-						if (isset($col['link_fmt'])) {
-							echo "</a>";
+						echo ">";
+						if (isset($col['tbody_widgets']) || $form->getRawData($group_id, $field_id) !== null) {
+							if (isset($col['tbody_widgets'])) {
+								$form->renderWidgets($template_engine, $col['tbody_widgets']);
+							} else {
+								$form->renderField($template_engine, $group_id, $field_id, '@view');
+							}
 						}
 						echo "</td>\n";
 					}
