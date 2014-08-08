@@ -36,6 +36,8 @@ class Smalldb implements IFieldGroupGenerator
 		}
 		$machine = $context->smalldb->getMachine($machine_type);
 		if (!$machine) {
+			// Not failing because we want to survive magic templates
+			error_msg('Unknown machine type: %s', $machine_type);
 			return array();
 		}
 
