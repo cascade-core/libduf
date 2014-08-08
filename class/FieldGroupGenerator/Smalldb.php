@@ -39,6 +39,8 @@ class Smalldb implements IFieldGroupGenerator
 			return array();
 		}
 
+		$machine_type_url = str_replace('_', '-', $machine_type);
+
 		// Add properties as form fields
 		$group_config['fields'] = $machine->describeAllMachineProperties();
 
@@ -100,7 +102,7 @@ class Smalldb implements IFieldGroupGenerator
 				$collection_actions[$a] = array(
 					'label' => $label,
 					'description' => $desc,
-					'link' => "/$machine_type!$a",
+					'link' => "/$machine_type_url!$a",
 				);
 				if (count($action['transitions']) == 1) {
 					// only collection action, skip items
@@ -112,7 +114,7 @@ class Smalldb implements IFieldGroupGenerator
 			$item_actions[$a] = array(
 				'label' => $label,
 				'description' => $desc,
-				'link' => "/$machine_type/$id_fmt!$a",
+				'link' => "/$machine_type_url/$id_fmt!$a",
 			);
 		}
 
