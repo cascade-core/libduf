@@ -32,39 +32,50 @@ class Reference extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 	/// @copydoc \Duf\Renderer\IFieldWidgetRenderer::renderFieldWidget
 	public static function renderFieldWidget(\Duf\Form $form, $template_engine, $widget_conf, $group_id, $field_id, $field_conf)
 	{
-		// Lazy-load possible values, just like for <select>
-		if (isset($field_conf['options_factory'])) {
-			$of = $field_conf['options_factory'];
-			$options = $of();
-		} else if (isset($field_conf['options'])) {
-			$options = $field_conf['options'];
+		if (!empty($field_conf['autocomplete'])) {
+			// FIXME: Does not work for compound keys
+			echo "<input type=\"text\"",
+				" id=\"", $form->getHtmlFieldId($group_id, $field_id), "\"",
+				" name=\"", $form->getHtmlFieldName($group_id, $field_id), "\"";
+			static::commonAttributes($field_conf);
+			echo 	" value=\"", htmlspecialchars($form->getRawData($group_id, $field_id)), "\"";
+			echo ">\n";
+
 		} else {
-			throw new \InvalidArgumentException('Missing "options_factory".');
+			// Lazy-load possible values, just like for <select>
+			if (isset($field_conf['options_factory'])) {
+				$of = $field_conf['options_factory'];
+				$options = $of();
+			} else if (isset($field_conf['options'])) {
+				$options = $field_conf['options'];
+			} else {
+				throw new \InvalidArgumentException('Missing "options_factory".');
+			}
+
+			echo "<select",
+				" id=\"", $form->getHtmlFieldId($group_id, $field_id), "\"",
+				" name=\"", $form->getHtmlFieldName($group_id, $field_id), "\"";
+			static::commonAttributes($field_conf);
+			echo ">\n";
+
+			$value = $form->getRawData($group_id, $field_id);
+
+			echo "<option value=\"\"";
+			if (empty($value)) {
+				echo " selected";
+			}
+			if (empty($field_conf['required'])) {
+				echo " disabled style=\"display: none;\"";
+			}
+			echo "</option>\n";
+
+			foreach ($options as $opt_value => $opt_label) {
+				echo "<option value=\"", htmlspecialchars($opt_value), "\"", ($value == $opt_value ? " selected":""), ">",
+					htmlspecialchars($opt_label), "</option>\n";
+			}
+
+			echo "</select>\n";
 		}
-
-		echo "<select",
-			" id=\"", $form->getHtmlFieldId($group_id, $field_id), "\"",
-			" name=\"", $form->getHtmlFieldName($group_id, $field_id), "\"";
-		static::commonAttributes($field_conf);
-		echo ">\n";
-
-		$value = $form->getRawData($group_id, $field_id);
-
-		echo "<option value=\"\"";
-		if (empty($value)) {
-			echo " selected";
-		}
-		if (empty($field_conf['required'])) {
-			echo " disabled style=\"display: none;\"";
-		}
-		echo "</option>\n";
-
-		foreach ($options as $opt_value => $opt_label) {
-			echo "<option value=\"", htmlspecialchars($opt_value), "\"", ($value == $opt_value ? " selected":""), ">",
-				htmlspecialchars($opt_label), "</option>\n";
-		}
-
-		echo "</select>\n";
 	}
 
 }
