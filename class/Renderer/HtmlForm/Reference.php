@@ -64,7 +64,7 @@ class Reference extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 			if (empty($value)) {
 				echo " selected";
 			}
-			if (empty($field_conf['required'])) {
+			if (!empty($field_conf['required'])) {
 				echo " disabled style=\"display: none;\"";
 			}
 			echo "</option>\n";
