@@ -81,6 +81,21 @@ class Smalldb implements IFieldGroupGenerator
 			$group_config['fields'][$ref_name] = $ref;
 		}
 
+		// Stable sort by weight, preserving keys
+		$weight_step = 1. / (count($group_config['fields']) + 1);
+		$extra_weight = 0;
+		foreach ($group_config['fields'] as & $f) {
+			if (isset($f['weight'])) {
+				$f['weight'] += $extra_weight;
+			} else {
+				$f['weight'] = 50 + $extra_weight;
+			}
+			$extra_weight += $weight_step;
+		}
+		uasort($group_config['fields'], function($a, $b) {
+			return $a['weight'] - $b['weight'] > 0 ? 1 : -1;
+		});
+
 		// TODO: Add permission check to actions
 
 		// Add actions
