@@ -208,6 +208,9 @@
         }
     },
     "widgets": {
+        "null_layout": {
+            "renderer": "\\Duf\\Renderer\\HtmlLayout\\NullLayout"
+        },
         "default_layout": {
             "renderer": "\\Duf\\Renderer\\HtmlLayout\\DefaultTable"
         },
