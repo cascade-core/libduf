@@ -27,8 +27,7 @@ class Select extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 	/// @copydoc \Duf\Renderer\IFieldWidgetRenderer::renderFieldWidget
 	public static function renderFieldWidget(\Duf\Form $form, $template_engine, $widget_conf, $group_id, $field_id, $field_conf)
 	{
-                echo "<span",
-                        " id=\"", $form->getHtmlFieldId($group_id, $field_id), "\"";
+                echo "<span";
 
                 static::commonAttributes($field_conf);
 

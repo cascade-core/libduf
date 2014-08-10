@@ -35,8 +35,7 @@ class Reference extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 
 		$raw_values = $form->getRawData($group_id);
 
-		echo "<$tag",
-			" id=\"", $form->getHtmlFieldId($group_id, $field_id), "\"";
+		echo "<$tag";
 
 		if (isset($field_conf['link'])) {
 			echo " href=\"", htmlspecialchars(filename_format($field_conf['link'], $raw_values)), "\"";

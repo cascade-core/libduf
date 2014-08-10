@@ -46,8 +46,7 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 				break;
 		}
 
-		echo "<$tag",
-			" id=\"", $form->getHtmlFieldId($group_id, $field_id), "\"";
+		echo "<$tag";
 
 		if (isset($field_conf['link'])) {
 			echo " href=\"", htmlspecialchars(filename_format($field_conf['link'], $form->getRawData($group_id))), "\"";
