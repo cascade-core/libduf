@@ -50,19 +50,21 @@ class Plain implements \Duf\Renderer\IWidgetRenderer
 				echo "</div>\n";
 			},
 			function($depth) use ($widget_conf) {
-				echo "<div";
 				if (isset($widget_conf['dimensions'][$depth]['class'])) {
+					echo "<div";
 					$class = $widget_conf['dimensions'][$depth]['class'];
 					if (is_array($class)) {
 						echo " class=\"", htmlspecialchars(join(' ', $class)), "\"";
 					} else {
 						echo " class=\"", htmlspecialchars($class), "\"";
 					}
+					echo ">\n";
 				}
-				echo ">\n";
 			},
 			function($depth) {
-				echo "</div>\n";
+				if (isset($widget_conf['dimensions'][$depth]['class'])) {
+					echo "</div>\n";
+				}
 			});
 		$form->unsetCollectionKey($group_id);
 	}
