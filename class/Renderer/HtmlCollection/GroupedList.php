@@ -41,16 +41,16 @@ class GroupedList implements \Duf\Renderer\IWidgetRenderer
 		$list_group_heading_fmt = isset($widget_conf['list_group_heading_fmt']) ? $widget_conf['list_group_heading_fmt'] : null;
 		$list_group_heading_level = (int) (isset($widget_conf['list_group_heading_level']) ? $widget_conf['list_group_heading_level'] : 3);
 
-		echo "<div";
 		if (isset($widget_conf['class'])) {
+			echo "<div";
 			$class = $widget_conf['class'];
 			if (is_array($class)) {
 				echo " class=\"", htmlspecialchars(join(' ', $class)), "\"";
 			} else {
 				echo " class=\"", htmlspecialchars($class), "\"";
 			}
+			echo ">\n";
 		}
-		echo ">\n";
 
 		\Duf\CollectionWalker::walkCollection($form->getRawData($group_id), $dimensions,
 			function($collection_key) use ($form, $template_engine, $widget_conf, $group_id, $dimensions,
@@ -97,7 +97,9 @@ class GroupedList implements \Duf\Renderer\IWidgetRenderer
 			echo "</ul>\n";
 		}
 
-		echo "</div>\n";
+		if (isset($widget_conf['class'])) {
+			echo "</div>\n";
+		}
 	}
 
 }
