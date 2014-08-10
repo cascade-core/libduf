@@ -220,6 +220,9 @@
         "fieldsets_layout": {
             "renderer": "\\Duf\\Renderer\\HtmlLayout\\Fieldsets"
         },
+        "html_template": {
+            "renderer": "\\Duf\\Renderer\\HtmlLayout\\HtmlTemplate"
+        },
         "plain_collection": {
             "renderer": "\\Duf\\Renderer\\HtmlCollection\\Plain"
         },
