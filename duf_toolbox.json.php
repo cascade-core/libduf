@@ -243,6 +243,9 @@
         },
         "grouped_list": {
             "renderer": "\\Duf\\Renderer\\HtmlCollection\\GroupedList"
+        },
+        "heading": {
+            "renderer": "\\Duf\\Renderer\\HtmlDecoration\\Heading"
         }
     }
 }
