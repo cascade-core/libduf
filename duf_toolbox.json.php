@@ -240,6 +240,9 @@
         },
         "collection_actions": {
             "renderer": "\\Duf\\Renderer\\HtmlDecoration\\CollectionActions"
+        },
+        "grouped_list": {
+            "renderer": "\\Duf\\Renderer\\HtmlCollection\\GroupedList"
         }
     }
 }
