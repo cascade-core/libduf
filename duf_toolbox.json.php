@@ -220,6 +220,9 @@
         "fieldsets_layout": {
             "renderer": "\\Duf\\Renderer\\HtmlLayout\\Fieldsets"
         },
+        "table_layout": {
+            "renderer": "\\Duf\\Renderer\\HtmlLayout\\Table"
+        },
         "html_template": {
             "renderer": "\\Duf\\Renderer\\HtmlLayout\\HtmlTemplate"
         },
