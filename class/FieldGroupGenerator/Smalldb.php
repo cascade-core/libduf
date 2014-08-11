@@ -44,13 +44,12 @@ class Smalldb implements IFieldGroupGenerator
 		$machine_type_url = str_replace('_', '-', $machine_type);
 
 		// Add properties as form fields
-		$group_config['fields'] = $machine->describeAllMachineProperties();
+		$fields = $machine->describeAllMachineProperties();
 
 		// Add relations to form fields
 		foreach ($machine->describeAllMachineReferences() as $ref_name => $ref) {
-			$group_config['fields'];
 			$ref['type'] = 'reference';
-			if (isset($group_config[$ref_name])) {
+			if (isset($fields[$ref_name])) {
 				throw new \InvalidArgumentException('Reference name collides with property name: '.$ref_name);
 			}
 
@@ -80,7 +79,14 @@ class Smalldb implements IFieldGroupGenerator
 				return $items;
 			};
 
-			$group_config['fields'][$ref_name] = $ref;
+			$fields[$ref_name] = $ref;
+		}
+
+		// Merge with overrides
+		if (isset($group_config['fields'])) {
+			$group_config['fields'] = array_replace_recursive($fields, $group_config['fields']);
+		} else {
+			$group_config['fields'] = $fields;
 		}
 
 		// Stable sort by weight, preserving keys
