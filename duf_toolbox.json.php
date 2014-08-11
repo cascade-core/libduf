@@ -252,6 +252,9 @@
         },
         "heading": {
             "renderer": "\\Duf\\Renderer\\HtmlDecoration\\Heading"
+        },
+        "slot": {
+            "renderer": "\\Duf\\Renderer\\HtmlDecoration\\Slot"
         }
     }
 }
