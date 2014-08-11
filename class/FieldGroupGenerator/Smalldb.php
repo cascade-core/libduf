@@ -119,13 +119,14 @@ class Smalldb implements IFieldGroupGenerator
 			// Build labels
 			$label = isset($action['label']) ? $action['label'] : $a;
 			$desc = isset($action['description']) ? $action['description'] : null;
+			$link = isset($action['link']) ? $action['link'] : null;
 
 			// Collection actions
 			if (isset($action['transitions'][''])) {
 				$collection_actions[$a] = array(
 					'label' => $label,
 					'description' => $desc,
-					'link' => "/$machine_type_url!$a",
+					'link' => $link !== null ? $link : "/$machine_type_url!$a",
 				);
 				if (count($action['transitions']) == 1) {
 					// only collection action, skip items
@@ -137,7 +138,7 @@ class Smalldb implements IFieldGroupGenerator
 			$item_actions[$a] = array(
 				'label' => $label,
 				'description' => $desc,
-				'link' => "/$machine_type_url/$id_fmt!$a",
+				'link' => $link !== null ? $link : $machine->getUrlFormat()."!$a",
 			);
 		}
 
