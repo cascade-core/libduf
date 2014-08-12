@@ -16,19 +16,31 @@
  *
  */
 
-namespace Duf\Renderer\HtmlForm;
+namespace Duf\Renderer\HtmlView;
 
 /**
- * Render URL list.
+ * Render generic list of values.
  */
-class UrlList extends ValueList implements \Duf\Renderer\IFieldWidgetRenderer
+class ValueList extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 {
 
-	/// @copydoc ValueList::renderNoteText()
-	protected static function renderNoteText()
+	/// @copydoc \Duf\Renderer\IFieldWidgetRenderer::renderFieldWidget
+	public static function renderFieldWidget(\Duf\Form $form, $template_engine, $widget_conf, $group_id, $field_id, $field_conf)
 	{
-		echo _('Enter list of addresses, each address on its own line.');
-	}
+		$value = $form->getViewData($group_id, $field_id);
+		if ($value === null) {
+			return;
+		}
 
+		echo "<ul";
+                static::commonAttributes($field_conf);
+		echo ">\n";
+
+		foreach ($value as $item) {
+			echo "<li>", htmlspecialchars($item), "</li>\n";
+		}
+
+		echo "</ul>\n";
+	}
 }
 

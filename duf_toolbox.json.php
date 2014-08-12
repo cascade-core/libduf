@@ -196,6 +196,15 @@
                 "html5": "\\Duf\\FieldValidator\\WeekInput"
             }
         },
+        "value_list": {
+            "renderers": {
+                "@edit": "\\Duf\\Renderer\\HtmlForm\\ValueList",
+                "@view": "\\Duf\\Renderer\\HtmlView\\ValueList"
+            },
+            "value_processor": "\\Duf\\FieldValueProcessor\\LineList",
+            "validators": {
+            }
+        },
         "url_list": {
             "renderers": {
                 "@edit": "\\Duf\\Renderer\\HtmlForm\\UrlList",
@@ -209,6 +218,15 @@
             "renderers": {
                 "@edit": "\\Duf\\Renderer\\HtmlForm\\UrlList",
                 "@view": "\\Duf\\Renderer\\HtmlView\\EmailList"
+            },
+            "value_processor": "\\Duf\\FieldValueProcessor\\LineList",
+            "validators": {
+            }
+        },
+        "tel_list": {
+            "renderers": {
+                "@edit": "\\Duf\\Renderer\\HtmlForm\\TelList",
+                "@view": "\\Duf\\Renderer\\HtmlView\\ValueList"
             },
             "value_processor": "\\Duf\\FieldValueProcessor\\LineList",
             "validators": {

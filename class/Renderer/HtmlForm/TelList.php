@@ -19,15 +19,15 @@
 namespace Duf\Renderer\HtmlForm;
 
 /**
- * Render URL list.
+ * Render list of phone numbers.
  */
-class UrlList extends ValueList implements \Duf\Renderer\IFieldWidgetRenderer
+class TelList extends ValueList implements \Duf\Renderer\IFieldWidgetRenderer
 {
 
 	/// @copydoc ValueList::renderNoteText()
 	protected static function renderNoteText()
 	{
-		echo _('Enter list of addresses, each address on its own line.');
+		echo _('Enter list of phone numbers including international prefix, each number on its own line.');
 	}
 
 }

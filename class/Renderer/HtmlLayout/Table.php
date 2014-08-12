@@ -38,6 +38,15 @@ class Table implements \Duf\Renderer\IWidgetRenderer
 		echo ">\n";
 
 		foreach($widget_conf['rows'] as $row) {
+
+			// Skip row, if required value is missing/empty
+			if (isset($row['require_value'])) {
+				$rq = $row['require_value'];
+				if (!$form->getViewData($rq['group_id'], $rq['field_id'])) {
+					continue;
+				}
+			}
+
 			echo "<tr";
 			if (isset($row['class'])) {
 				if (is_array($row['class'])) {
