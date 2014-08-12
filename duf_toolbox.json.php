@@ -198,7 +198,7 @@
         },
         "url_list": {
             "renderers": {
-                "@edit": "\\Duf\\Renderer\\HtmlForm\\TextArea",
+                "@edit": "\\Duf\\Renderer\\HtmlForm\\UrlList",
                 "@view": "\\Duf\\Renderer\\HtmlView\\UrlList"
             },
             "value_processor": "\\Duf\\FieldValueProcessor\\LineList",
