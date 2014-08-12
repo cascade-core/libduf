@@ -32,7 +32,7 @@ class TextArea extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 		static::commonAttributes($field_conf);
 
 		echo ">";
-		echo htmlspecialchars($form->getRawData($group_id, $field_id, true));
+		echo htmlspecialchars($form->getViewData($group_id, $field_id));
 		echo "</div>\n";
 	}
 

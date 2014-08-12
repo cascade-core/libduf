@@ -33,7 +33,7 @@ class Reference extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 			$tag = 'span';
 		}
 
-		$raw_values = $form->getRawData($group_id);
+		$raw_values = $form->getViewData($group_id);
 
 		echo "<$tag";
 

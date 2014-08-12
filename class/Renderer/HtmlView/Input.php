@@ -37,7 +37,7 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 		}
 
 		// Get value early, so class can be set
-		$raw_value = $form->getRawData($group_id, $field_id, true);
+		$raw_value = $form->getViewData($group_id, $field_id);
 
 		// add value-specific classes
 		switch ($type) {
@@ -49,7 +49,7 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 		echo "<$tag";
 
 		if (isset($field_conf['link'])) {
-			echo " href=\"", htmlspecialchars(filename_format($field_conf['link'], $form->getRawData($group_id))), "\"";
+			echo " href=\"", htmlspecialchars(filename_format($field_conf['link'], $form->getViewData($group_id))), "\"";
 		}
 
 		static::commonAttributes($field_conf);

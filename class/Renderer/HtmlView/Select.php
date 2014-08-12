@@ -33,7 +33,7 @@ class Select extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 
 		echo ">\n";
 
-		$value = $form->getRawData($group_id, $field_id, true);
+		$value = $form->getViewData($group_id, $field_id);
 
 		if (isset($field_conf['options'][$value])) {
 			$option = $field_conf['options'][$value];

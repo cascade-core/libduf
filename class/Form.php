@@ -445,11 +445,29 @@ class Form
 
 
 	/**
-	 * Get raw data for HTML form field.
+	 * Get data for a view. Like getRawData(), but without processing,
+	 * because view needs to display the real data.
+	 *
+	 * Default values specified in field configuration are ignored.
+	 *
+	 * Use this in `@view` renderer.
 	 */
-	public function getRawData($group, $field = null, $force_default = false)
+	public function getViewData($group, $field = null)
 	{
-		if ($this->readonly || $this->use_defaults || $force_default || !empty($this->form_def['field_groups'][$group]['readonly'])) {
+		return $this->getArrayItemByPath($this->field_defaults[$group],
+			isset($this->group_keys[$group]) ? $this->group_keys[$group] : null,
+			$field);
+	}
+
+
+	/**
+	 * Get raw data for HTML form field.
+	 *
+	 * Use this in `@edit` renderer.
+	 */
+	public function getRawData($group, $field = null)
+	{
+		if ($this->readonly || $this->use_defaults || !empty($this->form_def['field_groups'][$group]['readonly'])) {
 			// Default values need to be converted to raw form data.
 			if (!isset($this->raw_defaults[$group])) {
 				foreach ($this->form_def['field_groups'] as $gi => $g) {
