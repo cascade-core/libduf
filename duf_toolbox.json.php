@@ -204,6 +204,15 @@
             "value_processor": "\\Duf\\FieldValueProcessor\\LineList",
             "validators": {
             }
+        },
+        "email_list": {
+            "renderers": {
+                "@edit": "\\Duf\\Renderer\\HtmlForm\\UrlList",
+                "@view": "\\Duf\\Renderer\\HtmlView\\EmailList"
+            },
+            "value_processor": "\\Duf\\FieldValueProcessor\\LineList",
+            "validators": {
+            }
         }
     },
     "form": {
