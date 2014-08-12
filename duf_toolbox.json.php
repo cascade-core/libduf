@@ -195,6 +195,15 @@
             "validators": {
                 "html5": "\\Duf\\FieldValidator\\WeekInput"
             }
+        },
+        "url_list": {
+            "renderers": {
+                "@edit": "\\Duf\\Renderer\\HtmlForm\\TextArea",
+                "@view": "\\Duf\\Renderer\\HtmlView\\UrlList"
+            },
+            "value_processor": "\\Duf\\FieldValueProcessor\\LineList",
+            "validators": {
+            }
         }
     },
     "form": {
