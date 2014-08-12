@@ -138,7 +138,7 @@ class Smalldb implements IFieldGroupGenerator
 			$item_actions[$a] = array(
 				'label' => $label,
 				'description' => $desc,
-				'link' => $link !== null ? $link : $machine->getUrlFormat()."!$a",
+				'link' => $link !== null ? $link : (($url_fmt = $machine->getUrlFormat()) !== null ? $url_fmt."!$a" : "/$machine_type_url/$id_fmt!$a"),
 			);
 		}
 
