@@ -231,6 +231,15 @@
             "value_processor": "\\Duf\\FieldValueProcessor\\LineList",
             "validators": {
             }
+        },
+        "post_address": {
+            "renderers": {
+                "@edit": "\\Duf\\Renderer\\HtmlForm\\PostAddress",
+                "@view": "\\Duf\\Renderer\\HtmlView\\PostAddress"
+            },
+            "value_processor": "\\Duf\\FieldValueProcessor\\PostAddress",
+            "validators": {
+            }
         }
     },
     "form": {
