@@ -52,9 +52,13 @@ class DefaultTable implements \Duf\Renderer\IWidgetRenderer
 			$groups = $form->getAllFieldgroups();
 			$fields = null;
 		}
+		$skip_empty = !empty($widget_conf['skip_empty']);
 		foreach ($groups as $group_id => $group_config) {
 			foreach ($fields === null ? $group_config['fields'] : $fields as $field_id => $field_def) {
 				if (!empty($field_def['hidden']) || (!$form->readonly && !empty($field_def['calculated']))) {
+					continue;
+				}
+				if (!empty($skip_empty) && $form->getViewData($group_id, $field_id) == '') {
 					continue;
 				}
 				echo "<tr>\n";
