@@ -67,6 +67,12 @@ class Table implements \Duf\Renderer\IWidgetRenderer
 						echo " class=\"", htmlspecialchars($cell['class']), "\"";
 					}
 				}
+				if (isset($cell['colspan'])) {
+					echo " colspan=\"", (int) $cell['colspan'], "\"";
+				}
+				if (isset($cell['rowspan'])) {
+					echo " rowspan=\"", (int) $cell['rowspan'], "\"";
+				}
 				echo ">\n";
 
 				foreach ($cell['widgets'] as $widget) {
