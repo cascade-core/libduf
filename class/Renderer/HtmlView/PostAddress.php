@@ -39,8 +39,13 @@ class PostAddress extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 		echo ">";
 		echo "<div>", htmlspecialchars($a['street']), "</div>";
 		echo "<div>", htmlspecialchars($a['city']), "</div>";
-		echo "<div>", preg_replace('/^([0-9]{3})([0-9]{2})$/', '\1&nbsp;\2', htmlspecialchars($a['postcode'])), ", ",
-			htmlspecialchars($a['country']);
+
+		echo "<div>", preg_replace('/^([0-9]{3})([0-9]{2})$/', '\1&nbsp;\2', htmlspecialchars($a['postcode']));
+		if (!empty($a['postcode']) && !empty($a['country'])) {
+			echo ", ";
+		}
+		echo htmlspecialchars($a['country']);
+
 		if ($a['country'] == 'CZ' || $a['country'] == 'SK') {
 			echo " <span class=\"map\">(<a target=\"_blank\" rel=\"nofollow\" href=\"http://mapy.cz/?q=",
 				urlencode($a['street'].', '.$a['city'].', '.$a['postcode']), "\">mapa</a>)</span>";
