@@ -55,8 +55,7 @@ class PostAddress
 				'street'   => trim($raw['street']),
 			);
 
-			if ($val['country'] == ''
-				&& $val['postcode'] == ''
+			if ($val['postcode'] == ''
 				&& $val['city'] == ''
 				&& $val['street'] == '')
 			{
