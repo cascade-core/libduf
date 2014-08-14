@@ -34,7 +34,9 @@ class LineList
 	 */
 	public static function valuePreProcess($default_values, & $raw_values, \Duf\Form $form, $group_id, $field_id, $field_conf)
 	{
-		$raw_values[$field_id] = join("\n", array_map(function($x) { return str_replace("\n", " ", $x); }, (array) $default_values[$field_id]));
+		if (isset($default_values[$field_id])) {
+			$raw_values[$field_id] = join("\n", array_map(function($x) { return str_replace("\n", " ", $x); }, (array) $default_values[$field_id]));
+		}
 	}
 
 
@@ -46,7 +48,9 @@ class LineList
 	 */
 	public static function valuePostProcess($raw_values, & $group_values, \Duf\Form $form, $group_id, $field_id, $field_conf)
 	{
-		$group_values[$field_id] = array_filter(array_map('trim', explode("\n", $raw_values[$field_id])), function ($x) { return $x !== ''; });
+		if (isset($raw_values[$field_id])) {
+			$group_values[$field_id] = array_filter(array_map('trim', explode("\n", $raw_values[$field_id])), function ($x) { return $x !== ''; });
+		}
 	}
 
 }

@@ -42,7 +42,7 @@ class Table implements \Duf\Renderer\IWidgetRenderer
 			// Skip row, if required value is missing/empty
 			if (isset($row['require_value'])) {
 				$rq = $row['require_value'];
-				if (!$form->getViewData($rq['group_id'], $rq['field_id'])) {
+				if (!$form->getViewData($rq['group_id'], isset($rq['field_id']) ? $rq['field_id'] : null)) {
 					continue;
 				}
 			}

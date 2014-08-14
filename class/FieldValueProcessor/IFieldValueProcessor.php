@@ -30,7 +30,11 @@ interface IFieldValueProcessor
 	 * values from `$group_values` and writes raw values into
 	 * `$raw_values`.
 	 *
-	 * Minimal implementation: $raw_values[$field_id] = $default_values[$field_id];
+	 * Minimal implementation:
+	 *
+	 *     if (isset($default_values[$field_id])) {
+	 *         $raw_values[$field_id] = $default_values[$field_id];
+	 *     }
 	 *
 	 * @see valuePostProcess()
 	 */
@@ -41,7 +45,11 @@ interface IFieldValueProcessor
 	 * Convert raw value to output value. This method reads raw values from
 	 * `$raw_values` and writes converted values into `$group_values`.
 	 *
-	 * Minimal implementation: $group_values[$field_id] = $raw_values[$field_id];
+	 * Minimal implementation:
+	 *
+	 *     if (isset($raw_values[$field_id])) {
+	 *         $group_values[$field_id] = $raw_values[$field_id];
+	 *     }
 	 *
 	 * @see valuePreProcess()
 	 */

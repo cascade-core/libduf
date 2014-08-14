@@ -33,7 +33,9 @@ class PostAddress
 	 */
 	public static function valuePreProcess($default_values, & $raw_values, \Duf\Form $form, $group_id, $field_id, $field_conf)
 	{
-		$raw_values[$field_id] = $default_values[$field_id];
+		if (isset($default_values[$field_id])) {
+			$raw_values[$field_id] = $default_values[$field_id];
+		}
 	}
 
 
@@ -45,7 +47,11 @@ class PostAddress
 	 */
 	public static function valuePostProcess($raw_values, & $group_values, \Duf\Form $form, $group_id, $field_id, $field_conf)
 	{
-		$raw = $raw_values[$field_id];
+		if (isset($raw_values[$field_id])) {
+			$raw = $raw_values[$field_id];
+		} else {
+			return;
+		}
 
 		if (isset($raw['country']) && isset($raw['postcode']) && isset($raw['city']) && isset($raw['street'])) {
 			$val = array(
