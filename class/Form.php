@@ -807,10 +807,8 @@ class Form
 
 			// Execute renderer
 			if ($renderer_class !== false) {
-				if (is_a($renderer_class, '\\Duf\\Renderer\\IFieldWidgetRenderer', TRUE)) {
+				if (class_exists($renderer_class)) {
 					$renderer_class::renderFieldWidget($this, $template_engine, $widget_conf, $group_id, $field_id, $field_conf);
-				} else if (class_exists($renderer_class)) {
-					throw new RendererException('Field renderer '.$renderer_class.' must implement Duf\\Renderer\\IFieldWidgetRenderer inteface.');
 				} else {
 					throw new RendererException('Field renderer class '.$renderer_class.' does not exist.');
 				}
@@ -824,10 +822,8 @@ class Form
 
 			// Execute renderer
 			if ($renderer_class !== false) {
-				if (is_a($renderer_class, '\\Duf\\Renderer\\IWidgetRenderer', TRUE)) {
+				if (class_exists($renderer_class)) {
 					$renderer_class::renderWidget($this, $template_engine, $widget_conf);
-				} else if (class_exists($renderer_class)) {
-					throw new RendererException('Widget renderer '.$renderer_class.' must implement Duf\\Renderer\\IWidgetRenderer inteface.');
 				} else {
 					throw new RendererException('Widget renderer class '.$renderer_class.' does not exist.');
 				}
