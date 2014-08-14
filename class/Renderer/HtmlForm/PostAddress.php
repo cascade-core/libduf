@@ -48,7 +48,7 @@ class PostAddress extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 			" placeholder=\"", _('Post code'), "\" title=\"", _('Post code'), "\">\n";
 		echo "<select class=\"addr_country\"  name=\"{$name}[country]\"", $common_attr,
 			" title=\"", _('Country'), "\">\n";
-		static::printCountryCodeOptions($val['country']);
+		static::printCountryCodeOptions(isset($val['country']) ? $val['country'] : 'CZ');
 		echo "</select>\n";
 		echo "</address>\n";
 
