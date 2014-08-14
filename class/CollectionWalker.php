@@ -77,6 +77,9 @@ class CollectionWalker
 			if ($collection_key === null) {
 				$collection_key = array();
 			}
+			if (empty($collection)) {
+				return;
+			}
 			if ($on_enter !== null) {
 				$on_enter($depth);
 			}

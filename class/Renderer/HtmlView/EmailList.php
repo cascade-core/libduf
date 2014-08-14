@@ -28,6 +28,9 @@ class EmailList extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 	public static function renderFieldWidget(\Duf\Form $form, $template_engine, $widget_conf, $group_id, $field_id, $field_conf)
 	{
 		$value = $form->getViewData($group_id, $field_id);
+		if (empty($value)) {
+			return;
+		}
 
 		echo "<ul";
                 static::commonAttributes($field_conf);
