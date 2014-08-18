@@ -43,36 +43,58 @@ class ItemActions implements \Duf\Renderer\IWidgetRenderer
 		$item = $form->getRawData($group_id);
 		$actions = $form->getFieldGroupOption($group_id, 'item_actions');
 
-		static::renderActions($actions, $item);
+		static::renderActions($widget_conf, $actions, $item, isset($widget_conf['actions']) ? $widget_conf['actions'] : null);
 	}
 
 
-	protected static function renderActions($actions, $item)
+	protected static function renderActions($widget_conf, $actions, $item, $action_names)
 	{
-		echo "<div class=\"actions\">\n";
-		foreach ($actions as $a => $action) {
-			echo "<a";
+		echo "<div";
+		$class = isset($widget_conf['class']) ? (array) $widget_conf['class'] : array();
+		$class[] = 'actions';
+		echo " class=\"", htmlspecialchars(join(' ', $class)), "\"";
+		echo ">";
 
-			// URL
-			$link = filename_format($action['link'], $item);
-			echo " href=\"", htmlspecialchars($link), "\"";
-
-			// Class
-			$class = isset($action['class']) ? (array) $action['class'] : array();
-			$class[] = 'action_'.$a;
-			echo " class=\"", htmlspecialchars(join(' ', $class)), "\"";
-
-			// Title (label is usually very short)
-			echo " title=\"", htmlspecialchars(isset($action['description']) ? $action['description'] : $action['label']), "\"";
-
-			echo ">";
-
-			// Label
-			echo "<span>", htmlspecialchars($action['label']), "</span>";
-
-			echo "</a>\n";
+		if ($action_names !== null) {
+			foreach ($action_names as $a) {
+				$action = $actions[$a];
+				static::renderAction($a, $action, $item);
+			}
+		} else {
+			foreach ($actions as $a => $action) {
+				if ($action['hidden']) {
+					continue;
+				}
+				static::renderAction($a, $action, $item);
+			}
 		}
 		echo "</div>\n";
+	}
+
+
+	protected static function renderAction($action_name, $action, $item)
+	{
+		echo "<a";
+
+		// URL
+		$link = filename_format($action['link'], $item);
+		echo " href=\"", htmlspecialchars($link), "\"";
+
+		// Class
+		$class = isset($action['class']) ? (array) $action['class'] : array();
+		$class[] = 'action';
+		$class[] = 'action_'.$action_name;
+		echo " class=\"", htmlspecialchars(join(' ', $class)), "\"";
+
+		// Title (label is usually very short)
+		echo " title=\"", htmlspecialchars(isset($action['description']) ? $action['description'] : $action['label']), "\"";
+
+		echo ">";
+
+		// Label
+		echo "<span>", htmlspecialchars($action['label']), "</span>";
+
+		echo "</a>\n";
 	}
 
 }

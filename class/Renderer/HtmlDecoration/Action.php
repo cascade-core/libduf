@@ -19,24 +19,22 @@
 namespace Duf\Renderer\HtmlDecoration;
 
 /**
- * Render links to actions of collection (within a group).
- *
- * Expects 'collection_actions' option specified in group configuration.
- *
- * @see ItemActions
- *
+ * Render link to an action of an item. Like ItemActions, but renders only one
+ * selected action and ignores 'hidden' option.
  */
-class CollectionActions extends ItemActions implements \Duf\Renderer\IWidgetRenderer
+class Action extends ItemActions implements \Duf\Renderer\IWidgetRenderer
 {
 
 	/// @copydoc \Duf\Renderer\IWidgetRenderer::renderWidget
 	public static function renderWidget(\Duf\Form $form, $template_engine, $widget_conf)
 	{
+		$action_name = $widget_conf['action'];
 		$group_id = $widget_conf['group_id'];
-		$actions = $form->getFieldGroupOption($group_id, 'collection_actions');
+		$item = $form->getRawData($group_id);
+		$actions = $form->getFieldGroupOption($group_id, 'item_actions');
+		$action = $actions[$action_name];
 
-		static::renderActions($widget_conf, $actions, array(), isset($widget_conf['actions']) ? $widget_conf['actions'] : null);
+		static::renderAction($action_name, $action, $item);
 	}
 
 }
-
