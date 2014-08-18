@@ -28,10 +28,10 @@ class Thumbnail implements \Duf\Renderer\IFieldWidgetRenderer
 	public static function renderFieldWidget(\Duf\Form $form, $template_engine, $widget_conf, $group_id, $field_id, $field_conf)
 	{
 		if (isset($field_conf['link'])) {
-			echo "<a href=\"", htmlspecialchars(filename_format($field_conf['link'], $form->getViewData($group_id))), "\">";
+			echo "<a href=\"", htmlspecialchars(filename_format($field_conf['link'], $form->getViewData($group_id))), "\" class=\"thumbnail\">";
 		}
 
-		echo "<img width=\"", $widget_conf['width'], "\" height=\"", $widget_conf['height'], "\"",
+		echo "<img width=\"", $widget_conf['width'], "\" height=\"", $widget_conf['height'], "\" class=\"thumbnail\"",
 			" src=\"", htmlspecialchars($form->getViewData($group_id, $field_id)), "\" alt=\"\">";
 
 		if (isset($field_conf['link'])) {
