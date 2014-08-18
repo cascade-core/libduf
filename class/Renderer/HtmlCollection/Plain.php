@@ -33,7 +33,7 @@ class Plain implements \Duf\Renderer\IWidgetRenderer
 
 		$collection_key = array();
 		$dimensions = $group['collection_dimensions'];
-		\Duf\CollectionWalker::walkCollection($form->getRawData($group_id), $dimensions,
+		\Duf\CollectionWalker::walkCollection($form->getViewData($group_id), $dimensions,
 			function($collection_key) use ($form, $template_engine, $widget_conf, $group_id, $dimensions) {
 				$form->setCollectionKey($group_id, $collection_key);
 				echo "<div";

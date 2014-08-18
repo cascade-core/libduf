@@ -52,14 +52,14 @@ class GroupedList implements \Duf\Renderer\IWidgetRenderer
 			echo ">\n";
 		}
 
-		\Duf\CollectionWalker::walkCollection($form->getRawData($group_id), $dimensions,
+		\Duf\CollectionWalker::walkCollection($form->getViewData($group_id), $dimensions,
 			function($collection_key) use ($form, $template_engine, $widget_conf, $group_id, $dimensions,
 				& $last_list_group_id, $list_group_field_id, $list_group_class_fmt, $list_group_heading_fmt, $list_group_heading_level)
 			{
 				$form->setCollectionKey($group_id, $collection_key);
 
 				// Start new group if $list_group_id changed
-				$values = $form->getRawData($group_id);
+				$values = $form->getViewData($group_id);
 				$list_group_id = $list_group_field_id && isset($values[$list_group_field_id]) ? $values[$list_group_field_id] : null;
 				if ($last_list_group_id !== $list_group_id) {
 					if ($last_list_group_id !== false) {

@@ -31,7 +31,7 @@ class ActionLink implements \Duf\Renderer\IWidgetRenderer
 		$link_fmt = $widget_conf['link_fmt'];
 
 		$key = $form->getCollectionKey($group_id);
-		$item = $form->getRawData($group_id);
+		$item = $form->getViewData($group_id);
 		$link = filename_format($link_fmt, array_merge($key, $item));
 
 		echo "<a href=\"", $link, "\">\n";
