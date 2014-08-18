@@ -705,6 +705,8 @@ class Form
 	{
 		if (isset($this->form_def['field_groups'][$group][$option])) {
 			return $this->form_def['field_groups'][$group][$option];
+		} else if (!isset($this->form_def['field_groups'][$group])) {
+			throw new \InvalidArgumentException('Unknown field group: '.$group);
 		} else {
 			return null;
 		}
