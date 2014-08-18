@@ -36,10 +36,14 @@ class Reference
 	{
 		// Copy ID properties to field
 		if (count($field_conf['machine_id']) == 1) {
-			$id = reset($field_conf['machine_id']);
-			$raw_values[$field_id] = isset($default_values[$id]) ? $default_values[$id] : null;
+			$p = reset($field_conf['machine_id']);
+			$raw_values[$field_id] = isset($default_values[$p]) ? $default_values[$p] : null;
 		} else {
-			throw new \Exception('Not implemented yet.');
+			$id_value = array();
+			foreach ($field_conf['machine_id'] as $p) {
+				$id_value[] = isset($default_values[$p]) ? $default_values[$p] : null;
+			}
+			$raw_values[$field_id] = json_encode($id_value, JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
 		}
 
 		// Copy additional values which are not field data, but they are important for `@view` renderers.
@@ -60,7 +64,11 @@ class Reference
 		if (count($field_conf['machine_id']) == 1) {
 			$group_values[reset($field_conf['machine_id'])] = $raw_values[$field_id];
 		} else {
-			throw new \Exception('Not implemented yet.');
+			$id_value = array_values(json_decode($raw_values[$field_id], TRUE));
+			$i = 0;
+			foreach ($field_conf['machine_id'] as $p) {
+				$group_values[$p] = $id_value[$i++];
+			}
 		}
 	}
 
