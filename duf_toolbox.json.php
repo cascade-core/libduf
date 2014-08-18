@@ -181,7 +181,8 @@
         "url": {
             "renderers": {
                 "@edit": "\\Duf\\Renderer\\HtmlForm\\Input",
-                "@view": "\\Duf\\Renderer\\HtmlView\\Input"
+                "@view": "\\Duf\\Renderer\\HtmlView\\Input",
+                "@thumbnail": "\\Duf\\Renderer\\HtmlView\\Thumbnail"
             },
             "validators": {
                 "html5": "\\Duf\\FieldValidator\\UrlInput"
@@ -306,6 +307,9 @@
         },
         "price": {
             "renderer": "\\Duf\\Renderer\\HtmlDecoration\\Price"
+        },
+        "thumbnail": {
+            "renderer": "\\Duf\\Renderer\\HtmlDecoration\\Thumbnail"
         }
     }
 }
