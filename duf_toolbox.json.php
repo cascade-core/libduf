@@ -303,6 +303,9 @@
         },
         "slot": {
             "renderer": "\\Duf\\Renderer\\HtmlDecoration\\Slot"
+        },
+        "price": {
+            "renderer": "\\Duf\\Renderer\\HtmlDecoration\\Price"
         }
     }
 }
