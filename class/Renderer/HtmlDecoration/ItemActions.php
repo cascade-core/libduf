@@ -74,6 +74,13 @@ class ItemActions implements \Duf\Renderer\IWidgetRenderer
 
 	protected static function renderAction($action_name, $action, $item)
 	{
+		if (isset($action['is_allowed_callback'])) {
+			$f = $action['is_allowed_callback'];
+			if (!$f($item)) {
+				return;
+			}
+		}
+
 		echo "<a";
 
 		// URL

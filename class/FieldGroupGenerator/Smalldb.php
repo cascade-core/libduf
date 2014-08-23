@@ -109,7 +109,8 @@ class Smalldb implements IFieldGroupGenerator
 		// Add actions
 		$item_actions = array();
 		$collection_actions = array();
-		$id_fmt = join('/', array_map(function($x) { return "{{$x}}"; }, $machine->describeId()));
+		$id_properties = $machine->describeId();
+		$id_fmt = join('/', array_map(function($x) { return "{{$x}}"; }, $id_properties));
 		foreach ($machine->describeAllMachineActions() as $a => $action) {
 			if (empty($action['transitions'])) {
 				// Action with no transition -- no button needed
@@ -128,6 +129,9 @@ class Smalldb implements IFieldGroupGenerator
 					'description' => $desc,
 					'link' => $link !== null ? $link : "/$machine_type_url!$a",
 					'hidden' => !empty($action['hidden']),
+					'is_allowed_callback' => function($item) use ($machine, $a, $id_properties) {
+						return $machine->isTransitionAllowed(null, $a);
+					}
 				);
 				if (count($action['transitions']) == 1) {
 					// only collection action, skip items
@@ -141,6 +145,18 @@ class Smalldb implements IFieldGroupGenerator
 				'description' => $desc,
 				'link' => $link !== null ? $link : (($url_fmt = $machine->getUrlFormat()) !== null ? $url_fmt."!$a" : "/$machine_type_url/$id_fmt!$a"),
 				'hidden' => !empty($action['hidden']),
+				'is_allowed_callback' => function($item) use ($machine, $a, $id_properties) {
+					$id = array();
+					foreach ($id_properties as $k) {
+						$id[] = $item[$k];
+					}
+					/*
+					debug_dump($a, 'Checking item action');
+					debug_dump($id, 'ID');
+					debug_dump($item, 'Item');
+					// */
+					return $machine->isTransitionAllowed($id, $a);
+				}
 			);
 		}
 
