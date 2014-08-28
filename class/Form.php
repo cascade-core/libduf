@@ -454,6 +454,9 @@ class Form
 	 */
 	public function getViewData($group, $field = null)
 	{
+		if (!isset($this->form_def['field_groups'][$group])) {
+			throw new \InvalidArgumentException('Group does not exist: '.$group);
+		}
 		return $this->getArrayItemByPath($this->field_defaults[$group],
 			isset($this->group_keys[$group]) ? $this->group_keys[$group] : null,
 			$field);
