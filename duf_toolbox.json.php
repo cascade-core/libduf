@@ -20,7 +20,8 @@
         "checkbox": {
             "renderers": {
                 "@edit": "\\Duf\\Renderer\\HtmlForm\\Input",
-                "@view": "\\Duf\\Renderer\\HtmlView\\Input"
+                "@view": "\\Duf\\Renderer\\HtmlView\\Input",
+                "@hidden": "\\Duf\\Renderer\\HtmlForm\\HiddenInput"
             },
             "validators": {
                 "html5": "\\Duf\\FieldValidator\\TextInput"
@@ -32,7 +33,8 @@
         "date": {
             "renderers": {
                 "@edit": "\\Duf\\Renderer\\HtmlForm\\Input",
-                "@view": "\\Duf\\Renderer\\HtmlView\\Input"
+                "@view": "\\Duf\\Renderer\\HtmlView\\Input",
+                "@hidden": "\\Duf\\Renderer\\HtmlForm\\HiddenInput"
             },
             "validators": {
                 "html5": "\\Duf\\FieldValidator\\DateInput"
@@ -41,7 +43,8 @@
         "datetime": {
             "renderers": {
                 "@edit": "\\Duf\\Renderer\\HtmlForm\\Input",
-                "@view": "\\Duf\\Renderer\\HtmlView\\Input"
+                "@view": "\\Duf\\Renderer\\HtmlView\\Input",
+                "@hidden": "\\Duf\\Renderer\\HtmlForm\\HiddenInput"
             },
             "validators": {
                 "html5": "\\Duf\\FieldValidator\\DateTimeInput"
@@ -50,7 +53,8 @@
         "datetime-local": {
             "renderers": {
                 "@edit": "\\Duf\\Renderer\\HtmlForm\\Input",
-                "@view": "\\Duf\\Renderer\\HtmlView\\Input"
+                "@view": "\\Duf\\Renderer\\HtmlView\\Input",
+                "@hidden": "\\Duf\\Renderer\\HtmlForm\\HiddenInput"
             },
             "validators": {
                 "html5": "\\Duf\\FieldValidator\\DateTimeInput"
@@ -59,7 +63,8 @@
         "email": {
             "renderers": {
                 "@edit": "\\Duf\\Renderer\\HtmlForm\\Input",
-                "@view": "\\Duf\\Renderer\\HtmlView\\Input"
+                "@view": "\\Duf\\Renderer\\HtmlView\\Input",
+                "@hidden": "\\Duf\\Renderer\\HtmlForm\\HiddenInput"
             },
             "validators": {
                 "html5": "\\Duf\\FieldValidator\\EmailInput"
@@ -89,7 +94,8 @@
         "month": {
             "renderers": {
                 "@edit": "\\Duf\\Renderer\\HtmlForm\\Input",
-                "@view": "\\Duf\\Renderer\\HtmlView\\Input"
+                "@view": "\\Duf\\Renderer\\HtmlView\\Input",
+                "@hidden": "\\Duf\\Renderer\\HtmlForm\\HiddenInput"
             },
             "validators": {
                 "html5": "\\Duf\\FieldValidator\\MonthInput"
@@ -98,7 +104,8 @@
         "number": {
             "renderers": {
                 "@edit": "\\Duf\\Renderer\\HtmlForm\\Input",
-                "@view": "\\Duf\\Renderer\\HtmlView\\Input"
+                "@view": "\\Duf\\Renderer\\HtmlView\\Input",
+                "@hidden": "\\Duf\\Renderer\\HtmlForm\\HiddenInput"
             },
             "validators": {
                 "html5": "\\Duf\\FieldValidator\\NumberInput"
@@ -106,7 +113,8 @@
         },
         "password": {
             "renderers": {
-                "@edit": "\\Duf\\Renderer\\HtmlForm\\Input"
+                "@edit": "\\Duf\\Renderer\\HtmlForm\\Input",
+                "@hidden": "\\Duf\\Renderer\\HtmlForm\\HiddenInput"
             },
             "validators": {
                 "html5": "\\Duf\\FieldValidator\\TextInput"
@@ -127,7 +135,8 @@
         "select": {
             "renderers": {
                 "@edit": "\\Duf\\Renderer\\HtmlForm\\Select",
-                "@view": "\\Duf\\Renderer\\HtmlView\\Select"
+                "@view": "\\Duf\\Renderer\\HtmlView\\Select",
+                "@hidden": "\\Duf\\Renderer\\HtmlForm\\HiddenInput"
             },
             "validators": {
             }
@@ -155,7 +164,8 @@
         "text": {
             "renderers": {
                 "@edit": "\\Duf\\Renderer\\HtmlForm\\Input",
-                "@view": "\\Duf\\Renderer\\HtmlView\\Input"
+                "@view": "\\Duf\\Renderer\\HtmlView\\Input",
+                "@hidden": "\\Duf\\Renderer\\HtmlForm\\HiddenInput"
             },
             "validators": {
                 "html5": "\\Duf\\FieldValidator\\TextInput"
@@ -164,7 +174,8 @@
         "textarea": {
             "renderers": {
                 "@edit": "\\Duf\\Renderer\\HtmlForm\\TextArea",
-                "@view": "\\Duf\\Renderer\\HtmlView\\TextArea"
+                "@view": "\\Duf\\Renderer\\HtmlView\\TextArea",
+                "@hidden": "\\Duf\\Renderer\\HtmlForm\\HiddenInput"
             },
             "validators": {
             }
@@ -172,7 +183,8 @@
         "time": {
             "renderers": {
                 "@edit": "\\Duf\\Renderer\\HtmlForm\\Input",
-                "@view": "\\Duf\\Renderer\\HtmlView\\Input"
+                "@view": "\\Duf\\Renderer\\HtmlView\\Input",
+                "@hidden": "\\Duf\\Renderer\\HtmlForm\\HiddenInput"
             },
             "validators": {
                 "html5": "\\Duf\\FieldValidator\\TimeInput"
@@ -182,7 +194,8 @@
             "renderers": {
                 "@edit": "\\Duf\\Renderer\\HtmlForm\\Input",
                 "@view": "\\Duf\\Renderer\\HtmlView\\Input",
-                "@thumbnail": "\\Duf\\Renderer\\HtmlView\\Thumbnail"
+                "@thumbnail": "\\Duf\\Renderer\\HtmlView\\Thumbnail",
+                "@hidden": "\\Duf\\Renderer\\HtmlForm\\HiddenInput"
             },
             "validators": {
                 "html5": "\\Duf\\FieldValidator\\UrlInput"
@@ -191,7 +204,8 @@
         "week": {
             "renderers": {
                 "@edit": "\\Duf\\Renderer\\HtmlForm\\Input",
-                "@view": "\\Duf\\Renderer\\HtmlView\\Input"
+                "@view": "\\Duf\\Renderer\\HtmlView\\Input",
+                "@hidden": "\\Duf\\Renderer\\HtmlForm\\HiddenInput"
             },
             "validators": {
                 "html5": "\\Duf\\FieldValidator\\WeekInput"
@@ -200,7 +214,8 @@
         "value_list": {
             "renderers": {
                 "@edit": "\\Duf\\Renderer\\HtmlForm\\ValueList",
-                "@view": "\\Duf\\Renderer\\HtmlView\\ValueList"
+                "@view": "\\Duf\\Renderer\\HtmlView\\ValueList",
+                "@hidden": "\\Duf\\Renderer\\HtmlForm\\HiddenInput"
             },
             "value_processor": "\\Duf\\FieldValueProcessor\\LineList",
             "validators": {
@@ -209,7 +224,8 @@
         "url_list": {
             "renderers": {
                 "@edit": "\\Duf\\Renderer\\HtmlForm\\UrlList",
-                "@view": "\\Duf\\Renderer\\HtmlView\\UrlList"
+                "@view": "\\Duf\\Renderer\\HtmlView\\UrlList",
+                "@hidden": "\\Duf\\Renderer\\HtmlForm\\HiddenInput"
             },
             "value_processor": "\\Duf\\FieldValueProcessor\\LineList",
             "validators": {
@@ -218,7 +234,8 @@
         "email_list": {
             "renderers": {
                 "@edit": "\\Duf\\Renderer\\HtmlForm\\UrlList",
-                "@view": "\\Duf\\Renderer\\HtmlView\\EmailList"
+                "@view": "\\Duf\\Renderer\\HtmlView\\EmailList",
+                "@hidden": "\\Duf\\Renderer\\HtmlForm\\HiddenInput"
             },
             "value_processor": "\\Duf\\FieldValueProcessor\\LineList",
             "validators": {
@@ -227,7 +244,8 @@
         "tel_list": {
             "renderers": {
                 "@edit": "\\Duf\\Renderer\\HtmlForm\\TelList",
-                "@view": "\\Duf\\Renderer\\HtmlView\\ValueList"
+                "@view": "\\Duf\\Renderer\\HtmlView\\ValueList",
+                "@hidden": "\\Duf\\Renderer\\HtmlForm\\HiddenInput"
             },
             "value_processor": "\\Duf\\FieldValueProcessor\\LineList",
             "validators": {
@@ -236,7 +254,8 @@
         "post_address": {
             "renderers": {
                 "@edit": "\\Duf\\Renderer\\HtmlForm\\PostAddress",
-                "@view": "\\Duf\\Renderer\\HtmlView\\PostAddress"
+                "@view": "\\Duf\\Renderer\\HtmlView\\PostAddress",
+                "@hidden": "\\Duf\\Renderer\\HtmlForm\\HiddenInput"
             },
             "value_processor": "\\Duf\\FieldValueProcessor\\PostAddress",
             "validators": {
