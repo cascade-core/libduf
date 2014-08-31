@@ -155,6 +155,7 @@
                 "@view": false,
                 "@label": false
             },
+            "value_processor": "\\Duf\\FieldValueProcessor\\SubmitInput",
             "validators": {
             }
         },
