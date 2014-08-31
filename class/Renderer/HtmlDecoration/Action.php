@@ -30,7 +30,7 @@ class Action extends ItemActions implements \Duf\Renderer\IWidgetRenderer
 	{
 		$action_name = $widget_conf['action'];
 		$group_id = $widget_conf['group_id'];
-		$item = $form->getRawData($group_id);
+		$item = $form->getViewData($group_id);
 		$actions = $form->getFieldGroupOption($group_id, 'item_actions');
 		$action = $actions[$action_name];
 
