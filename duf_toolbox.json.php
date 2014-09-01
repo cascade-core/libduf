@@ -261,6 +261,15 @@
             "value_processor": "\\Duf\\FieldValueProcessor\\PostAddress",
             "validators": {
             }
+        },
+        "item_count": {
+            "renderers": {
+                "@edit": "\\Duf\\Renderer\\HtmlForm\\Input",
+                "@view": "\\Duf\\Renderer\\HtmlView\\ItemCount",
+                "@hidden": "\\Duf\\Renderer\\HtmlForm\\HiddenInput"
+            },
+            "validators": {
+            }
         }
     },
     "form": {
