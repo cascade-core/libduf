@@ -122,13 +122,17 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 			echo "</thead>\n";
 		}
 
-		// Header
-		if (empty($widget_conf['tfoot']['hidden']) && !empty($widget_conf['tfoot']['widgets'])) {
+		// Footer
+		if (isset($widget_conf['tfoot']) && empty($widget_conf['tfoot']['hidden'])) {
 			echo "<tfoot>\n";
 			echo "<tr>\n";
-			echo "<th colspan=\"", count($columns), "\">\n";
-			$form->renderWidgets($template_engine, $widget_conf['tfoot']['widgets']);
-			echo "</th>\n";
+			if (isset($widget_conf['tfoot']['columns'])) {
+				self::renderColumns($form, $template_engine, $widget_conf['tfoot']['columns']);
+			} else {
+				echo "<th colspan=\"", count($columns), "\">\n";
+				$form->renderWidgets($template_engine, $widget_conf['tfoot']['widgets']);
+				echo "</th>\n";
+			}
 			echo "</tr>\n";
 			echo "</tfoot>\n";
 		}
@@ -152,9 +156,35 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 			echo "</td>\n";
 			echo "</tr>\n";
 		} else {
+			// Prepare group headings configuration
+			$last_group_heading_value = null;
+			if (isset($widget_conf['group_heading']['field_id'])) {
+				$group_heading_field_id = $widget_conf['group_heading']['field_id'];
+				$group_heading_columns = $widget_conf['group_heading']['columns'];
+			} else {
+				$group_heading_field_id = null;
+				$group_heading_columns = null;
+			}
+
+			// For each row ...
 			\Duf\CollectionWalker::walkCollection($collection, $group['collection_dimensions'],
-				function($collection_key, $item) use ($form, $template_engine, $group_id, $columns, & $is_row_even) {
+				function($collection_key, $item) use ($form, $template_engine, $group_id, $columns, & $is_row_even,
+					& $last_group_heading_value, $group_heading_field_id, $group_heading_columns)
+				{
 					$form->setCollectionKey($group_id, $collection_key);
+
+					// Group heading
+					if ($group_heading_field_id !== null) {
+						$group_heading_value = $form->getViewData($group_id, $group_heading_field_id);
+						if ($group_heading_value !== $last_group_heading_value) {
+							$last_group_heading_value = $group_heading_value;
+							echo "<tr class=\"group_heading\">\n";
+							self::renderColumns($form, $template_engine, $group_heading_columns);
+							echo "</tr>\n";
+						}
+					}
+
+					// Row cells
 					echo "<tr class=\"", $is_row_even ? 'even':'odd', "\">\n";
 					foreach ($columns as $field_id => $col) {
 						echo "<td";
@@ -180,6 +210,30 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 
 		// End
 		echo "</table>\n";
+	}
+
+	/**
+	 * Render `<td>` elements using given columns configuration
+	 */
+	private static function renderColumns(\Duf\Form $form, $template_engine, $columns, $tag = 'td')
+	{
+		foreach ($columns as $col) {
+			echo "<$tag";
+			if (!empty($col['colspan'])) {
+				echo " colspan=\"", htmlspecialchars($col['colspan']), "\"";
+			}
+			if (!empty($col['class'])) {
+				echo " class=\"", htmlspecialchars(join(' ', (array) $col['class'])), "\"";
+			}
+			echo ">\n";
+			if (isset($col['label'])) {
+				echo htmlspecialchars($col['label']);
+			}
+			if (isset($col['widgets'])) {
+				$form->renderWidgets($template_engine, $col['widgets']);
+			}
+			echo "</$tag>\n";
+		}
 	}
 
 }
