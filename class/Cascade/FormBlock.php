@@ -62,8 +62,21 @@ class FormBlock extends \Cascade\Core\Block implements \Cascade\Core\IShebangHan
 			'duf_form' => true,
 		);
 		foreach ($this->form->getFieldGroups() as $group => $group_config) {
-			$this->inputs[$group] = null;
-			$this->outputs[$group] = true;
+			if (empty($group_config['explode_inputs'])) {
+				$this->inputs[$group] = null;
+			} else {
+				foreach ($group_config['fields'] as $field => $field_conf) {
+					$this->inputs[$group.'_'.$field] = null;
+				}
+			}
+
+			if (empty($group_config['explode_outputs'])) {
+				$this->outputs[$group] = true;
+			} else {
+				foreach ($group_config['fields'] as $field => $field_conf) {
+					$this->outputs[$group.'_'.$field] = true;
+				}
+			}
 		}
 		$this->inputs['action_url'] = '';
 		$this->inputs['target_form_id'] = null;
@@ -96,6 +109,19 @@ class FormBlock extends \Cascade\Core\Block implements \Cascade\Core\IShebangHan
 			$this->form->class = $class;
 		}
 
+		$input_values = $this->inAll();
+		foreach ($this->form->getFieldGroups() as $group => $group_config) {
+			if (!empty($group_config['explode_inputs'])) {
+				foreach ($group_config['fields'] as $field => $field_conf) {
+					$k = $group.'_'.$field;
+					if (isset($input_values[$k])) {
+						$input_values[$group][$field] = $input_values[$k];
+						unset($input_values[$k]);
+					}
+				}
+			}
+		}
+
 		$this->form->setDefaults($this->inAll());
 		$this->form->loadInput();
 
@@ -109,7 +135,18 @@ class FormBlock extends \Cascade\Core\Block implements \Cascade\Core\IShebangHan
 		}
 
 		if ($is_valid) {
-			$this->outAll($this->form->getValues());
+			$values = $this->form->getValues();
+			foreach ($this->form->getFieldGroups() as $group => $group_config) {
+				if (!empty($group_config['explode_outputs'])) {
+					foreach ($group_config['fields'] as $field => $field_conf) {
+						if (isset($values[$group][$field])) {
+							$values[$group.'_'.$field] = $values[$group][$field];
+						}
+					}
+					unset($values[$group]);
+				}
+			}
+			$this->outAll($values);
 		}
 
 		$this->out('duf_form', $this->form);
