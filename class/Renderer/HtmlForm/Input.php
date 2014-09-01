@@ -118,8 +118,16 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 						echo " $k=\"", htmlspecialchars($v), "\"";
 					}
 					break;
+
+				// Confirm button click
+				case 'confirm_query':
+					if ($type == 'submit') {
+						echo "onclick=\"return confirm('", htmlspecialchars(addcslashes($v, "'")), "');\"";
+					}
+					break;
 			}
 		}
+
 		echo ">\n";
 	}
 
