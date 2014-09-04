@@ -339,6 +339,9 @@
         },
         "thumbnail": {
             "renderer": "\\Duf\\Renderer\\HtmlDecoration\\Thumbnail"
+        },
+        "add_to_basket": {
+            "renderer": "\\Duf\\Renderer\\HtmlDecoration\\AddToBasketWidget"
         }
     }
 }

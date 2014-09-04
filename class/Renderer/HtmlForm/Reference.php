@@ -38,7 +38,12 @@ class Reference extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 				" id=\"", $form->getHtmlFieldId($group_id, $field_id), "\"",
 				" name=\"", $form->getHtmlFieldName($group_id, $field_id), "\"";
 			static::commonAttributes($field_conf);
-			echo 	" value=\"", htmlspecialchars($form->getRawData($group_id, $field_id)), "\"";
+			$value = $form->getRawData($group_id, $field_id);
+			if (is_array($value)) {
+				echo 	" value='", json_encode($value, JSON_HEX_AMP | JSON_HEX_APOS | JSON_NUMERIC_CHECK | JSON_UNESCAPED_SLASHES), "'";
+			} else {
+				echo 	" value=\"", htmlspecialchars($value), "\"";
+			}
 			echo ">\n";
 
 		} else {

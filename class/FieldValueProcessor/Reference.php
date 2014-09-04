@@ -64,7 +64,12 @@ class Reference
 		if (count($field_conf['machine_id']) == 1) {
 			$group_values[reset($field_conf['machine_id'])] = $raw_values[$field_id];
 		} else {
-			$id_value = array_values(json_decode($raw_values[$field_id], TRUE));
+			if (is_array($raw_values[$field_id])) {
+				ksort($raw_values[$field_id]);
+				$id_value = array_values($raw_values[$field_id]);
+			} else {
+				$id_value = array_values(json_decode($raw_values[$field_id], TRUE));
+			}
 			$i = 0;
 			foreach ($field_conf['machine_id'] as $p) {
 				$group_values[$p] = $id_value[$i++];
