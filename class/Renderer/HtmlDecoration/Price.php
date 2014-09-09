@@ -40,7 +40,9 @@ class Price implements \Duf\Renderer\IWidgetRenderer
 		$currency  = $form->getViewData($group_id, $widget_conf['currency_field_id']);
 
 
-		if ($price_vat === null) {
+		if ($price_vat === null && $price === null) {
+			return;
+		} else if ($price_vat === null) {
 			echo "<span class=\"price excl_vat\">";
 			echo htmlspecialchars(self::$currency_formatter->formatCurrency($price, $currency)), ' <small>', _('(excl. VAT.)'), '</small>';
 			echo "</span>\n";
