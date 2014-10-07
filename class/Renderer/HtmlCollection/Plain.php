@@ -23,6 +23,7 @@ namespace Duf\Renderer\HtmlCollection;
  */
 class Plain implements \Duf\Renderer\IWidgetRenderer
 {
+	use \Duf\Renderer\TagUtils;
 
 	/// @copydoc \Duf\Renderer\IWidgetRenderer::renderWidget
 	public static function renderWidget(\Duf\Form $form, $template_engine, $widget_conf)
@@ -38,12 +39,7 @@ class Plain implements \Duf\Renderer\IWidgetRenderer
 				$form->setCollectionKey($group_id, $collection_key);
 				echo "<div";
 				if (isset($widget_conf['dimensions'][$dimensions]['class'])) {
-					$class = $widget_conf['dimensions'][$dimensions]['class'];
-					if (is_array($class)) {
-						echo " class=\"", htmlspecialchars(join(' ', $class)), "\"";
-					} else {
-						echo " class=\"", htmlspecialchars($class), "\"";
-					}
+					static::renderClassAttr($form, $template_engine, $widget_conf['dimensions'][$dimensions]['class']);
 				}
 				echo ">\n";
 				$form->renderWidgets($template_engine, $widget_conf['widgets']);
@@ -52,12 +48,7 @@ class Plain implements \Duf\Renderer\IWidgetRenderer
 			function($depth) use ($widget_conf) {
 				if (isset($widget_conf['dimensions'][$depth]['class'])) {
 					echo "<div";
-					$class = $widget_conf['dimensions'][$depth]['class'];
-					if (is_array($class)) {
-						echo " class=\"", htmlspecialchars(join(' ', $class)), "\"";
-					} else {
-						echo " class=\"", htmlspecialchars($class), "\"";
-					}
+					static::renderClassAttr($form, $template_engine, $widget_conf['dimensions'][$depth]['class']);
 					echo ">\n";
 				}
 			},

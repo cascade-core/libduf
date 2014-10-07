@@ -27,54 +27,16 @@ namespace Duf\Renderer\Utils;
  * rendered as usual. Invalid values (not present in `widgets_map`) are silently
  * ignored and `default_widgets` are used instead.
  *
- * The value is used as array index without conversion. PHP will map true to
- * "1", false to "0".
- *
- * If `map_function` is specified, value is processed by this function before
- * use. The map function is called with two arguments: the value and
- * `$widget_conf`.
- *
- * If `cast_value` option is specified, result value (after applying
- * `map_function`) is casted to `bool`, `int`, `float` or `string. Additionaly
- * it can be compared to `null` using `is_null` and `not_null` (these produce
- * bool values).
- *
- * If `field_id` is null or missing, the map function receives values of entire
- * group.
+ * @see Duf\Renderer\TagUtils::calculateValue()
  */
 class SwitchWidget implements \Duf\Renderer\IWidgetRenderer
 {
+	use \Duf\Renderer\TagUtils;
 
 	/// @copydoc \Duf\Renderer\IWidgetRenderer::renderWidget
 	public static function renderWidget(\Duf\Form $form, $template_engine, $widget_conf)
 	{
-		if (isset($widget_conf['group_id'])) {
-			$group_id = $widget_conf['group_id'];
-		} else {
-			throw new \InvalidArgumentException('Missing group_id.');
-		}
-
-		// Get value
-		$field_id = isset($widget_conf['field_id']) ? $widget_conf['field_id'] : null;
-		$value = $form->getRawData($group_id, $field_id);
-
-		// Apply map function if specified
-		if (isset($widget_conf['map_function'])) {
-			$map_function = $widget_conf['map_function'];
-			$value = call_user_func($map_function, $value, $widget_conf);
-		}
-
-		// Cast result
-		if (isset($widget_conf['cast_value'])) {
-			switch($widget_conf['cast_value']) {
-				case 'bool':     $value = (bool)   $value; break;
-				case 'int':      $value = (int)    $value; break;
-				case 'float':    $value = (float)  $value; break;
-				case 'string':   $value = (string) $value; break;
-				case 'is_null':  $value = ($value === null); break;
-				case 'not_null': $value = ($value !== null); break;
-			}
-		}
+		$value = static::calculateValue($form, $template_engine, $widget_conf);
 
 		// Render children
 		if (isset($widget_conf['widgets_map'][$value])) {

@@ -25,6 +25,7 @@ namespace Duf\Renderer\HtmlLayout;
  */
 class Plain implements \Duf\Renderer\IWidgetRenderer
 {
+	use \Duf\Renderer\TagUtils;
 
 	/// @copydoc \Duf\Renderer\IWidgetRenderer::renderWidget
 	public static function renderWidget(\Duf\Form $form, $template_engine, $widget_conf)
@@ -33,11 +34,7 @@ class Plain implements \Duf\Renderer\IWidgetRenderer
 		if ($layout_has_holder) {
 			echo "<div";
 			if (isset($widget_conf['class'])) {
-				if (is_array($widget_confow['class'])) {
-					echo " class=\"", htmlspecialchars(join(' ', $widget_confow['class'])), "\"";
-				} else {
-					echo " class=\"", htmlspecialchars($widget_confow['class']), "\"";
-				}
+				static::renderClassAttr($form, $template_engine, $widget_conf['class']);
 			}
 			echo ">\n";
 		}
@@ -47,11 +44,7 @@ class Plain implements \Duf\Renderer\IWidgetRenderer
 			if ($row_has_holder) {
 				echo "<div";
 				if (isset($row['class'])) {
-					if (is_array($row['class'])) {
-						echo " class=\"", htmlspecialchars(join(' ', $row['class'])), "\"";
-					} else {
-						echo " class=\"", htmlspecialchars($row['class']), "\"";
-					}
+					static::renderClassAttr($form, $template_engine, $row['class']);
 				}
 				echo ">\n";
 			}
