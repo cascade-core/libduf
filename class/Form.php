@@ -394,7 +394,7 @@ class Form
 				if ($processor_class) {
 					$processor_class::valuePostProcess($raw_input, $field_values, $this, $group_id, $fi, $f);
 				} else {
-					$field_values[$fi] = $raw_input[$fi];
+					$field_values[$fi] = $raw_input[$fi] === '' ? null : $raw_input[$fi];
 				}
 			}
 			$this->unsetCollectionKey($group_id);
