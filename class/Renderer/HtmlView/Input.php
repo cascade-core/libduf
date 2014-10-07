@@ -76,8 +76,12 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 				throw new \Exception('Not supported.');
 
 			case 'email':
-				echo str_replace(array('@', '.'), array('<span>&#64;</span>', '<span>&#46;</span>'),
-					htmlspecialchars($raw_value));
+				if ($raw_value !== null) {
+					echo str_replace(array('@', '.'), array('<span>&#64;</span>', '<span>&#46;</span>'),
+						htmlspecialchars($raw_value));
+				} else if (isset($field_conf['null_value'])) {
+					echo htmlspecialchars($field_conf['null_value']);
+				}
 				break;
 
 			case 'datetime':
@@ -86,6 +90,8 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 					echo strftime(
 						isset($field_conf['format']) ? $field_conf['format'] : _('%d.&nbsp;%m.&nbsp;%Y,&nbsp;%H:%M'),
 						strtotime($raw_value));
+				} else if (isset($field_conf['null_value'])) {
+					echo htmlspecialchars($field_conf['null_value']);
 				}
 				break;
 
@@ -94,6 +100,8 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 					echo strftime(
 						isset($field_conf['format']) ? $field_conf['format'] : _('%H:%M'),
 						strtotime($raw_value));
+				} else if (isset($field_conf['null_value'])) {
+					echo htmlspecialchars($field_conf['null_value']);
 				}
 				break;
 
@@ -102,6 +110,8 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 					echo strftime(
 						isset($field_conf['format']) ? $field_conf['format'] : _('%d.&nbsp;%m.&nbsp;%Y'),
 						strtotime($raw_value));
+				} else if (isset($field_conf['null_value'])) {
+					echo htmlspecialchars($field_conf['null_value']);
 				}
 				break;
 
@@ -110,6 +120,8 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 					echo strftime(
 						isset($field_conf['format']) ? $field_conf['format'] : _('%V/%Y'),
 						strtotime($raw_value));
+				} else if (isset($field_conf['null_value'])) {
+					echo htmlspecialchars($field_conf['null_value']);
 				}
 				break;
 
@@ -118,12 +130,18 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 					echo strftime(
 						isset($field_conf['format']) ? $field_conf['format'] : _('%B&nbsp;%Y'),
 						strtotime($raw_value));
+				} else if (isset($field_conf['null_value'])) {
+					echo htmlspecialchars($field_conf['null_value']);
 				}
 				break;
 
 
 			default:
-				echo htmlspecialchars($raw_value);
+				if ($raw_value !== null) {
+					echo htmlspecialchars($raw_value);
+				} else if (isset($field_conf['null_value'])) {
+					echo htmlspecialchars($field_conf['null_value']);
+				}
 				break;
 		}
 
