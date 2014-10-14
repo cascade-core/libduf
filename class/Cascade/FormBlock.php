@@ -122,7 +122,7 @@ class FormBlock extends \Cascade\Core\Block implements \Cascade\Core\IShebangHan
 			}
 		}
 
-		$this->form->setDefaults($this->inAll());
+		$this->form->setDefaults($input_values);
 		$this->form->loadInput();
 
 		$is_submitted = $this->form->isSubmitted();
