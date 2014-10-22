@@ -287,6 +287,20 @@ class Form
 
 
 	/**
+	 * Get group/field default value
+	 */
+	public function getDefaultValue($group, $field = null)
+	{
+		if (!isset($this->form_def['field_groups'][$group])) {
+			throw new \InvalidArgumentException('Group does not exist: '.$group);
+		}
+		return $field !== null
+			? (isset($this->field_defaults[$group][$field]) ? $this->field_defaults[$group][$field] : null)
+			: (isset($this->field_defaults[$group]) ? $this->field_defaults[$group] : null);
+	}
+
+
+	/**
 	 * Returns values submitted by user.
 	 */
 	public function getValues()
