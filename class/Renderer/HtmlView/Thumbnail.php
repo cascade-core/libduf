@@ -39,8 +39,14 @@ class Thumbnail implements \Duf\Renderer\IFieldWidgetRenderer
 
 		$base_dir = filename_format($field_conf['base_dir'], $values);
 
+		if (parse_url($value, PHP_URL_HOST) == '') {
+			$src = "$base_dir/$value";
+		} else {
+			$src = $value;
+		}
+
 		echo "<img width=\"", $widget_conf['width'], "\" height=\"", $widget_conf['height'], "\" class=\"thumbnail\"",
-			" src=\"", htmlspecialchars("$base_dir/$value"), "\" alt=\"\">";
+			" src=\"", htmlspecialchars($src), "\" alt=\"\">";
 
 		if (isset($field_conf['link'])) {
 			echo "</a>";
