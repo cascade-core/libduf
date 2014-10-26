@@ -27,12 +27,20 @@ class Thumbnail implements \Duf\Renderer\IFieldWidgetRenderer
 	/// @copydoc \Duf\Renderer\IFieldWidgetRenderer::renderFieldWidget
 	public static function renderFieldWidget(\Duf\Form $form, $template_engine, $widget_conf, $group_id, $field_id, $field_conf)
 	{
+		$values = $form->getViewData($group_id);
+		if (empty($values[$field_id])) {
+			return;
+		}
+		$value = $values[$field_id];
+
 		if (isset($field_conf['link'])) {
-			echo "<a href=\"", htmlspecialchars(filename_format($field_conf['link'], $form->getViewData($group_id))), "\" class=\"thumbnail\">";
+			echo "<a href=\"", htmlspecialchars(filename_format($field_conf['link'], $values)), "\" class=\"thumbnail\">";
 		}
 
+		$base_dir = filename_format($field_conf['base_dir'], $values);
+
 		echo "<img width=\"", $widget_conf['width'], "\" height=\"", $widget_conf['height'], "\" class=\"thumbnail\"",
-			" src=\"", htmlspecialchars($form->getViewData($group_id, $field_id)), "\" alt=\"\">";
+			" src=\"", htmlspecialchars("$base_dir/$value"), "\" alt=\"\">";
 
 		if (isset($field_conf['link'])) {
 			echo "</a>";
