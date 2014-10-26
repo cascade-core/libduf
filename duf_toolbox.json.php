@@ -270,6 +270,16 @@
             },
             "validators": {
             }
+        },
+        "image_list": {
+            "renderers": {
+                "@edit": "\\Duf\\Renderer\\HtmlForm\\UrlList",
+                "@view": "\\Duf\\Renderer\\HtmlView\\ImageList",
+                "@hidden": "\\Duf\\Renderer\\HtmlForm\\HiddenInput"
+            },
+            "value_processor": "\\Duf\\FieldValueProcessor\\LineList",
+            "validators": {
+            }
         }
     },
     "form": {
