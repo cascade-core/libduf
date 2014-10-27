@@ -33,8 +33,6 @@ class ImageList extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 		}
 		$value = $values[$field_id];
 
-		$base_dir = filename_format($field_conf['base_dir'], $values);
-
 		$field_conf['class'] = isset($field_conf['class']) ? (array) $field_conf['class'] : array();
 		$field_conf['class'][] = 'images';
 
@@ -42,12 +40,19 @@ class ImageList extends Input implements \Duf\Renderer\IFieldWidgetRenderer
                 static::commonAttributes($field_conf);
 		echo ">\n";
 
-		foreach ($value as $src) {
-			if (parse_url($src, PHP_URL_HOST) == '') {
-				$src = "$base_dir/$src";
+		foreach ($value as $filename) {
+			$arg = array(
+				$field_id => $filename,
+			);
+			if (parse_url($filename, PHP_URL_HOST) == '') {
+				$src  = filename_format($field_conf['image_src'],  $values, $arg);
+				$link = filename_format($field_conf['image_link'], $values, $arg);
+			} else {
+				$src  = $filename;
+				$link = $filename;
 			}
-			echo	"<a href=\"", htmlspecialchars($src), "\">",
-				"<img src=\"", htmlspecialchars($src), "\" alt=\"", htmlspecialchars(basename($src)), "\">",
+			echo	"<a href=\"", htmlspecialchars($link), "\">",
+				"<img src=\"", htmlspecialchars($src), "\" alt=\"", htmlspecialchars($filename), "\">",
 				"</a>",
 				"</li>\n";
 		}

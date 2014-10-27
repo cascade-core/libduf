@@ -33,22 +33,31 @@ class Thumbnail implements \Duf\Renderer\IFieldWidgetRenderer
 		}
 		$value = $values[$field_id];
 
-		if (isset($field_conf['link'])) {
-			echo "<a href=\"", htmlspecialchars(filename_format($field_conf['link'], $values)), "\" class=\"thumbnail\">";
-		}
-
-		$base_dir = filename_format($field_conf['base_dir'], $values);
-
+		$arg = array(
+			$field_id => $value,
+		);
 		if (parse_url($value, PHP_URL_HOST) == '') {
-			$src = "$base_dir/$value";
+			$src  = filename_format($field_conf['image_src'],  $values, $arg);
+			$link = filename_format($field_conf['image_link'], $values, $arg);
 		} else {
-			$src = $value;
+			$src  = $value;
+			$link = $value;
 		}
 
-		echo "<img width=\"", $widget_conf['width'], "\" height=\"", $widget_conf['height'], "\" class=\"thumbnail\"",
-			" src=\"", htmlspecialchars($src), "\" alt=\"\">";
+		if ($link !== null) {
+			echo "<a href=\"", htmlspecialchars($link), "\" class=\"thumbnail\">";
+		}
 
-		if (isset($field_conf['link'])) {
+		echo "<img class=\"thumbnail\"";
+		if (isset($widget_conf['width'])) {
+			echo " width=\"", $widget_conf['width'], "\"";
+		}
+		if (isset($widget_conf['height'])) {
+			echo " height=\"", $widget_conf['height'], "\"";
+		}
+		echo " src=\"", htmlspecialchars($src), "\" alt=\"\">";
+
+		if ($link !== null) {
 			echo "</a>";
 		}
 
