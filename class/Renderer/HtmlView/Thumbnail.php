@@ -29,6 +29,7 @@ class Thumbnail implements \Duf\Renderer\IFieldWidgetRenderer
 	{
 		$values = $form->getViewData($group_id);
 		if (empty($values[$field_id])) {
+			echo "<span class=\"thumbnail\"></span>\n";
 			return;
 		}
 		$value = $values[$field_id];
@@ -36,12 +37,13 @@ class Thumbnail implements \Duf\Renderer\IFieldWidgetRenderer
 		$arg = array(
 			$field_id => $value,
 		);
+
 		if (parse_url($value, PHP_URL_HOST) == '') {
-			$src  = filename_format($field_conf['image_src'],  $values, $arg);
-			$link = filename_format($field_conf['image_link'], $values, $arg);
+			$src  = filename_format(isset($widget_conf['image_src'] ) ? $widget_conf['image_src']  : $field_conf['image_src'] , $values, $arg);
+			$link = filename_format(isset($widget_conf['image_link']) ? $widget_conf['image_link'] : $field_conf['image_link'], $values, $arg);
 		} else {
 			$src  = $value;
-			$link = $value;
+			$link = isset($widget_conf['image_link']) ? filename_format($widget_conf['image_link'], $values, $arg) : $value;
 		}
 
 		if ($link !== null) {

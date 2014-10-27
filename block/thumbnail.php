@@ -27,7 +27,8 @@ class B_duf__thumbnail extends \Cascade\Core\Block
 
 	protected $inputs = array(
 		'filename' => null,	// Other inputs are used as parameters.
-		'size' => 512,		// Target size.
+		'width' => 512,		// Target size.
+		'height' => 512,	// Target size.
 		'resize_mode' => 'fit',	// One of: 'fit', 'fill', 'same_height'
 		'*' => null,
 	);
@@ -39,7 +40,8 @@ class B_duf__thumbnail extends \Cascade\Core\Block
 
 	public function main()
 	{
-		$size = $this->in('size');
+		$width = $this->in('width');
+		$height = $this->in('height');
 		$resize_mode = $this->in('resize_mode');
 		$filename = realpath(DIR_ROOT.'/'.filename_format($this->in('filename'), $this->inAll()));
 
@@ -53,7 +55,7 @@ class B_duf__thumbnail extends \Cascade\Core\Block
 		if (!is_dir($cache_dir)) {
 			mkdir($cache_dir);
 		}
-		$cache_fn = md5($filename.'|'.$size.'|'.$resize_mode).'.jpg';
+		$cache_fn = md5($filename.'|'.$width.'|'.$height.'|'.$resize_mode).'.jpg';
 		$cache_file = $cache_dir.'/'.substr($cache_fn, 0, 2);
 		if (!is_dir($cache_file)) {
 			mkdir($cache_file);
@@ -62,7 +64,7 @@ class B_duf__thumbnail extends \Cascade\Core\Block
 
 		// update cache if required
 		if (!is_readable($cache_file) || filemtime($filename) > filemtime($cache_file) || filemtime(__FILE__) > filemtime($cache_file)) {
-			self::generateThumbnail($cache_file, $filename, $size, $size, $resize_mode);
+			self::generateThumbnail($cache_file, $filename, $width, $height, $resize_mode);
 		}
 		if ($cache_file !== false) {
 			$this->out('thumbnail_file', $cache_file);
