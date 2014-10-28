@@ -61,7 +61,7 @@ class SimpleButton implements \Duf\Renderer\IWidgetRenderer
 		$link_filters = call_user_func_array('array_merge', func_get_args());
 		ksort($link_filters);
 		array_walk($link_filters, function($v, $k) use (& $f) {
-			if ($v !== null && $k[0] != '_') {
+			if ($v !== null && $k[0] != '_' && is_scalar($v)) {
 				$f[] = urlencode($k).'='.urlencode($v === false ? '0' : $v);
 			}
 		});

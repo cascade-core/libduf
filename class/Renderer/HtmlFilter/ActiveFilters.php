@@ -63,7 +63,7 @@ class ActiveFilters extends SimpleButton implements \Duf\Renderer\IWidgetRendere
 		echo ">";
 
 		foreach ($filters as $k => $v) {
-			if (!$show_all && ($k[0] == '_' || !empty(static::$ignored_filters[$k]))) {
+			if (!$show_all && ($k[0] == '_' || !empty(static::$ignored_filters[$k]) || !is_scalar($v))) {
 				continue;
 			}
 
@@ -81,7 +81,7 @@ class ActiveFilters extends SimpleButton implements \Duf\Renderer\IWidgetRendere
 			echo "<span>",
 				"<i>",   htmlspecialchars($f),  "</i>",
 				" <tt>", htmlspecialchars($op), "</tt>",
-				" <b>",  htmlspecialchars($v),  "</b>";
+				" <b>",  htmlspecialchars(is_scalar($v) ? $v : @(string) $v),  "</b>";
 			if ($k[0] != '_') {
 				echo " <a href=\"", htmlspecialchars(static::buildFilterLink($filters, array($k => null))), "\"",
 					" class=\"remove\"><span>&times</span></a>";
