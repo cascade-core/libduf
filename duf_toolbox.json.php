@@ -358,6 +358,9 @@
         },
         "filter_active_filters": {
             "renderer": "\\Duf\\Renderer\\HtmlFilter\\ActiveFilters"
+        },
+        "filter_paginator": {
+            "renderer": "\\Duf\\Renderer\\HtmlFilter\\Paginator"
         }
     }
 }
