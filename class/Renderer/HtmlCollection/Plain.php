@@ -45,14 +45,14 @@ class Plain implements \Duf\Renderer\IWidgetRenderer
 				$form->renderWidgets($template_engine, $widget_conf['widgets']);
 				echo "</div>\n";
 			},
-			function($depth) use ($widget_conf) {
+			function($depth) use ($form, $template_engine, $widget_conf) {
 				if (isset($widget_conf['dimensions'][$depth]['class'])) {
 					echo "<div";
 					static::renderClassAttr($form, $template_engine, $widget_conf['dimensions'][$depth]['class']);
 					echo ">\n";
 				}
 			},
-			function($depth) {
+			function($depth) use ($form, $template_engine, $widget_conf) {
 				if (isset($widget_conf['dimensions'][$depth]['class'])) {
 					echo "</div>\n";
 				}
