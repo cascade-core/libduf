@@ -352,6 +352,9 @@
         },
         "add_to_basket": {
             "renderer": "\\Duf\\Renderer\\HtmlDecoration\\AddToBasketWidget"
+        },
+        "filter_active_filters": {
+            "renderer": "\\Duf\\Renderer\\HtmlFilter\\ActiveFilters"
         }
     }
 }

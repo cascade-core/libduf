@@ -488,7 +488,10 @@ class Form
 			// Default values need to be converted to raw form data.
 			if (!isset($this->raw_defaults[$group])) {
 				foreach ($this->form_def['field_groups'] as $gi => $g) {
-					if (isset($this->field_defaults[$gi])) {
+					if (!empty($g['wild'])) {
+						// Wild group has no default data, but group still exists
+						$this->raw_defaults[$gi] = array();
+					} else if (isset($this->field_defaults[$gi])) {
 						// Values for the group are set, use them.
 						$this->preProcessGroup($gi, $g, $this->field_defaults[$gi], $this->raw_defaults[$gi]);
 					} else {

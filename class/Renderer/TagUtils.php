@@ -36,8 +36,20 @@ trait TagUtils {
 	 */
 	protected static function renderClassAttr(\Duf\Form $form, $template_engine, $class)
 	{
-		if (!empty($class)) {
-			echo " class=\"";
+		$no_class = true;
+		$args = func_get_args();
+		$argc = func_num_args();
+
+		for ($a = 2; $a < $argc; $a++) {
+			$class = $args[$a];
+			if (empty($class)) {
+				continue;
+			}
+			if ($no_class) {
+				echo " class=\"";
+				$no_class = false;
+			}
+
 			if (is_array($class)) {
 				foreach ($class as $c) {
 					if (is_array($c)) {
@@ -51,6 +63,9 @@ trait TagUtils {
 			} else {
 				echo htmlspecialchars($class);
 			}
+		}
+
+		if (!$no_class) {
 			echo "\"";
 		}
 	}
