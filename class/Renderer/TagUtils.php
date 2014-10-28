@@ -37,6 +37,7 @@ trait TagUtils {
 	protected static function renderClassAttr(\Duf\Form $form, $template_engine, $class)
 	{
 		$no_class = true;
+		$sep = false;
 		$args = func_get_args();
 		$argc = func_num_args();
 
@@ -56,10 +57,10 @@ trait TagUtils {
 				foreach ($class as $c) {
 					if (is_array($c)) {
 						if (static::calculateValue($form, $template_engine, $c)) {
-							echo htmlspecialchars($c['class']);
+							echo ' ', htmlspecialchars($c['class']);
 						}
 					} else {
-						echo htmlspecialchars($c);
+						echo ' ', htmlspecialchars($c);
 					}
 				}
 			} else {
