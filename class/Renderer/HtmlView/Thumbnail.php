@@ -28,11 +28,7 @@ class Thumbnail implements \Duf\Renderer\IFieldWidgetRenderer
 	public static function renderFieldWidget(\Duf\Form $form, $template_engine, $widget_conf, $group_id, $field_id, $field_conf)
 	{
 		$values = $form->getViewData($group_id);
-		if (empty($values[$field_id])) {
-			echo "<span class=\"thumbnail\"></span>\n";
-			return;
-		}
-		$value = $values[$field_id];
+		$value = isset($values[$field_id]) ? $values[$field_id] : null;
 
 		$arg = array(
 			$field_id => $value,
@@ -50,14 +46,16 @@ class Thumbnail implements \Duf\Renderer\IFieldWidgetRenderer
 			echo "<a href=\"", htmlspecialchars($link), "\" class=\"thumbnail\">";
 		}
 
-		echo "<img class=\"thumbnail\"";
-		if (isset($widget_conf['width'])) {
-			echo " width=\"", $widget_conf['width'], "\"";
+		if ($value !== null) {
+			echo "<img class=\"thumbnail\"";
+			if (isset($widget_conf['width'])) {
+				echo " width=\"", $widget_conf['width'], "\"";
+			}
+			if (isset($widget_conf['height'])) {
+				echo " height=\"", $widget_conf['height'], "\"";
+			}
+			echo " src=\"", htmlspecialchars($src), "\" alt=\"\">";
 		}
-		if (isset($widget_conf['height'])) {
-			echo " height=\"", $widget_conf['height'], "\"";
-		}
-		echo " src=\"", htmlspecialchars($src), "\" alt=\"\">";
 
 		if ($link !== null) {
 			echo "</a>";
