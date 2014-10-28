@@ -28,7 +28,7 @@ class ActiveFilters implements \Duf\Renderer\IWidgetRenderer
 	/**
 	 * Map common operators to unicode symbols
 	 */
-	static $operator_map = array(
+	protected static $operator_map = array(
 		'<=' => '≤',
 		'>=' => '≥',
 		'<<=' => '<',
@@ -54,24 +54,42 @@ class ActiveFilters implements \Duf\Renderer\IWidgetRenderer
 
 		foreach ($filters as $k => $v) {
 			if (preg_match('/^(.*[^[:punct:]])([[:punct:]]*)$/', $k, $m)) {
-				$k = $m[1];
-				$operator = $m[2].'=';
-				if (isset(static::$operator_map[$operator])) {
-					$operator = static::$operator_map[$operator];
+				$f = $m[1];
+				$op = $m[2].'=';
+				if (isset(static::$operator_map[$op])) {
+					$op = static::$operator_map[$op];
 				}
 			} else {
-				$operator = '=';
+				$f = $k;
+				$op = '=';
 			}
 			$remove_url = '?';
 			echo "<span>",
-				"<i>",   htmlspecialchars($k),        "</i>",
-				" <tt>", htmlspecialchars($operator), "</tt>",
-				" <b>",  htmlspecialchars($v),        "</b>",
-				//" <a href=\"", htmlspecialchars($remove_url), "\" class=\"remove\"><span>&times</span></a>",
-				"</span>";
+				"<i>",   htmlspecialchars($f),  "</i>",
+				" <tt>", htmlspecialchars($op), "</tt>",
+				" <b>",  htmlspecialchars($v),  "</b>";
+			if ($k[0] != '_') {
+				echo " <a href=\"", htmlspecialchars(static::buildFilterLink($filters, array($k => null))), "\"",
+					" class=\"remove\"><span>&times</span></a>";
+			}
+			echo "</span>";
 		}
 
 		echo "</div>\n";
+	}
+
+
+	protected static function buildFilterLink($filters, $overrides)
+	{
+		$f = array();
+		$link_filters = array_merge($filters, $overrides);
+		array_walk($link_filters, function($v, $k) use (& $f) {
+			if ($v !== null && $k[0] != '_') {
+				$f[] = urlencode($k).'='.urlencode($v);
+			}
+		});
+		return '?'.join('&', $f);
+
 	}
 
 }
