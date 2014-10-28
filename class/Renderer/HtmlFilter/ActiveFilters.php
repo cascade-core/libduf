@@ -39,11 +39,22 @@ class ActiveFilters extends SimpleButton implements \Duf\Renderer\IWidgetRendere
 		'%!=' => '%≠',
 	);
 
+	/**
+	 * List of filters wich are ignored if `show_all` is false (in addition to filters starting with '_').
+	 */
+	protected static $ignored_filters = array(
+		'order_by' => true,
+		'order_asc' => true,
+		'limit' => true,
+		'offset' => true,
+	);
+
 	/// @copydoc \Duf\Renderer\IWidgetRenderer::renderWidget
 	public static function renderWidget(\Duf\Form $form, $template_engine, $widget_conf)
 	{
 		// Get value early, so class can be set
 		$filters = $form->getViewData($widget_conf['group_id']);
+		$show_all = !empty($widget_conf['show_all']);
 
 		//debug_dump($filters, 'Filters');
 
@@ -52,6 +63,10 @@ class ActiveFilters extends SimpleButton implements \Duf\Renderer\IWidgetRendere
 		echo ">";
 
 		foreach ($filters as $k => $v) {
+			if (!$show_all && ($k[0] == '_' || !empty(static::$ignored_filters[$k]))) {
+				continue;
+			}
+
 			if (preg_match('/^(.*[^[:punct:]])([[:punct:]]*)$/', $k, $m)) {
 				$f = $m[1];
 				$op = $m[2].'=';

@@ -81,7 +81,8 @@ class SimpleButton implements \Duf\Renderer\IWidgetRenderer
 		$required_filters = call_user_func_array('array_merge', $args);
 
 		foreach ($required_filters as $k => $v) {
-			if (!(isset($current_filters[$k]) && $current_filters[$k] !== null) || $current_filters[$k] != $v) {
+			$cv = isset($current_filters[$k]) ? $current_filters[$k] : null;
+			if ($v === null ? $cv !== null : $v != $cv) {
 				return false;
 			}
 		}
