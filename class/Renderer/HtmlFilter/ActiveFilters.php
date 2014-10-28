@@ -21,9 +21,8 @@ namespace Duf\Renderer\HtmlFilter;
 /**
  * Render list of active filters.
  */
-class ActiveFilters implements \Duf\Renderer\IWidgetRenderer
+class ActiveFilters extends SimpleButton implements \Duf\Renderer\IWidgetRenderer
 {
-	use \Duf\Renderer\TagUtils;
 
 	/**
 	 * Map common operators to unicode symbols
@@ -76,20 +75,6 @@ class ActiveFilters implements \Duf\Renderer\IWidgetRenderer
 		}
 
 		echo "</div>\n";
-	}
-
-
-	protected static function buildFilterLink($filters, $overrides)
-	{
-		$f = array();
-		$link_filters = array_merge($filters, $overrides);
-		array_walk($link_filters, function($v, $k) use (& $f) {
-			if ($v !== null && $k[0] != '_') {
-				$f[] = urlencode($k).'='.urlencode($v);
-			}
-		});
-		return '?'.join('&', $f);
-
 	}
 
 }

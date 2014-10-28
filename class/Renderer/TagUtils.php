@@ -48,16 +48,18 @@ trait TagUtils {
 			if ($no_class) {
 				echo " class=\"";
 				$no_class = false;
+			} else {
+				echo ' ';
 			}
 
 			if (is_array($class)) {
 				foreach ($class as $c) {
 					if (is_array($c)) {
 						if (static::calculateValue($form, $template_engine, $c)) {
-							echo ' ', htmlspecialchars($c['class']);
+							echo htmlspecialchars($c['class']);
 						}
 					} else {
-						echo ' ', htmlspecialchars($c);
+						echo htmlspecialchars($c);
 					}
 				}
 			} else {

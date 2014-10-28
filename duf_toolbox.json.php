@@ -353,6 +353,9 @@
         "add_to_basket": {
             "renderer": "\\Duf\\Renderer\\HtmlDecoration\\AddToBasketWidget"
         },
+        "filter_simple_button": {
+            "renderer": "\\Duf\\Renderer\\HtmlFilter\\SimpleButton"
+        },
         "filter_active_filters": {
             "renderer": "\\Duf\\Renderer\\HtmlFilter\\ActiveFilters"
         }
