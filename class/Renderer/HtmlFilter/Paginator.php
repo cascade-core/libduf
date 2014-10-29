@@ -33,6 +33,8 @@ class Paginator extends SimpleButton implements \Duf\Renderer\IWidgetRenderer
 		$offset = isset($filters['offset']) ? $filters['offset'] : 0;
 		$page_count = isset($filters['_count']) ? ceil($filters['_count'] / $page_size) : ceil($offset / $page_size) + 3;
 		$current_page = ceil($offset / $page_size);
+		$inner_radius = isset($widget_conf['inner_radius']) ? $widget_conf['inner_radius'] : 3;
+		$outter_radius = isset($widget_conf['outter_radius']) ? $widget_conf['outter_radius'] : 2;
 
 		echo "<div";
 		static::renderClassAttr($form, $template_engine,
@@ -48,12 +50,34 @@ class Paginator extends SimpleButton implements \Duf\Renderer\IWidgetRenderer
 			));
 		}
 
+		// Calculate ellipsis window
+		$window_start = $current_page - $inner_radius - 1;
+		$window_end   = $current_page + $inner_radius;
+		if ($window_start < $outter_radius) {
+			$window_end += $outter_radius - $window_start;
+			$window_start = -1;
+		}
+		if ($window_end > $page_count - $outter_radius - 1) {
+			$window_start -= $window_end - ($page_count - $outter_radius);
+			$window_end = -1;
+		}
+
 		// Page numbers
 		for ($page = 0; $page < $page_count; $page++) {
+			if ($page == $outter_radius && $window_start != -1) {
+				$page = $window_start;
+				echo "&hellip;\n";
+				continue;
+			}
 			static::renderPageButton($form, $template_engine, $filters, $page + 1, 'page', array(
 				'offset' => $page * $page_size,
 				'limit' => $page_size,
 			));
+			if ($page == $window_end) {
+				$page = $page_count - $outter_radius - 1;
+				echo "&hellip;\n";
+				continue;
+			}
 		}
 
 		// Next page
