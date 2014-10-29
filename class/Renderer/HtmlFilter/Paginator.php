@@ -29,7 +29,7 @@ class Paginator extends SimpleButton implements \Duf\Renderer\IWidgetRenderer
 	{
 		// Get value early, so class can be set
 		$filters = $form->getViewData($widget_conf['group_id']);
-		$page_size = isset($widget_conf['page_size']) ? $widget_conf['page_size'] : 30;
+		$page_size = isset($widget_conf['page_size']) ? $widget_conf['page_size'] : 150;
 		$offset = isset($filters['offset']) ? $filters['offset'] : 0;
 		$page_count = isset($filters['_count']) ? ceil($filters['_count'] / $page_size) : ceil($offset / $page_size) + 3;
 		$current_page = ceil($offset / $page_size);
@@ -46,6 +46,7 @@ class Paginator extends SimpleButton implements \Duf\Renderer\IWidgetRenderer
 		$window_end   = max($current_page, $outter_radius + $inner_radius) + $inner_radius;
 
 		//debug_dump(compact('page_count', 'current_page', 'window_start', 'window_end'), 'Vars');
+		//debug_dump($filters, 'Filters');
 
 		echo "<div";
 		static::renderClassAttr($form, $template_engine,
@@ -96,7 +97,7 @@ class Paginator extends SimpleButton implements \Duf\Renderer\IWidgetRenderer
 		static::renderClassAttr($form, $template_engine,
 			'filter button',
 			$page_class,
-			static::isFilterActive($filters, $page_filters) ? 'active' : null);
+			(!isset($filters['offset']) && $page_filters['offset'] == 0) || static::isFilterActive($filters, $page_filters) ? 'active' : null);
 		echo ">";
 		echo $page_html_label;
 		echo "</a>\n";
