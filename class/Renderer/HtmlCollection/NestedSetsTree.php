@@ -61,7 +61,9 @@ class NestedSetsTree implements \Duf\Renderer\IWidgetRenderer
 					}
 					echo "</li>\n<li>";
 				}
+				echo "<span>";
 				$form->renderWidgets($template_engine, $widget_conf['widgets']);
+				echo "</span>";
 			});
 
 		// Go out
