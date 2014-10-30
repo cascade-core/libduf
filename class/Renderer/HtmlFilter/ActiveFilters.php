@@ -55,6 +55,7 @@ class ActiveFilters extends SimpleButton implements \Duf\Renderer\IWidgetRendere
 		// Get value early, so class can be set
 		$filters = $form->getViewData($widget_conf['group_id']);
 		$show_all = !empty($widget_conf['show_all']);
+		$ignored_filters = isset($widget_conf['ignored_filters']) ? array_flip($widget_conf['ignored_filters']) : array();
 
 		//debug_dump($filters, 'Filters');
 
@@ -63,7 +64,7 @@ class ActiveFilters extends SimpleButton implements \Duf\Renderer\IWidgetRendere
 		echo ">";
 
 		foreach ($filters as $k => $v) {
-			if (!$show_all && ($k[0] == '_' || !empty(static::$ignored_filters[$k]) || !is_scalar($v))) {
+			if (!$show_all && ($k[0] == '_' || !empty(static::$ignored_filters[$k]) || isset($ignored_filters[$k]) || !is_scalar($v))) {
 				continue;
 			}
 
