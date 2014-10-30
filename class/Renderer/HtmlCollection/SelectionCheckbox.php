@@ -33,13 +33,22 @@ class SelectionCheckbox implements \Duf\Renderer\IWidgetRenderer
 		$field_id = $widget_conf['field_id'];
 
 		echo "<label class=\"selection\">",
+			"<input type=\"hidden\" value=\"0\"",
+				" name=\"", $form->getHtmlFieldName($group_id, $field_id), "\"",
+				">",
 			"<input type=\"checkbox\"",
-				" name=\"", $form->getHtmlFieldName($group_id, '__selected'), "\"",
+				" name=\"", $form->getHtmlFieldName($group_id, $field_id), "\"",
 				" value=\"1\"",
-				$form->getRawData($group_id, '__selected') ? ' checked' : '',
+				$form->getRawData($group_id, $field_id) ? ' checked' : '',
 			">",
-			"<i></i>",
-			"</label>\n";
+			"<i></i>";
+		if (isset($widget_conf['label'])) {
+			echo " ", htmlspecialchars($widget_conf['label']);
+		} else if (isset($widget_conf['widgets'])) {
+			echo " ";
+			$form->renderWidgets($template_engine, $widget_conf['widgets']);
+		}
+		echo "</label>\n";
 	}
 
 }
