@@ -62,11 +62,7 @@ class Reference
 	public static function valuePostProcess($raw_values, & $group_values, \Duf\Form $form, $group_id, $field_id, $field_conf)
 	{
 		if (count($field_conf['machine_id']) == 1) {
-			if ($raw_values[$field_id] !== '') {
-				$group_values[reset($field_conf['machine_id'])] = $raw_values[$field_id];
-			} else {
-				$group_values = null;
-			}
+			$group_values[reset($field_conf['machine_id'])] = ($raw_values[$field_id] !== '' ? $raw_values[$field_id] : null);
 		} else {
 			if (is_array($raw_values[$field_id])) {
 				ksort($raw_values[$field_id]);
@@ -80,10 +76,12 @@ class Reference
 				if ($id_value[$i] !== '') {
 					$all_null = false;
 				}
-				$group_values[$p] = $id_value[$i++];
+				$gv[$p] = $id_value[$i++];
 			}
-			if ($all_null) {
-				$group_values = null;
+			if (!$all_null) {
+				foreach($gv as $k => $v) {
+					$group_values[$k] = $v;
+				}
 			}
 		}
 	}
