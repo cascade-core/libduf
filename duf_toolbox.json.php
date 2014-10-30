@@ -317,6 +317,9 @@
         "tabular_collection": {
             "renderer": "\\Duf\\Renderer\\HtmlCollection\\Tabular"
         },
+        "nested_sets_tree": {
+            "renderer": "\\Duf\\Renderer\\HtmlCollection\\NestedSetsTree"
+        },
         "text": {
             "renderer": "\\Duf\\Renderer\\HtmlDecoration\\Text"
         },
