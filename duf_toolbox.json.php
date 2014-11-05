@@ -181,6 +181,15 @@
             "validators": {
             }
         },
+        "markdownarea": {
+            "renderers": {
+                "@edit": "\\Duf\\Renderer\\HtmlForm\\TextArea",
+                "@view": "\\Duf\\Renderer\\HtmlView\\MarkdownArea",
+                "@hidden": "\\Duf\\Renderer\\HtmlForm\\HiddenInput"
+            },
+            "validators": {
+            }
+        },
         "time": {
             "renderers": {
                 "@edit": "\\Duf\\Renderer\\HtmlForm\\Input",

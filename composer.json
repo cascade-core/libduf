@@ -21,7 +21,8 @@
 		"cascade/core": ">=0.11"
 	},
     "suggest": {
-        "cascade/smalldb": "Generate field groups from state machine definition."
+        "cascade/smalldb": "Generate field groups from state machine definition.",
+        "erusev/parsedown": "Markdown formated field."
     }
 }
 
