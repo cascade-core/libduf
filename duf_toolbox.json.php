@@ -317,6 +317,9 @@
         "table_layout": {
             "renderer": "\\Duf\\Renderer\\HtmlLayout\\Table"
         },
+        "placeholder": {
+            "renderer": "\\Duf\\Renderer\\HtmlDecoration\\Placeholder"
+        },
         "html_template": {
             "renderer": "\\Duf\\Renderer\\HtmlLayout\\HtmlTemplate"
         },
