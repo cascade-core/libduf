@@ -129,7 +129,13 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 			}
 		}
 
-		echo ">\n";
+		echo ">";
+
+		if (isset($field_conf['field_note'])) {
+			echo "<span class=\"field_note\">", htmlspecialchars($field_conf['field_note']), "</span>";
+		}
+
+		echo "\n";
 	}
 
 

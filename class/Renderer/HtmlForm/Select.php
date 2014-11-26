@@ -70,7 +70,13 @@ class Select extends Input implements \Duf\Renderer\IFieldWidgetRenderer
                                 htmlspecialchars($opt_label), "</option>\n";
                 }
 		
-		echo "</select>\n";
+		echo "</select>";
+
+		if (isset($field_conf['field_note'])) {
+			echo "<span class=\"field_note\">", htmlspecialchars($field_conf['field_note']), "</span>";
+		}
+
+		echo "\n";
 	}
 
 }

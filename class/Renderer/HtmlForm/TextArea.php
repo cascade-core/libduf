@@ -56,7 +56,13 @@ class TextArea extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 		}
 		echo ">",
 			htmlspecialchars($form->getRawData($group_id, $field_id)),
-			"</textarea>\n";
+			"</textarea>";
+
+		if (isset($field_conf['field_note'])) {
+			echo "<span class=\"field_note\">", htmlspecialchars($field_conf['field_note']), "</span>";
+		}
+
+		echo "\n";
 	}
 
 }
