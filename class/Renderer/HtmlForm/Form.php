@@ -23,10 +23,17 @@ namespace Duf\Renderer\HtmlForm;
  */
 class Form implements \Duf\Renderer\IFormRenderer
 {
+	static private $base_tabindex = 100;
+	static private $base_tabindex_increment = 100;
 
 	/// @copydoc \Duf\Renderer\IFormRenderer::renderForm
 	public static function renderForm(\Duf\Form $form, $template_engine)
 	{
+		// Set tabindex by element order in page
+		if ($form->base_tabindex === null) {
+			$form->base_tabindex = static::$base_tabindex;
+			static::$base_tabindex += static::$base_tabindex_increment;
+		}
 
 		echo "<form",
 			" id=\"", htmlspecialchars($form->id), "\"",

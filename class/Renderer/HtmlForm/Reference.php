@@ -36,7 +36,8 @@ class Reference extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 			// FIXME: Does not work for compound keys
 			echo "<input type=\"text\"",
 				" id=\"", $form->getHtmlFieldId($group_id, $field_id), "\"",
-				" name=\"", $form->getHtmlFieldName($group_id, $field_id), "\"";
+				" name=\"", $form->getHtmlFieldName($group_id, $field_id), "\"",
+				" tabindex=\"", $form->base_tabindex + (isset($field_conf['tabindex']) ? $field_conf['tabindex'] : 0), "\"";
 			static::commonAttributes($field_conf);
 			$value = $form->getRawData($group_id, $field_id);
 			if (is_array($value)) {
@@ -59,7 +60,8 @@ class Reference extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 
 			echo "<select",
 				" id=\"", $form->getHtmlFieldId($group_id, $field_id), "\"",
-				" name=\"", $form->getHtmlFieldName($group_id, $field_id), "\"";
+				" name=\"", $form->getHtmlFieldName($group_id, $field_id), "\"",
+				" tabindex=\"", $form->base_tabindex + (isset($field_conf['tabindex']) ? $field_conf['tabindex'] : 0), "\"";
 			static::commonAttributes($field_conf);
 			echo ">\n";
 

@@ -75,6 +75,7 @@ class RadioTabs implements \Duf\Renderer\IFieldWidgetRenderer
 			if ($tab_value == $field_value) {
 				echo " checked";
 			}
+			echo " tabindex=\"", $form->base_tabindex + (isset($field_conf['tabindex']) ? $field_conf['tabindex'] : 0), "\"";
 			echo "/>";
 	
 			// Tab label

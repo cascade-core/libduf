@@ -66,6 +66,9 @@ class Form
 	public $field_errors = array();		///< Errors from all fields; 2D structure (group, field).
 	public $form_errors = array();		///< Global errors; simple list.
 
+	public $base_tabindex = null;		///< Base tabindex of all inputs (input's tabindex is increased by this value).
+						///< If null, it will be choosen by renderer.
+
 	protected $raw_input = null;		///< Submitted input from user. Data are not modified in any way.
 	protected $raw_defaults = array();	///< Preprocessed default values. These data go directly to HTML form.
 	protected $use_defaults = false;	///< Use default (true) or submitted (false) values.

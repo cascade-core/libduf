@@ -29,7 +29,8 @@ class TextArea extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 	{
 		echo "<textarea",
 			" id=\"", $form->getHtmlFieldId($group_id, $field_id), "\"",
-			" name=\"", $form->getHtmlFieldName($group_id, $field_id), "\"";
+			" name=\"", $form->getHtmlFieldName($group_id, $field_id), "\"",
+			" tabindex=\"", $form->base_tabindex + (isset($field_conf['tabindex']) ? $field_conf['tabindex'] : 0), "\"";
 
 		static::commonAttributes($field_conf);
 

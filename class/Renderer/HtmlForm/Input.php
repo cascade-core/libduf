@@ -42,7 +42,8 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 		echo "<input",
 			" type=\"", htmlspecialchars($type), "\"",
 			" id=\"", $form->getHtmlFieldId($group_id, $field_id), "\"",
-			" name=\"", $form->getHtmlFieldName($group_id, $field_id), "\"";
+			" name=\"", $form->getHtmlFieldName($group_id, $field_id), "\"",
+			" tabindex=\"", $form->base_tabindex + (isset($field_conf['tabindex']) ? $field_conf['tabindex'] : 0), "\"";
 
 		// Value
 		switch ($type) {
@@ -169,7 +170,7 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 				case 'itemid':
 				case 'lang':
 				case 'style':
-				case 'tabindex':
+				//case 'tabindex':
 				case 'title':
 				case 'contenteditable':
 					echo " $k=\"", htmlspecialchars($v), "\"";
