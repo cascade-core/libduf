@@ -21,6 +21,8 @@ namespace Duf\Renderer\HtmlLayout;
 /**
  * Render template_format()-like template. Useful for small and complicated fragments.
  *
+ * To add raw value from field use '!': {!group_id.field_id}
+ *
  * Example: "Hello <em>{group_id.field_id}</em>!"
  */
 class HtmlTemplate implements \Duf\Renderer\IWidgetRenderer
@@ -53,7 +55,7 @@ class HtmlTemplate implements \Duf\Renderer\IWidgetRenderer
 
 		// Template
 		if (isset($widget_conf['template'])) {
-			static::processTemplate($widget_conf['template'], function($key) use ($form, $template_engine, $widget_conf) {
+			static::processTemplate($widget_conf['template'], function($key, $raw) use ($form, $template_engine, $widget_conf) {
 				switch (count($key)) {
 					case 1:
 						// Simple key points to 'widget_map'
@@ -66,7 +68,11 @@ class HtmlTemplate implements \Duf\Renderer\IWidgetRenderer
 
 					case 2:
 						// Dual key points to field
-						$form->renderField($template_engine, $key[0], $key[1], '@edit');
+						if ($raw) {
+							echo htmlspecialchars($form->getViewData($key[0], $key[1]));
+						} else {
+							$form->renderField($template_engine, $key[0], $key[1], '@edit');
+						}
 						break;
 
 					default:
@@ -93,6 +99,7 @@ class HtmlTemplate implements \Duf\Renderer\IWidgetRenderer
 	private static function processTemplate($template, $value_callback)
 	{
 		$tokens = preg_split('/(?:({)'
+					."(!?)"
 					."(\\/?[a-zA-Z0-9_-]+)"			// first symbol name part
 					."(?:\.(\\/?[a-zA-Z0-9_-]+))*"		// another symbol name part
 					.'(})'
@@ -101,6 +108,7 @@ class HtmlTemplate implements \Duf\Renderer\IWidgetRenderer
 
 		$status = 0;		// Current status of parser
 		$append = 0;		// Append value to output (call $value_callback) after token is processed ?
+		$raw = false;		// raw parameter to callback
 
 		foreach($tokens as $token) {
 			switch ($status) {
@@ -109,6 +117,7 @@ class HtmlTemplate implements \Duf\Renderer\IWidgetRenderer
 					if ($token === '{') {
 						$status = 10;
 						$fmt = null;
+						$raw = false;
 					} else if ($token[0] === '\\') {
 						echo substr($token, 1);
 					} else {
@@ -118,8 +127,12 @@ class HtmlTemplate implements \Duf\Renderer\IWidgetRenderer
 
 				// first symbol part
 				case 10:
-					$key = array($token);
-					$status = 20;
+					if ($token == '!') {
+						$raw = true;
+					} else {
+						$key = array($token);
+						$status = 20;
+					}
 					break;
 
 				// another symbol part
@@ -145,8 +158,8 @@ class HtmlTemplate implements \Duf\Renderer\IWidgetRenderer
 			}
 
 			if ($append) {
+				$value_callback($key, $raw);
 				$append = false;
-				$value_callback($key);
 			}
 		}
 	}
