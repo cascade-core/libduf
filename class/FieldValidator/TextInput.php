@@ -41,11 +41,22 @@ class TextInput implements IFieldValidator
 		}
 
 		// HTML5 'pattern' attribute
-		if (($pattern = @ $field_def['pattern']) && !preg_match("\xFF$pattern\$\xFFADmsu", $value)) {
+		if (isset($field_def['pattern']) && ($pattern = $field_def['pattern']) != '' && !preg_match("\xFF$pattern\$\xFFADmsu", $value)) {
 			$form->setFieldError($group_id, $field_id, \Duf\Form::E_FIELD_MALFORMED, array(
 				'message' => sprintf(_('Field does not match pattern: %s'), $pattern),
 				'pattern' => $pattern,
 			));
+		}
+
+		// Equals-To rule (for passwords, but it works everywhere)
+		if (isset($field_def['equals_to_field'])
+			&& ($equals_to_field = $field_def['equals_to_field']) != ''
+			&& $value != $form->getRawData($group_id, $equals_to_field))
+		{
+			$form->setFieldError($group_id, $field_id, \Duf\Form::E_FIELD_REQUIRED, array(
+				'message' => _('Fields do not match.'),
+			));
+			return false;
 		}
 
 		return true;
