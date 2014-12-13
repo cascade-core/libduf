@@ -66,7 +66,7 @@ class Paginator extends SimpleButton implements \Duf\Renderer\IWidgetRenderer
 		for ($page = 0; $page < $page_count; $page++) {
 			if ($page == $outter_radius && $window_start >= $outter_radius) {
 				$page = $window_start;
-				echo "&hellip;\n";
+				echo "<span>&hellip;</span>\n";
 				continue;
 			}
 			static::renderPageButton($form, $template_engine, $filters, $page + 1, 'page', array(
@@ -75,7 +75,7 @@ class Paginator extends SimpleButton implements \Duf\Renderer\IWidgetRenderer
 			));
 			if ($page == $window_end && $window_end < $page_count - $outter_radius - 1) {
 				$page = $page_count - $outter_radius - 1;
-				echo "&hellip;\n";
+				echo "<span>&hellip;</span>\n";
 			}
 		}
 
