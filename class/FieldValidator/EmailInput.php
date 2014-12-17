@@ -29,7 +29,8 @@ class EmailInput extends TextInput implements IFieldValidator
 			return false;
 		}
 
-		if (!preg_match('/.+@.+/', $value)) {
+		//if (!preg_match('/.+@.+/', $value)) {
+		if (!filter_var($value, FILTER_VALIDATE_EMAIL)) {
 			$form->setFieldError($group_id, $field_id, \Duf\Form::E_FIELD_MALFORMED, array(
 				'message' => _('Please enter valid e-mail address.'),
 			));
