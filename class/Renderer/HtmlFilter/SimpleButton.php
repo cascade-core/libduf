@@ -58,7 +58,7 @@ class SimpleButton implements \Duf\Renderer\IWidgetRenderer
 	protected static function buildFilterLink($filters, $overrides)
 	{
 		$f = array();
-		$link_filters = call_user_func_array('array_merge', func_get_args());
+		$link_filters = call_user_func_array('array_merge', array_filter(func_get_args(), function($x) { return $x !== null; }));
 		ksort($link_filters);
 		array_walk($link_filters, function($v, $k) use (& $f) {
 			if ($v !== null && $k[0] != '_' && is_scalar($v)) {
@@ -78,7 +78,7 @@ class SimpleButton implements \Duf\Renderer\IWidgetRenderer
 
 		$args = func_get_args();
 		$current_filters = array_shift($args);
-		$required_filters = call_user_func_array('array_merge', $args);
+		$required_filters = call_user_func_array('array_merge', array_filter($args, function($x) { return $x !== null; }));
 
 		foreach ($required_filters as $k => $v) {
 			$cv = isset($current_filters[$k]) ? $current_filters[$k] : null;
