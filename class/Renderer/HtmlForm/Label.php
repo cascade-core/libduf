@@ -28,8 +28,11 @@ class Label implements \Duf\Renderer\IFieldWidgetRenderer
 	public static function renderFieldWidget(\Duf\Form $form, $template_engine, $widget_conf, $group_id, $field_id, $field_conf)
 	{
 		echo "<label",
-			" for=\"", $form->getHtmlFieldId($group_id, $field_id), "\"",
-			">";
+			" for=\"", $form->getHtmlFieldId($group_id, $field_id), "\"";
+		if (!empty($field_conf['title'])) {
+			echo " title=\"", htmlspecialchars($field_conf['title']), "\"";
+		}
+		echo ">";
 		$label = isset($field_conf['label']) ? $field_conf['label'] : $field_conf['name'];
 		if (!empty($field_conf['label_undecorated'])) {
 			echo htmlspecialchars($label);

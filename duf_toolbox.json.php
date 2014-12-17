@@ -211,6 +211,17 @@
                 "html5": "\\Duf\\FieldValidator\\UrlInput"
             }
         },
+        "relative_url": {
+            "renderers": {
+                "@edit": "\\Duf\\Renderer\\HtmlForm\\Input",
+                "@view": "\\Duf\\Renderer\\HtmlView\\Input",
+                "@thumbnail": "\\Duf\\Renderer\\HtmlView\\Thumbnail",
+                "@hidden": "\\Duf\\Renderer\\HtmlForm\\HiddenInput"
+            },
+            "validators": {
+                "html5": "\\Duf\\FieldValidator\\TextInput"
+            }
+        },
         "week": {
             "renderers": {
                 "@edit": "\\Duf\\Renderer\\HtmlForm\\Input",

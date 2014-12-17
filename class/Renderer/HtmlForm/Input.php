@@ -39,6 +39,12 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 			echo "<input type=\"hidden\" name=\"", $form->getHtmlFieldName($group_id, $field_id), "\" value=\"\">";
 		}
 
+		// relative URL may be anything
+		// FIXME: Any restrictions ?
+		if ($type == 'relative_url') {
+			$type = 'text';
+		}
+
 		echo "<input",
 			" type=\"", htmlspecialchars($type), "\"",
 			" id=\"", $form->getHtmlFieldId($group_id, $field_id), "\"",
