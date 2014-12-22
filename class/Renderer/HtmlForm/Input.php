@@ -48,8 +48,11 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 		echo "<input",
 			" type=\"", htmlspecialchars($type), "\"",
 			" id=\"", $form->getHtmlFieldId($group_id, $field_id), "\"",
-			" name=\"", $form->getHtmlFieldName($group_id, $field_id), "\"",
 			" tabindex=\"", $form->base_tabindex + (isset($field_conf['tabindex']) ? $field_conf['tabindex'] : 0), "\"";
+
+		if (empty($field_conf['unnamed'])) {
+			echo " name=\"", $form->getHtmlFieldName($group_id, $field_id), "\"";
+		}
 
 		// Value
 		switch ($type) {

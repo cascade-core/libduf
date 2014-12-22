@@ -61,8 +61,10 @@ class Form implements \Duf\Renderer\IFormRenderer
 		}
 
 		$form->renderRootWidget($template_engine);
-		
-		echo "<input type=\"hidden\" name=\"__[", htmlspecialchars($form->getToken()), "]\" value=\"1\">\n";
+
+		if ($form->http_method == 'post') {
+			echo "<input type=\"hidden\" name=\"__[", htmlspecialchars($form->getToken()), "]\" value=\"1\">\n";
+		}
 		echo "<!--[if IE]><input type=\"text\" disabled style=\"display:none!important;\" size=\"1\"><![endif]-->\n"; // IE bug: single text input
 		echo "</form>\n";
 	}

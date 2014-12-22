@@ -113,6 +113,11 @@ class Form
 			throw new \InvalidArgumentException('Missing "field_groups" section in configuration.');
 		}
 
+		// Set http method to GET and disable XSRF protection
+		if (isset($this->form_def['form']['http_method']) && strtolower($this->form_def['form']['http_method']) == 'get') {
+			$this->http_method = 'get';
+		}
+
 		// Detect read only form
 		if ($form_flags & self::READ_ONLY) {
 			$this->readonly = true;
@@ -515,13 +520,21 @@ class Form
 				}
 			}
 
-			return $this->getArrayItemByPath($this->raw_defaults[$group],
-				isset($this->group_keys[$group]) ? $this->group_keys[$group] : null,
-				$field);
+			if (isset($this->raw_defaults[$group])) {
+				return $this->getArrayItemByPath($this->raw_defaults[$group],
+					isset($this->group_keys[$group]) ? $this->group_keys[$group] : null,
+					$field);
+			} else {
+				return null;
+			}
 		} else {
-			return $this->getArrayItemByPath($this->raw_input[$group],
-				isset($this->group_keys[$group]) ? $this->group_keys[$group] : null,
-				$field);
+			if (isset($this->raw_input[$group])) {
+				return $this->getArrayItemByPath($this->raw_input[$group],
+					isset($this->group_keys[$group]) ? $this->group_keys[$group] : null,
+					$field);
+			} else {
+				return null;
+			}
 		}
 	}
 
@@ -604,7 +617,10 @@ class Form
 	 */
 	public function isSubmitted()
 	{
-		if (isset($this->raw_input['__'])) {
+		if ($this->http_method == 'get') {
+			// GET form is always submitted
+			return TRUE;
+		} else if (isset($this->raw_input['__'])) {
 			$__ = $this->raw_input['__'];
 		} else {
 			return FALSE;
