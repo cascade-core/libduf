@@ -48,7 +48,9 @@ class Price implements \Duf\Renderer\IWidgetRenderer
 			echo "</span>\n";
 		} else {
 			echo "<span class=\"price incl_vat\">";
-			echo htmlspecialchars(self::$currency_formatter->formatCurrency($price_vat, $currency)), ' <small>', _('(incl. VAT.)'), '</small>';
+			echo htmlspecialchars(self::$currency_formatter->formatCurrency($price, $currency)), ' / ',
+				htmlspecialchars(self::$currency_formatter->formatCurrency($price_vat, $currency)),
+				' <small>', _('(excl./incl.&nbsp;VAT.)'), '</small>';
 			echo "</span>\n";
 		}
 	}
