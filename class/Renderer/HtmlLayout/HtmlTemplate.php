@@ -60,7 +60,9 @@ class HtmlTemplate implements \Duf\Renderer\IWidgetRenderer
 					case 1:
 						// Simple key points to 'widget_map'
 						if (isset($widget_conf['widget_map'][$key[0]])) {
+							ob_start();
 							$form->renderWidget($template_engine, $widget_conf['widget_map'][$key[0]]);
+							echo trim(ob_get_clean());
 						} else {
 							throw new \RuntimeException('Unknown widget: '.$key[0]);
 						}
@@ -71,7 +73,9 @@ class HtmlTemplate implements \Duf\Renderer\IWidgetRenderer
 						if ($raw) {
 							echo htmlspecialchars($form->getViewData($key[0], $key[1]));
 						} else {
+							ob_start();
 							$form->renderField($template_engine, $key[0], $key[1], '@edit');
+							echo trim(ob_get_clean());
 						}
 						break;
 
