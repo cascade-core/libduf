@@ -56,8 +56,14 @@ trait TagUtils {
 			if (is_array($class)) {
 				foreach ($class as $c) {
 					if (is_array($c)) {
-						if (static::calculateValue($form, $template_engine, $c)) {
-							echo ' ', htmlspecialchars($c['class']);
+						if (isset($c['class'])) {
+							if (static::calculateValue($form, $template_engine, $c)) {
+								echo ' ', htmlspecialchars($c['class']);
+							}
+						} else {
+							$prefix = isset($c['prefix']) ? $c['prefix'] : '';
+							echo ' ', htmlspecialchars($prefix.preg_replace('/[^a-zA-Z0-9_-]+/', '_',
+								static::calculateValue($form, $template_engine, $c)));
 						}
 					} else {
 						echo ' ', htmlspecialchars($c);

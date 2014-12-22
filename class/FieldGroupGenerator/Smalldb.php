@@ -46,6 +46,14 @@ class Smalldb implements IFieldGroupGenerator
 		// Add properties as form fields
 		$fields = $machine->describeAllMachineProperties();
 
+		// Add fake state field
+		$fields['state'] = array(
+			'type' => 'text',
+			'computed' => true,
+			'readonly' => true,
+			'hidden' => true,
+		);
+
 		// Add relations to form fields
 		foreach ($machine->describeAllMachineReferences() as $ref_name => $ref) {
 			$ref['type'] = 'reference';

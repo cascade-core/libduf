@@ -23,6 +23,8 @@ namespace Duf\Renderer\HtmlForm;
  */
 class Form implements \Duf\Renderer\IFormRenderer
 {
+	use \Duf\Renderer\TagUtils;
+
 	static private $base_tabindex = 100;
 	static private $base_tabindex_increment = 100;
 
@@ -37,10 +39,12 @@ class Form implements \Duf\Renderer\IFormRenderer
 
 		echo "<form",
 			" id=\"", htmlspecialchars($form->id), "\"",
-			" class=\"", htmlspecialchars(is_array($form->html_class) ? join(' ', $form->html_class) : $form->html_class), "\"",
 			" action=\"", htmlspecialchars($form->action_url), "\"",
-			" method=\"", htmlspecialchars($form->http_method), "\"",
-			">\n";
+			" method=\"", htmlspecialchars($form->http_method), "\"";
+		if (isset($form->html_class)) {
+			static::renderClassAttr($form, $template_engine, $form->html_class);
+		}
+		echo ">\n";
 
 		if (!empty($form->form_errors)) {
 			echo "<ul class=\"errors\">\n";

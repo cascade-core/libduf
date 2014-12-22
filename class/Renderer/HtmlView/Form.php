@@ -23,14 +23,17 @@ namespace Duf\Renderer\HtmlView;
  */
 class Form implements \Duf\Renderer\IFormRenderer
 {
+	use \Duf\Renderer\TagUtils;
 
 	/// @copydoc \Duf\Renderer\IFormRenderer::renderForm
 	public static function renderForm(\Duf\Form $form, $template_engine)
 	{
 		echo "<div",
-			" id=\"", htmlspecialchars($form->id), "\"",
-			" class=\"", htmlspecialchars(is_array($form->html_class) ? join(' ', $form->html_class) : $form->html_class), "\"",
-			">\n";
+			" id=\"", htmlspecialchars($form->id), "\"";
+		if (isset($form->html_class)) {
+			static::renderClassAttr($form, $template_engine, $form->html_class);
+		}
+		echo ">\n";
 
 		if (!empty($form->form_errors)) {
 			echo "<ul class=\"errors\">\n";
