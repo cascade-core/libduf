@@ -31,14 +31,18 @@ class Heading implements \Duf\Renderer\IWidgetRenderer
 		$holder_tag = "h$level";
 
 		echo "<$holder_tag";
-		if (isset($set['class'])) {
-			if (is_array($set['class'])) {
-				echo " class=\"", htmlspecialchars(join(' ', $set['class'])), "\"";
+		if (isset($widget_conf['class'])) {
+			if (is_array($widget_conf['class'])) {
+				echo " class=\"", htmlspecialchars(join(' ', $widget_conf['class'])), "\"";
 			} else {
-				echo " class=\"", htmlspecialchars($set['class']), "\"";
+				echo " class=\"", htmlspecialchars($widget_conf['class']), "\"";
 			}
 		}
 		echo ">";
+
+		if (isset($widget_conf['anchor_name'])) {
+			echo "<a name=\"", htmlspecialchars($widget_conf['anchor_name']), "\"></a>";
+		}
 
 		if (isset($widget_conf['widgets'])) {
 			$form->renderWidgets($template_engine, $widget_conf['widgets']);

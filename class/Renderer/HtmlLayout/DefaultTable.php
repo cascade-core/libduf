@@ -53,8 +53,12 @@ class DefaultTable implements \Duf\Renderer\IWidgetRenderer
 			$fields = null;
 		}
 		$skip_empty = !empty($widget_conf['skip_empty']);
+		$required_field_option = empty($widget_conf['required_field_option']) ? null : $widget_conf['required_field_option'];
 		foreach ($groups as $group_id => $group_config) {
 			foreach ($fields === null ? $group_config['fields'] : $fields as $field_id => $field_def) {
+				if ($required_field_option !== null && empty($field_def[$required_field_option])) {
+					continue;
+				}
 				if (!empty($field_def['hidden']) || (!$form->readonly && !empty($field_def['calculated']))) {
 					continue;
 				}
