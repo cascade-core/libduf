@@ -55,6 +55,7 @@ class DefaultTable implements \Duf\Renderer\IWidgetRenderer
 		$skip_empty = !empty($widget_conf['skip_empty']);
 		$required_field_option = empty($widget_conf['required_field_option']) ? null : $widget_conf['required_field_option'];
 		foreach ($groups as $group_id => $group_config) {
+			$group_readonly = !empty($group_config['readonly']);
 			foreach ($fields === null ? $group_config['fields'] : $fields as $field_id => $field_def) {
 				if ($required_field_option !== null && empty($field_def[$required_field_option])) {
 					continue;
@@ -62,7 +63,7 @@ class DefaultTable implements \Duf\Renderer\IWidgetRenderer
 				if (!empty($field_def['hidden']) || (!$form->readonly && !empty($field_def['calculated']))) {
 					continue;
 				}
-				if (!empty($skip_empty) && $form->getViewData($group_id, $field_id) == '') {
+				if (!empty($skip_empty) && ($group_readonly || $form->readonly) && $form->getViewData($group_id, $field_id) == '') {
 					continue;
 				}
 				echo "<tr>\n";
