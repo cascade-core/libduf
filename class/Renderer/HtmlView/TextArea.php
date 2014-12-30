@@ -32,7 +32,13 @@ class TextArea extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 		static::commonAttributes($field_conf);
 
 		echo ">";
-		echo htmlspecialchars($form->getViewData($group_id, $field_id));
+		$value = $form->getViewData($group_id, $field_id);
+
+		if ($value === null && !empty($field_conf['null_value'])) {
+			echo "<span class=\"null_value\">", htmlspecialchars($field_conf['null_value']), "</span>";
+		} else {
+			echo htmlspecialchars($value);
+		}
 		echo "</div>\n";
 	}
 
