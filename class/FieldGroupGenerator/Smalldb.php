@@ -132,13 +132,14 @@ class Smalldb implements IFieldGroupGenerator
 
 			// Collection actions
 			if (isset($action['transitions'][''])) {
+				$null_ref = $machine->nullRef();
 				$collection_actions[$a] = array(
 					'label' => $label,
 					'description' => $desc,
 					'link' => $link !== null ? $link : "/$machine_type_url!$a",
 					'hidden' => !empty($action['hidden']),
-					'is_allowed_callback' => function($item) use ($machine, $a, $id_properties) {
-						return $machine->isTransitionAllowed(null, $a);
+					'is_allowed_callback' => function($item) use ($machine, $a, $id_properties, $null_ref) {
+						return $machine->isTransitionAllowed($null_ref, $a);
 					}
 				);
 				if (count($action['transitions']) == 1) {
@@ -154,16 +155,21 @@ class Smalldb implements IFieldGroupGenerator
 				'link' => $link !== null ? $link : (($url_fmt = $machine->getUrlFormat()) !== null ? $url_fmt."!$a" : "/$machine_type_url/$id_fmt!$a"),
 				'hidden' => !empty($action['hidden']),
 				'is_allowed_callback' => function($item) use ($machine, $a, $id_properties) {
-					$id = array();
-					foreach ($id_properties as $k) {
-						$id[] = $item[$k];
+					if ($item instanceof \Smalldb\StateMachine\Reference) {
+						return $item->machine->isTransitionAllowed($item, $a);
+					} else {
+						$id = array();
+						foreach ($id_properties as $k) {
+							$id[] = $item[$k];
+						}
+						/*
+						debug_dump($a, 'Checking item action');
+						debug_dump($id, 'ID');
+						debug_dump($item, 'Item');
+						// */
+						$ref = $machine->ref($id);
+						return $machine->isTransitionAllowed($ref, $a);
 					}
-					/*
-					debug_dump($a, 'Checking item action');
-					debug_dump($id, 'ID');
-					debug_dump($item, 'Item');
-					// */
-					return $machine->isTransitionAllowed($id, $a);
 				}
 			);
 		}
