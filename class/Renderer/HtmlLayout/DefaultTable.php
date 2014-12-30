@@ -23,11 +23,18 @@ namespace Duf\Renderer\HtmlLayout;
  */
 class DefaultTable implements \Duf\Renderer\IWidgetRenderer
 {
+	use \Duf\Renderer\TagUtils;
 
 	/// @copydoc \Duf\Renderer\IWidgetRenderer::renderWidget
 	public static function renderWidget(\Duf\Form $form, $template_engine, $widget_conf)
 	{
-		echo "<table class=\"form\">\n";
+		echo "<table";
+		if (isset($widget_conf['class'])) {
+			static::renderClassAttr($form, $template_engine, $widget_conf['class']);
+		} else {
+			echo " class=\"form\"";
+		}
+		echo ">\n";
 		if (isset($widget_conf['group_id'])) {
 			// Load specified group config
 			$group_id = $widget_conf['group_id'];
