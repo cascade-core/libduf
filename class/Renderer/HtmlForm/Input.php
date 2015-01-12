@@ -45,6 +45,11 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 			$type = 'text';
 		}
 
+		// Change datetime to datetime-local because browser support
+		if ($type == 'datetime') {
+			$type = 'datetime-local';
+		}
+
 		echo "<input",
 			" type=\"", htmlspecialchars($type), "\"",
 			" id=\"", $form->getHtmlFieldId($group_id, $field_id), "\"",
