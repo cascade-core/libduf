@@ -118,6 +118,12 @@ class Form
 			$this->http_method = 'get';
 		}
 
+		// Set form TTL (XSRF token timeout)
+		if (isset($this->form_def['form']['ttl'])) {
+			$this->form_ttl = $this->form_def['form']['ttl'];
+		}
+
+
 		// Detect read only form
 		if ($form_flags & self::READ_ONLY) {
 			$this->readonly = true;
@@ -629,7 +635,7 @@ class Form
 			$t = static::validateFormToken($token, $this->id);
 			if ($t !== FALSE) {
 				// Submitted
-				if ($this->form_ttl !== null && time() - $t >$this->form_ttl) {
+				if ($this->form_ttl > 0 && time() - $t > $this->form_ttl) {
 					$this->form_errors[self::E_FORM_EXPIRED] = array(
 						'message' => _('The form has expired, please check entered data and submit it again.')
 					);
