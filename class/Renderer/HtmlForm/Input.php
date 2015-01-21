@@ -112,9 +112,7 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 				case 'width':
 				case 'inputmode':
 				case 'list':
-				case 'max':
 				case 'maxlength':
-				case 'min':
 				case 'minlength':
 				case 'pattern':
 				case 'placeholder':
@@ -123,6 +121,25 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 				case 'step':
 				case 'alt':
 					echo " $k=\"", htmlspecialchars($v), "\"";
+					break;
+
+				case 'max':
+				case 'min':
+					switch ($type) {
+						case 'datetime':
+						case 'datetime-local':
+							echo " $k=\"", htmlspecialchars(strftime('%Y-%m-%d %H:%M:%S', strtotime($v))), "\"";
+							break;
+						case 'date':
+							echo " $k=\"", htmlspecialchars(strftime('%Y-%m-%d', strtotime($v))), "\"";
+							break;
+						case 'time':
+							echo " $k=\"", htmlspecialchars(strftime('%H:%M:%S', strtotime($v))), "\"";
+							break;
+						default:
+							echo " $k=\"", htmlspecialchars($v), "\"";
+							break;
+					}
 					break;
 
 				// HTML5 set of comma-separated tokens
