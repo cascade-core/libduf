@@ -181,6 +181,16 @@
             "validators": {
             }
         },
+        "jsonarea": {
+            "renderers": {
+                "@edit": "\\Duf\\Renderer\\HtmlForm\\TextArea",
+                "@view": "\\Duf\\Renderer\\HtmlView\\JsonDump",
+                "@hidden": "\\Duf\\Renderer\\HtmlForm\\HiddenInput"
+            },
+            "value_processor": "\\Duf\\FieldValueProcessor\\JsonData",
+            "validators": {
+            }
+        },
         "markdownarea": {
             "renderers": {
                 "@edit": "\\Duf\\Renderer\\HtmlForm\\TextArea",
