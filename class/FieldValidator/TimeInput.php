@@ -27,5 +27,15 @@ class TimeInput extends DateTimeInput implements IFieldValidator
 	 * Expected format.
 	 */
 	protected static $format = '%H:%M:%S';
+
+
+	/**
+	 * Return message to tell user how field should be formatted.
+	 */
+	protected static function getDateTimeMalformedMessage()
+	{
+		return _('Please use "HH:MM:SS" format (ISO 8601, time only).');
+	}
+
 }
 

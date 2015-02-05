@@ -27,5 +27,15 @@ class DateInput extends DateTimeInput implements IFieldValidator
 	 * Expected format.
 	 */
 	protected static $format = '%Y-%m-%d';
+
+
+	/**
+	 * Return message to tell user how field should be formatted.
+	 */
+	protected static function getDateTimeMalformedMessage()
+	{
+		return _('Please use "YYYY-MM-DD" format (ISO 8601, date only).');
+	}
+
 }
 

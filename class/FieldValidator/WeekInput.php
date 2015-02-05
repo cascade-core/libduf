@@ -27,5 +27,15 @@ class WeekInput extends DateTimeInput implements IFieldValidator
 	 * Expected format.
 	 */
 	protected static $format = '%Y-W%V';
+
+
+	/**
+	 * Return message to tell user how field should be formatted.
+	 */
+	protected static function getDateTimeMalformedMessage()
+	{
+		return _('Please use "YYYY-Ww" format (e.g. "2015-W3"; ISO 8601, year and week).');
+	}
+
 }
 

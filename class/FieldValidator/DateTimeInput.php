@@ -40,11 +40,21 @@ class DateTimeInput extends TextInput implements IFieldValidator
 
 		if ($ts === false) {
 			$form->setFieldError($group_id, $field_id, \Duf\Form::E_FIELD_MALFORMED, array(
-				'message' => sprintf(_('Please use "%s" format (ISO 8601).'), static::$format),
+				'message' => static::getDateTimeMalformedMessage(),
 			));
 		}
 
 		return true;
 	}
+
+
+	/**
+	 * Return message to tell user how field should be formatted.
+	 */
+	protected static function getDateTimeMalformedMessage()
+	{
+		return _('Please use "YYYY-MM-DD HH:MM:SS" format (ISO 8601).');
+	}
+
 }
 
