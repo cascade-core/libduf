@@ -48,6 +48,7 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 		$k_width    = $key_prefix.'_width';
 		$k_label    = $key_prefix.'_label';
 		$k_indent   = $key_prefix.'_indent_key';
+		$k_rotated  = $key_prefix.'_rotated_header';
 
 		// Get column list from group fields
 		if (!empty($widget_conf['columns_from_fields'])) {
@@ -57,11 +58,12 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 					continue;
 				}
 				$columns[$field_id] = array(
-					'weight'     => isset($f[$k_weight])   ? $f[$k_weight]   : (isset($f['weight'])     ? $f['weight']     : 50),
-					'width'      => isset($f[$k_width])    ? $f[$k_width]    : (isset($f['width'])      ? $f['width']      : null),
-					'label'      => isset($f[$k_label])    ? $f[$k_label]    : (isset($f['label'])      ? $f['label']      :
-					                                                           (isset($f['name'])       ? $f['name']       : $field_id)),
-					'indent_key' => isset($f[$k_indent])   ? $f[$k_indent]   : (isset($f['indent_key']) ? $f['indent_key'] : null),
+					'weight'     => isset($f[$k_weight])   ? $f[$k_weight]   : (isset($f['weight'])         ? $f['weight']         : 50),
+					'width'      => isset($f[$k_width])    ? $f[$k_width]    : (isset($f['width'])          ? $f['width']          : null),
+					'label'      => isset($f[$k_label])    ? $f[$k_label]    : (isset($f['label'])          ? $f['label']          :
+					                                                           (isset($f['name'])           ? $f['name']           : $field_id)),
+					'indent_key' => isset($f[$k_indent])   ? $f[$k_indent]   : (isset($f['indent_key'])     ? $f['indent_key']     : null),
+					'rotated'    => isset($f[$k_rotated])  ? $f[$k_rotated]  : (isset($f['rotated_header']) ? $f['rotated_header'] : null),
 				);
 			}
 		}
@@ -109,12 +111,21 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 				if (isset($col['width'])) {
 					echo " width=\"", htmlspecialchars($col['width']), "\"";
 				}
+				if (!empty($col['rotated'])) {
+					echo " class=\"rotated\"";
+				}
 				echo ">";
+				if (!empty($col['rotated'])) {
+					echo "<span class=\"rotated\">";
+				}
 				if (isset($col['label'])) {
 					echo htmlspecialchars($col['label']);
 				}
 				if (isset($col['thead_widgets'])) {
 					$form->renderWidgets($template_engine, $col['thead_widgets']);
+				}
+				if (!empty($col['rotated'])) {
+					echo "</span>";
 				}
 				echo "</th>\n";
 			}

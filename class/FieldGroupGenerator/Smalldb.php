@@ -62,7 +62,7 @@ class Smalldb implements IFieldGroupGenerator
 			}
 
 			// FIXME: Shouldn't we use toolbox?
-			$ref['options_factory'] = function() use ($context, $ref) {
+			$ref['options_factory'] = function($field_conf, $value) use ($context, $ref) {
 				$items = array();
 				$machine = $context->smalldb->getMachine($ref['machine_type']);
 				$machine_id_keys = $machine->describeId();
@@ -72,10 +72,17 @@ class Smalldb implements IFieldGroupGenerator
 				$machine_id_key = reset($machine_id_keys);
 				$machine_value_fmt = $ref['value_fmt'];
 
-				foreach ($context->smalldb->createListing(array(
-						'type' => $ref['machine_type'],
-						'limit' => false,
-					))->query() as $item)
+				$filters = array(
+					'type' => $ref['machine_type'],
+					'limit' => false,
+				);
+
+				if (!empty($ref['lazy_load'])) {
+					// Load only selected item, rest will get loaded by Select2 or something like that
+					$filters[$machine_id_key] = $value;
+				}
+
+				foreach ($context->smalldb->createListing($filters)->query() as $item)
 				{
 					// FIXME: Optimize this.
 					$p = array();

@@ -48,10 +48,12 @@ class Reference extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 			echo ">\n";
 
 		} else {
+			$value = $form->getRawData($group_id, $field_id);
+
 			// Lazy-load possible values, just like for <select>
 			if (isset($field_conf['options_factory'])) {
 				$of = $field_conf['options_factory'];
-				$options = $of();
+				$options = $of($field_conf, $value);
 			} else if (isset($field_conf['options'])) {
 				$options = $field_conf['options'];
 			} else {
@@ -61,11 +63,10 @@ class Reference extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 			echo "<select",
 				" id=\"", $form->getHtmlFieldId($group_id, $field_id), "\"",
 				" name=\"", $form->getHtmlFieldName($group_id, $field_id), "\"",
+				" data-ref=\"", htmlspecialchars($field_conf['machine_type']), "\"",
 				" tabindex=\"", $form->base_tabindex + (isset($field_conf['tabindex']) ? $field_conf['tabindex'] : 0), "\"";
 			static::commonAttributes($field_conf);
 			echo ">\n";
-
-			$value = $form->getRawData($group_id, $field_id);
 
 			echo "<option value=\"\"";
 			if (empty($value)) {
