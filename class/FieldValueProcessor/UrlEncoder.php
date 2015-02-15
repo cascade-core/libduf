@@ -50,7 +50,7 @@ class UrlEncoder
 	public static function valuePostProcess($raw_values, & $group_values, \Duf\Form $form, $group_id, $field_id, $field_conf)
 	{
 		if (isset($raw_values[$field_id])) {
-			$group_values[$field_id] = urldecode($raw_values[$field_id]);
+			$group_values[$field_id] = ($raw_values[$field_id] === '' ? null : urldecode($raw_values[$field_id]));
 		}
 	}
 

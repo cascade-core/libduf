@@ -45,6 +45,10 @@ interface IFieldValueProcessor
 	 * Convert raw value to output value. This method reads raw values from
 	 * `$raw_values` and writes converted values into `$group_values`.
 	 *
+	 * Empty value, as not provided by user, should be converted to null.
+	 * For example when processor converts value to int, it shoud return
+	 * zero on '0', but null on empty string.
+	 *
 	 * Minimal implementation:
 	 *
 	 *     if (isset($raw_values[$field_id])) {
