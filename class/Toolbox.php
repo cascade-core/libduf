@@ -36,7 +36,7 @@ class Toolbox
 	protected $config;
 
 	/**
-	 * Context
+	 * Context (unused by DUF, passed to field group generator)
 	 */
 	protected $context;
 
@@ -44,7 +44,7 @@ class Toolbox
 	/**
 	 * Create a toolbox.
 	 */
-	public function __construct($config, $context)
+	public function __construct($config, $context = null)
 	{
 		$this->config = $config;
 		$this->context = $context;
