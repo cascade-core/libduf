@@ -12,7 +12,10 @@
         "resources": {
             "duf_toolbox": {
                 "class": "\\Duf\\Toolbox",
-                "_load_config": "duf_toolbox"
+                "_load_config": "duf_toolbox",
+                "_resources": {
+                    "smalldb": "duf_smalldb"
+                }
             },
             "duf_smalldb": {
                 "factory": [

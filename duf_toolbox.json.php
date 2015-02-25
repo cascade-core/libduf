@@ -1,7 +1,6 @@
 {
     "_": "<?php printf('_%c%c}%c',34,10,10);__halt_compiler();?>",
     "field_group_generators": {
-        "smalldb": "\\Duf\\FieldGroupGenerator\\Smalldb"
     },
     "field_types": {
         "reference": {

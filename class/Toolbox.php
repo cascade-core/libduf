@@ -48,9 +48,16 @@ class Toolbox
 	{
 		$this->config = $config;
 
+		// FIXME: hack
+		foreach ($config as $k => $v) {
+			if (is_object($v) && $v instanceof \Duf\FieldGroupGenerator\IFieldGroupGenerator) {
+				$this->registerFieldGroupGenerator($k, $v);
+			}
+		}
+
 		if (isset($this->config['field_group_generators'])) {
 			foreach ($this->config['field_group_generators'] as $generator_name => $generator_class) {
-				$this->registerFieldGroupGenerator($generator_name, new $generator_class());
+				$this->registerFieldGroupGenerator($generator_name, is_object($generator_class) ? $generator_class : new $generator_class());
 			}
 		}
 	}
