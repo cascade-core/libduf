@@ -33,13 +33,10 @@ interface IFieldGroupGenerator {
 	 * 	group. Generator fills in holes in it. There should be some
 	 * 	identifier of entity type or whatever is relevant to this
 	 * 	generator.
-	 * @param $context is global context passed from Toolbox. Generator
-	 * 	should use only this context to retrieve all it needs to 
-	 * 	generate field group.
 	 *
 	 * @return FALSE if group cannot be updated.
 	 */
-	static function updateFieldGroup(& $group_config, $context);
+	function updateFieldGroup(& $group_config);
 
 }
 

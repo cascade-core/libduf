@@ -25,16 +25,37 @@ namespace Duf\FieldGroupGenerator;
  */
 class Smalldb implements IFieldGroupGenerator
 {
+	/// Smalldb.
+	protected $smalldb;
+
+
+	/**
+	 * Constructor.
+	 */
+	public function __construct(\Smalldb\StateMachine\AbstractBackend $smalldb)
+	{
+		$this->smalldb = $smalldb;
+	}
+
+
+	/**
+	 * Factory for compatibility with cascade Context.
+	 */
+	public static function createFromConfig($config, $context, $alias)
+	{
+		return new self($context->smalldb);
+	}
+
 
 	/// @copydoc IFieldGroupGenerator::updateFieldGroup
-	static function updateFieldGroup(& $group_config, $context)
+	public function updateFieldGroup(& $group_config)
 	{
 		if (empty($group_config['machine_type'])) {
 			throw new \InvalidArgumentException('Missing machine_type in field group configuration.');
 		} else {
 			$machine_type = $group_config['machine_type'];
 		}
-		$machine = $context->smalldb->getMachine($machine_type);
+		$machine = $this->smalldb->getMachine($machine_type);
 		if (!$machine) {
 			// Not failing because we want to survive magic templates
 			error_msg('Unknown machine type: %s', $machine_type);
@@ -62,9 +83,10 @@ class Smalldb implements IFieldGroupGenerator
 			}
 
 			// FIXME: Shouldn't we use toolbox?
-			$ref['options_factory'] = function($field_conf, $value) use ($context, $ref) {
+			$smalldb = $this->smalldb;
+			$ref['options_factory'] = function($field_conf, $value) use ($smalldb, $ref) {
 				$items = array();
-				$machine = $context->smalldb->getMachine($ref['machine_type']);
+				$machine = $smalldb->getMachine($ref['machine_type']);
 				$machine_id_keys = $machine->describeId();
 				if (count($machine_id_keys) != 1) {
 					throw new \Exception('Sorry, only simple primary keys are supported.');
@@ -82,7 +104,7 @@ class Smalldb implements IFieldGroupGenerator
 					$filters[$machine_id_key] = $value;
 				}
 
-				foreach ($context->smalldb->createListing($filters)->query() as $item)
+				foreach ($smalldb->createListing($filters)->query() as $item)
 				{
 					// FIXME: Optimize this.
 					$p = array();

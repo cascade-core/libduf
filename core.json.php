@@ -13,6 +13,15 @@
             "duf_toolbox": {
                 "class": "\\Duf\\Toolbox",
                 "_load_config": "duf_toolbox"
+            },
+            "duf_smalldb": {
+                "factory": [
+                    "\\Duf\\FieldGroupGenerator\\Smalldb",
+                    "createFromConfig"
+                ],
+                "_resources": {
+                    "smalldb": "smalldb"
+                }
             }
         }
     }

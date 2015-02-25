@@ -36,18 +36,35 @@ class Toolbox
 	protected $config;
 
 	/**
-	 * Context (unused by DUF, passed to field group generator)
+	 * Field group generators
 	 */
-	protected $context;
+	protected $field_group_generators = array();
 
 
 	/**
 	 * Create a toolbox.
 	 */
-	public function __construct($config, $context = null)
+	public function __construct($config)
 	{
 		$this->config = $config;
-		$this->context = $context;
+
+		if (isset($this->config['field_group_generators'])) {
+			foreach ($this->config['field_group_generators'] as $generator_name => $generator_class) {
+				$this->registerFieldGroupGenerator($generator_name, new $generator_class());
+			}
+		}
+	}
+
+
+	/**
+	 * Register field group generator.
+	 *
+	 * It is external tool connected to external resources, so toolbox
+	 * cannot create it.
+	 */
+	public function registerFieldGroupGenerator($generator_name, $generator)
+	{
+		$this->field_group_generators[$generator_name] = $generator;
 	}
 
 
@@ -57,9 +74,8 @@ class Toolbox
 	 */
 	public function updateFieldGroup($generator_name, & $field_group)
 	{
-		if (isset($this->config['field_group_generators'][$generator_name])) {
-			$generator = $this->config['field_group_generators'][$generator_name];
-			return $generator::updateFieldGroup($field_group, $this->context);
+		if (isset($this->field_group_generators[$generator_name])) {
+			return $this->field_group_generators[$generator_name]->updateFieldGroup($field_group);
 		}
 		throw new \RuntimeException('Unknown field group generator: '.$generator_name);
 	}
