@@ -44,7 +44,7 @@ class Toolbox
 	/**
 	 * Create a toolbox.
 	 */
-	public function __construct($config)
+	public function __construct($config = array())
 	{
 		$this->config = $config;
 
@@ -72,6 +72,16 @@ class Toolbox
 	public function registerFieldGroupGenerator($generator_name, $generator)
 	{
 		$this->field_group_generators[$generator_name] = $generator;
+	}
+
+
+	/**
+	 * Load config file
+	 */
+	public function loadConfigFile($filename)
+	{
+		$cfg = json_decode(file_get_contents($filename), TRUE);
+		$this->config = array_replace_recursive($this->config, $cfg);
 	}
 
 
