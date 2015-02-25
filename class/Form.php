@@ -485,7 +485,7 @@ class Form
 		if (!isset($this->form_def['field_groups'][$group])) {
 			throw new \InvalidArgumentException('Group does not exist: '.$group);
 		}
-		return $this->getArrayItemByPath($this->field_defaults[$group],
+		return $this->getArrayItemByPath($this->field_defaults, $group,
 			isset($this->group_keys[$group]) ? $this->group_keys[$group] : null,
 			$field);
 	}
@@ -526,21 +526,13 @@ class Form
 				}
 			}
 
-			if (isset($this->raw_defaults[$group])) {
-				return $this->getArrayItemByPath($this->raw_defaults[$group],
-					isset($this->group_keys[$group]) ? $this->group_keys[$group] : null,
-					$field);
-			} else {
-				return null;
-			}
+			return $this->getArrayItemByPath($this->raw_defaults, $group,
+				isset($this->group_keys[$group]) ? $this->group_keys[$group] : null,
+				$field);
 		} else {
-			if (isset($this->raw_input[$group])) {
-				return $this->getArrayItemByPath($this->raw_input[$group],
-					isset($this->group_keys[$group]) ? $this->group_keys[$group] : null,
-					$field);
-			} else {
-				return null;
-			}
+			return $this->getArrayItemByPath($this->raw_input, $group,
+				isset($this->group_keys[$group]) ? $this->group_keys[$group] : null,
+				$field);
 		}
 	}
 
