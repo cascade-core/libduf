@@ -200,7 +200,7 @@ class Smalldb implements IFieldGroupGenerator
 					} else {
 						$id = array();
 						foreach ($id_properties as $k) {
-							$id[] = $item[$k];
+							$id[] = isset($item[$k]) ? $item[$k] : null;
 						}
 						/*
 						debug_dump($a, 'Checking item action');

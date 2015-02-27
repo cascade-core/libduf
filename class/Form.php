@@ -161,6 +161,16 @@ class Form
 				$this->toolbox->updateFieldGroup($group_def['field_group_generator'], $group_def);
 			}
 		}
+		unset($group_def);
+
+		// Scan form definition for default values
+		foreach ($this->form_def['field_groups'] as $group_id => $group_def) {
+			foreach ($group_def['fields'] as $field_id => $field) {
+				if (isset($field['default_value'])) {
+					$this->field_defaults[$group_id][$field_id] = $field['default_value'];
+				}
+			}
+		}
 	}
 
 
@@ -287,15 +297,24 @@ class Form
 	 * $custom_defaults has the same structure as values returned by 
 	 * getValues(), if $group is null. Otherwise $custom_defaults is only 
 	 * fragment for specified field group.
+	 *
+	 * If `$replace` is false, `$custom_defaults` will be merged with
+	 * defaults from form definition or previous calls of setDefaults().
 	 */
-	public function setDefaults($custom_defaults, $group = null)
+	public function setDefaults($custom_defaults, $group = null, $replace = false)
 	{
 		// Merge definition defaults with custom defaults -- custom defaults win
 		if ($group === null) {
 			$this->raw_defaults = null; // Reset cache (just to make sure it is empty)
-			$this->field_defaults = $custom_defaults;
+			if ($replace) {
+				$this->field_defaults = $custom_defaults;
+			} else {
+				foreach ($custom_defaults as $k => $v) {
+					$this->field_defaults[$k] = array_merge($this->field_defaults[$k], $v);
+				}
+			}
 		} else {
-			$this->field_defaults[$group] = $custom_defaults;
+			$this->field_defaults[$group] = array_merge($this->field_defaults[$k], $custom_defaults);
 		}
 	}
 
