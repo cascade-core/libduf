@@ -55,8 +55,12 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 		// Get column list from group fields
 		if (!empty($widget_conf['columns_from_fields'])) {
 			foreach ($fields as $field_id => $f) {
-				if (!empty($f['hidden']) || !empty($f[$k_hidden])) {
+				if (isset($f[$k_hidden])) {		// Allow false to override 'hidden' option
 					// columns are enabled by default
+					if (!empty($f[$k_hidden])) {
+						continue;
+					}
+				} else if (!empty($f['hidden'])) {
 					continue;
 				}
 				$columns[$field_id] = array(
