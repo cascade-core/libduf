@@ -75,6 +75,15 @@ class Smalldb implements IFieldGroupGenerator
 			'hidden' => true,
 		);
 
+		// Generate sorting options
+		foreach ($fields as $field_id => & $field)
+		if (!isset($field['order_by'])) {
+			$field['order_by'] = $field_id;
+			if (!isset($field['order_asc'])) {
+				$field['order_asc'] = true;
+			}
+		}
+
 		// Add relations to form fields
 		foreach ($machine->describeAllMachineReferences() as $ref_name => $ref) {
 			$ref['type'] = 'reference';

@@ -42,13 +42,15 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 		$fields = $group['fields'];
 
 		// Calculate prefixed tabular keys
-		$key_prefix = isset($widget_conf['option_prefix']) ? $widget_conf['option_prefix'] : 'tabular';
-		$k_hidden   = $key_prefix.'_hidden';
-		$k_weight   = $key_prefix.'_weight';
-		$k_width    = $key_prefix.'_width';
-		$k_label    = $key_prefix.'_label';
-		$k_indent   = $key_prefix.'_indent_key';
-		$k_rotated  = $key_prefix.'_rotated_header';
+		$key_prefix  = isset($widget_conf['option_prefix']) ? $widget_conf['option_prefix'] : 'tabular';
+		$k_hidden    = $key_prefix.'_hidden';
+		$k_weight    = $key_prefix.'_weight';
+		$k_width     = $key_prefix.'_width';
+		$k_label     = $key_prefix.'_label';
+		$k_indent    = $key_prefix.'_indent_key';
+		$k_order_by  = $key_prefix.'_order_by';
+		$k_order_asc = $key_prefix.'_order_asc';
+		$k_rotated   = $key_prefix.'_rotated_header';
 
 		// Get column list from group fields
 		if (!empty($widget_conf['columns_from_fields'])) {
@@ -58,12 +60,14 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 					continue;
 				}
 				$columns[$field_id] = array(
-					'weight'     => isset($f[$k_weight])   ? $f[$k_weight]   : (isset($f['weight'])         ? $f['weight']         : 50),
-					'width'      => isset($f[$k_width])    ? $f[$k_width]    : (isset($f['width'])          ? $f['width']          : null),
-					'label'      => isset($f[$k_label])    ? $f[$k_label]    : (isset($f['label'])          ? $f['label']          :
-					                                                           (isset($f['name'])           ? $f['name']           : $field_id)),
-					'indent_key' => isset($f[$k_indent])   ? $f[$k_indent]   : (isset($f['indent_key'])     ? $f['indent_key']     : null),
-					'rotated'    => isset($f[$k_rotated])  ? $f[$k_rotated]  : (isset($f['rotated_header']) ? $f['rotated_header'] : null),
+					'weight'     => isset($f[$k_weight])    ? $f[$k_weight]    : (isset($f['weight'])          ? $f['weight']          : 50),
+					'width'      => isset($f[$k_width])     ? $f[$k_width]     : (isset($f['width'])           ? $f['width']           : null),
+					'label'      => isset($f[$k_label])     ? $f[$k_label]     : (isset($f['label'])           ? $f['label']           :
+					                                                             (isset($f['name'])            ? $f['name']            : $field_id)),
+					'order_by'   => isset($f[$k_order_by])  ? $f[$k_order_by]  : (isset($f['order_by'])        ? $f['order_by']        : null),
+					'order_asc'  => isset($f[$k_order_asc]) ? $f[$k_order_asc] : (isset($f['order_asc'])       ? $f['order_asc']       : true),
+					'indent_key' => isset($f[$k_indent])    ? $f[$k_indent]    : (isset($f['indent_key'])      ? $f['indent_key']      : null),
+					'rotated'    => isset($f[$k_rotated])   ? $f[$k_rotated]   : (isset($f['rotated_header'])  ? $f['rotated_header']  : null),
 				);
 			}
 		}
@@ -118,12 +122,25 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 				if (!empty($col['rotated'])) {
 					echo "<span class=\"rotated\">";
 				}
-				if (isset($col['label'])) {
-					echo htmlspecialchars($col['label']);
+
+				if (!empty($col['order_by'])) {
+					\Duf\Renderer\HtmlFilter\OrderButton::renderWidget($form, $template_engine, array(
+						'group_id' => 'filters',
+						'order_by' => $col['order_by'],
+						'order_asc' => isset($col['order_asc']) ? $col['order_asc'] : true,
+						'label' => isset($col['label']) ? $col['label'] : null,
+						'widgets' => isset($col['thead_widgets']) ? $col['thead_widgets'] : null,
+					));
+				} else {
+					if (isset($col['label'])) {
+						echo htmlspecialchars($col['label']);
+					}
+
+					if (isset($col['thead_widgets'])) {
+						$form->renderWidgets($template_engine, $col['thead_widgets']);
+					}
 				}
-				if (isset($col['thead_widgets'])) {
-					$form->renderWidgets($template_engine, $col['thead_widgets']);
-				}
+
 				if (!empty($col['rotated'])) {
 					echo "</span>";
 				}
