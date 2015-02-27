@@ -165,10 +165,17 @@ class Form
 
 		// Scan form definition for default values
 		foreach ($this->form_def['field_groups'] as $group_id => $group_def) {
-			foreach ($group_def['fields'] as $field_id => $field) {
-				if (isset($field['default_value'])) {
-					$this->field_defaults[$group_id][$field_id] = $field['default_value'];
+			$this->field_defaults[$group_id] = array();
+			if (isset($group_def['fields'])) {
+				if (empty($group_def['collection_dimensions'])) {
+					foreach ($group_def['fields'] as $field_id => $field) {
+						if (isset($field['default_value'])) {
+							$this->field_defaults[$group_id][$field_id] = $field['default_value'];
+						}
+					}
 				}
+			} else if (empty($group_def['wild'])) {
+				throw new \InvalidArgumentException('No fields in field group "'.$group_id.'".');
 			}
 		}
 	}
@@ -314,7 +321,11 @@ class Form
 				}
 			}
 		} else {
-			$this->field_defaults[$group] = array_merge($this->field_defaults[$k], $custom_defaults);
+			if ($replace) {
+				$this->field_defaults[$group] = $custom_defaults;
+			} else {
+				$this->field_defaults[$group] = array_merge($this->field_defaults[$group], $custom_defaults);
+			}
 		}
 	}
 
