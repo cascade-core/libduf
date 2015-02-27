@@ -60,6 +60,7 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 		}
 
 		// Value
+		$raw_data = $form->getRawData($group_id, $field_id);
 		switch ($type) {
 			case 'submit':
 				echo " value=\"", htmlspecialchars(isset($field_conf['label']) ? $field_conf['label'] : $field_conf['name']), "\"";
@@ -76,17 +77,23 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 
 			case 'datetime':
 			case 'datetime-local':
-				echo " value=\"", htmlspecialchars(strftime('%Y-%m-%dT%H:%M:%S', strtotime($form->getRawData($group_id, $field_id)))), "\"";
+				if ($raw_data) {
+					echo " value=\"", htmlspecialchars(strftime('%Y-%m-%dT%H:%M:%S', strtotime($raw_data))), "\"";
+				}
 				break;
 			case 'date':
-				echo " value=\"", htmlspecialchars(strftime('%Y-%m-%d', strtotime($form->getRawData($group_id, $field_id)))), "\"";
+				if ($raw_data) {
+					echo " value=\"", htmlspecialchars(strftime('%Y-%m-%d', strtotime($raw_data))), "\"";
+				}
 				break;
 			case 'time':
-				echo " value=\"", htmlspecialchars(strftime('%H:%M:%S', strtotime($form->getRawData($group_id, $field_id)))), "\"";
+				if ($raw_data) {
+					echo " value=\"", htmlspecialchars(strftime('%H:%M:%S', strtotime($raw_data))), "\"";
+				}
 				break;
 
 			default:
-				echo " value=\"", htmlspecialchars($form->getRawData($group_id, $field_id)), "\"";
+				echo " value=\"", htmlspecialchars($raw_data), "\"";
 				break;
 		}
 
