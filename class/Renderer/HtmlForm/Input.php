@@ -74,6 +74,17 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 				// Radio cannot use this method, it needs different handling.
 				throw new \Exception('Not supported.');
 
+			case 'datetime':
+			case 'datetime-local':
+				echo " value=\"", htmlspecialchars(strftime('%Y-%m-%dT%H:%M:%S', strtotime($form->getRawData($group_id, $field_id)))), "\"";
+				break;
+			case 'date':
+				echo " value=\"", htmlspecialchars(strftime('%Y-%m-%d', strtotime($form->getRawData($group_id, $field_id)))), "\"";
+				break;
+			case 'time':
+				echo " value=\"", htmlspecialchars(strftime('%H:%M:%S', strtotime($form->getRawData($group_id, $field_id)))), "\"";
+				break;
+
 			default:
 				echo " value=\"", htmlspecialchars($form->getRawData($group_id, $field_id)), "\"";
 				break;
@@ -128,7 +139,7 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 					switch ($type) {
 						case 'datetime':
 						case 'datetime-local':
-							echo " $k=\"", htmlspecialchars(strftime('%Y-%m-%d %H:%M:%S', strtotime($v))), "\"";
+							echo " $k=\"", htmlspecialchars(strftime('%Y-%m-%dT%H:%M:%S', strtotime($v))), "\"";
 							break;
 						case 'date':
 							echo " $k=\"", htmlspecialchars(strftime('%Y-%m-%d', strtotime($v))), "\"";

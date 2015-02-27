@@ -36,7 +36,7 @@ class DateTimeInput extends TextInput implements IFieldValidator
 			return false;
 		}
 
-		$ts = strptime($value, static::$format);
+		$ts = strtotime($value);
 
 		if ($ts === false) {
 			$form->setFieldError($group_id, $field_id, \Duf\Form::E_FIELD_MALFORMED, array(
