@@ -186,6 +186,8 @@ class Smalldb implements IFieldGroupGenerator
 				'is_allowed_callback' => function($item) use ($machine, $a, $id_properties) {
 					if ($item instanceof \Smalldb\StateMachine\Reference) {
 						return $item->machine->isTransitionAllowed($item, $a);
+					} else if (empty($item)) {
+						return $machine->isTransitionAllowed($machine->nullRef(), $a);
 					} else {
 						$id = array();
 						foreach ($id_properties as $k) {
