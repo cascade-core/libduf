@@ -34,7 +34,8 @@ class MarkdownArea extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 		static::commonAttributes($field_conf);
 
 		echo ">";
-		echo \Parsedown::instance()->text($form->getViewData($group_id, $field_id));
+		//echo \Parsedown::instance()->text($form->getViewData($group_id, $field_id));
+		echo \App\MarkdownProcessor::instance()->text($form->getViewData($group_id, $field_id));
 		echo "</div>\n";
 	}
 
