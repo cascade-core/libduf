@@ -192,7 +192,7 @@
         },
         "markdownarea": {
             "renderers": {
-                "@edit": "\\Duf\\Renderer\\HtmlForm\\TextArea",
+                "@edit": "\\Duf\\Renderer\\HtmlForm\\MarkdownArea",
                 "@view": "\\Duf\\Renderer\\HtmlView\\MarkdownArea",
                 "@hidden": "\\Duf\\Renderer\\HtmlForm\\HiddenInput"
             },
