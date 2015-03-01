@@ -1,0 +1,163 @@
+.wmd-editor {
+	display: table;
+	margin: 0em;
+	padding: 0em;
+	border: 1px solid #aaa;
+	border-top-style: dashed;
+	min-width: 500px;
+	width: 100%;
+}
+
+.wmd-editor .wmd-button-bar-holder,
+.wmd-editor .wmd-input-and-preview-holder,
+.wmd-editor .wmd-input-holder,
+.wmd-editor .wmd-preview-holder {
+	padding: 0px;
+	margin: 0px;
+	border: none;
+	vertical-align: top;
+	box-sizing: border-box;
+}
+
+.wmd-editor .wmd-button-bar-holder {
+	display: table-caption;
+	border-top:   1px solid #aaa;
+	border-right: 1px solid #aaa;
+	border-left:  1px solid #aaa;
+	background: #f8f8f8;
+}
+
+	.wmd-editor .wmd-button-bar {
+		padding: 0px;
+		margin: 0px;
+	}
+
+.wmd-editor .wmd-input-and-preview-holder {
+	display: table-row;
+}
+
+	.wmd-editor .wmd-input-holder {
+		display: table-cell;
+		position: relative;
+		width: 52%;
+		overflow: hidden;
+	}
+
+		.wmd-editor .wmd-input-holder textarea {
+			display: block;
+			float: left;
+			box-sizing: border-box;
+			width: 100%;
+			height: 100%;
+			margin: 0px;
+			padding: 0.5em;
+			min-height: 5em;
+		}
+
+			.wmd-editor .wmd-input-holder textarea:focus {
+				outline: none;
+			}
+
+
+	.wmd-editor .wmd-preview-holer {
+		display: table-cell;
+		width: 48%;
+	}
+
+		.wmd-editor .wmd-preview {
+			box-sizing: border-box;
+			padding: 0.5em 0.5em 3em 0.5em;
+			float: right;
+			width: 100%;
+			background: #fafafa;
+			border-left: 1px dashed #aaa;
+			min-height: 6em;
+		}
+
+
+.wmd-button-row 
+{
+	position: relative; 
+	margin: 5px;
+	padding: 0px;  
+	height: 22px;
+}
+
+.wmd-spacer
+{
+	width: 1px; 
+	height: 20px; 
+	margin-left: 14px;
+	
+	position: absolute;
+	background-color: #ddd;
+	display: inline-block; 
+	list-style: none;
+}
+
+.wmd-button {
+    width: 20px;
+    height: 20px;
+    padding-left: 2px;
+    padding-right: 3px;
+    position: absolute;
+    display: inline-block;
+    list-style: none;
+    cursor: pointer;
+}
+
+.wmd-button > span {
+    background-image: url(pagedown/wmd-buttons.png);
+    background-repeat: no-repeat;
+    background-position: 0px 0px;
+    width: 22px;
+    height: 22px;
+    padding: 1px;
+    display: inline-block;
+    border: 1px solid #ddd;
+}
+
+.wmd-spacer1
+{
+    left: 50px;
+}
+.wmd-spacer2
+{
+    left: 175px;
+}
+.wmd-spacer3
+{
+    left: 300px;
+}
+
+
+
+
+.wmd-prompt-background
+{
+	background-color: Black;
+}
+
+.wmd-prompt-dialog
+{
+	border: 1px solid #999999;
+	background-color: #F5F5F5;
+}
+
+.wmd-prompt-dialog > div {
+	font-size: 0.8em;
+	font-family: arial, helvetica, sans-serif;
+}
+
+
+.wmd-prompt-dialog > form > input[type="text"] {
+	border: 1px solid #999999;
+	color: black;
+}
+
+.wmd-prompt-dialog > form > input[type="button"]{
+	border: 1px solid #888888;
+	font-family: trebuchet MS, helvetica, sans-serif;
+	font-size: 0.8em;
+	font-weight: bold;
+}

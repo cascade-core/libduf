@@ -19,16 +19,39 @@
 namespace Duf\Renderer\HtmlForm;
 
 /**
- * Markdown flavored `<textarea>` field renderer.
+ * Markdown flavored `<textarea>` field renderer with WMD editor.
  */
-class MarkdownArea extends TextArea implements \Duf\Renderer\IFieldWidgetRenderer
+class MarkdownArea extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 {
 
 	/// @copydoc \Duf\Renderer\IFieldWidgetRenderer::renderFieldWidget
 	public static function renderFieldWidget(\Duf\Form $form, $template_engine, $widget_conf, $group_id, $field_id, $field_conf)
 	{
-		$field_conf['data']['provide'] = 'markdown';
-		return parent::renderFieldWidget($form, $template_engine, $widget_conf, $group_id, $field_id, $field_conf);
+		$suffix = $form->getHtmlFieldId($group_id, $field_id);
+
+		echo	"<div id=\"", $suffix, "\" class=\"wmd-editor\" data-wmd-suffix=\"$suffix\">\n",
+				"<div class=\"wmd-button-bar-holder\">\n",
+					"<div class=\"wmd-button-bar\" id=\"wmd-button-bar-$suffix\"></div>\n",
+				"</div>\n",
+				"<div class=\"wmd-input-and-preview-holder\">\n",
+					"<div class=\"wmd-input-holder\">\n";
+
+		echo "<textarea",
+			" id=\"wmd-input-$suffix\"",
+			" name=\"", $form->getHtmlFieldName($group_id, $field_id), "\"",
+			" tabindex=\"", $form->base_tabindex + (isset($field_conf['tabindex']) ? $field_conf['tabindex'] : 0), "\"";
+		static::commonAttributes($field_conf);
+		echo ">",
+			htmlspecialchars($form->getRawData($group_id, $field_id)),
+			"</textarea>";
+
+		echo			"</div>\n",
+					"<div class=\"wmd-preview-holder\">\n",
+						"<div id=\"wmd-preview-$suffix\" class=\"wmd-preview\"></div>\n",
+					"</div>\n",
+				"</div>\n",
+			"</div>\n";
 	}
+
 }
 
