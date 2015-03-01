@@ -86,6 +86,10 @@
 			min-height: 6em;
 		}
 
+		.wmd-editor .wmd-preview img {
+			max-width: 100%;
+		}
+
 
 .wmd-button-row 
 {
