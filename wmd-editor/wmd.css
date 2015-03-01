@@ -1,9 +1,9 @@
 .wmd-editor {
-	display: table;
+	display: block;
+	position: relative;
 	margin: 0em;
 	padding: 0em;
 	border: 1px solid #aaa;
-	border-top-style: dashed;
 	min-width: 500px;
 	width: 100%;
 }
@@ -12,6 +12,9 @@
 .wmd-editor .wmd-input-and-preview-holder,
 .wmd-editor .wmd-input-holder,
 .wmd-editor .wmd-preview-holder {
+	display: block;
+	overflow: hidden;
+	position: relative;
 	padding: 0px;
 	margin: 0px;
 	border: none;
@@ -20,11 +23,9 @@
 }
 
 .wmd-editor .wmd-button-bar-holder {
-	display: table-caption;
-	border-top:   1px solid #aaa;
-	border-right: 1px solid #aaa;
-	border-left:  1px solid #aaa;
+	border-bottom:  1px dashed #aaa;
 	background: #f8f8f8;
+	height: 33px;
 }
 
 	.wmd-editor .wmd-button-bar {
@@ -33,25 +34,29 @@
 	}
 
 .wmd-editor .wmd-input-and-preview-holder {
-	display: table-row;
 }
 
 	.wmd-editor .wmd-input-holder {
-		display: table-cell;
-		position: relative;
+		position: absolute;
+		top: 0px;
+		bottom: 0px;
+		left: 0px;
 		width: 52%;
-		overflow: hidden;
 	}
 
 		.wmd-editor .wmd-input-holder textarea {
 			display: block;
-			float: left;
+			position: absolute;
 			box-sizing: border-box;
+			resize: none;
+			top: 0px;
+			right: 0px;
+			bottom: 0px;
+			left: 0px;
 			width: 100%;
 			height: 100%;
 			margin: 0px;
 			padding: 0.5em;
-			min-height: 5em;
 		}
 
 			.wmd-editor .wmd-input-holder textarea:focus {
@@ -59,16 +64,13 @@
 			}
 
 
-	.wmd-editor .wmd-preview-holer {
-		display: table-cell;
-		width: 48%;
+	.wmd-editor .wmd-preview-holder {
+		margin-left: 52%;
 	}
 
 		.wmd-editor .wmd-preview {
 			box-sizing: border-box;
 			padding: 0.5em 0.5em 3em 0.5em;
-			float: right;
-			width: 100%;
 			background: #fafafa;
 			border-left: 1px dashed #aaa;
 			min-height: 6em;
