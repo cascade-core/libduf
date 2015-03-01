@@ -68,6 +68,16 @@
 		margin-left: 52%;
 	}
 
+		.wmd-editor .wmd-preview-label {
+			position: absolute;
+			top: 0px;
+			right: 0px;
+			padding: 0.3em 0.5em;
+			font-size: 80%;
+			background: transparent;
+			color: #aaa;
+		}
+
 		.wmd-editor .wmd-preview {
 			box-sizing: border-box;
 			padding: 0.5em 0.5em 3em 0.5em;

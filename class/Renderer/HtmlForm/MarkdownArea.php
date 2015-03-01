@@ -47,6 +47,7 @@ class MarkdownArea extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 
 		echo			"</div>\n",
 					"<div class=\"wmd-preview-holder\">\n",
+						"<div class=\"wmd-preview-label\">", _('Preview'), "</div>\n",
 						"<div id=\"wmd-preview-$suffix\" class=\"wmd-preview\"></div>\n",
 					"</div>\n",
 				"</div>\n",
