@@ -32,6 +32,7 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 	public static function renderWidget(\Duf\Form $form, $template_engine, $widget_conf)
 	{
 		$group_id = $widget_conf['group_id'];
+		$filters_group_id = isset($widget_conf['filters_group_id']) ? $widget_conf['filters_group_id'] : null; 
 		$group = $form->getFieldGroup($group_id);
 		$columns = array();
 
@@ -51,6 +52,8 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 		$k_order_by  = $key_prefix.'_order_by';
 		$k_order_asc = $key_prefix.'_order_asc';
 		$k_rotated   = $key_prefix.'_rotated_header';
+		$k_irf_name  = $key_prefix.'_indent_rq_filter_name';
+		$k_irf_value = $key_prefix.'_indent_rq_filter_value';
 
 		// Get column list from group fields
 		if (!empty($widget_conf['columns_from_fields'])) {
@@ -73,6 +76,17 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 					'indent_key' => isset($f[$k_indent])    ? $f[$k_indent]    : (isset($f['indent_key'])      ? $f['indent_key']      : null),
 					'rotated'    => isset($f[$k_rotated])   ? $f[$k_rotated]   : (isset($f['rotated_header'])  ? $f['rotated_header']  : null),
 				);
+
+				$irf_name  = isset($f[$k_irf_name])  ? $f[$k_irf_name]  : (isset($f['indent_rq_filter_name'])  ? $f['indent_rq_filter_name']   : null);
+				$irf_value = isset($f[$k_irf_value]) ? $f[$k_irf_value] : (isset($f['indent_rq_filter_value']) ? $f['indent_rq_filter_value']  : null);
+
+				// If required filter is not set, do not indent the tree. Typically
+				// this filter is "order_by = tree_left", which says "tree in a list".
+				if ($filters_group_id !== null && $irf_name !== null && $irf_value !== null) {
+					if ($form->getViewData($filters_group_id, $irf_name) != $irf_value) {
+						$columns[$field_id]['indent_key'] = null;
+					}
+				}
 			}
 		}
 
@@ -129,7 +143,7 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 
 				if (!empty($col['order_by'])) {
 					\Duf\Renderer\HtmlFilter\OrderButton::renderWidget($form, $template_engine, array(
-						'group_id' => 'filters',
+						'group_id' => $filters_group_id,
 						'order_by' => $col['order_by'],
 						'order_asc' => isset($col['order_asc']) ? $col['order_asc'] : true,
 						'label' => isset($col['label']) ? $col['label'] : null,
