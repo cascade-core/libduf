@@ -32,7 +32,7 @@ class OrderButton extends SimpleButton
 
 		$order_by = $widget_conf['order_by'];
 		$order_asc = $widget_conf['order_asc'];
-		$effective_order_asc = (isset($filters['order_by']) && $order_by == $filters['order_by']) ? $filters['order_asc'] : null;
+		$effective_order_asc = (isset($filters['order_by']) && isset($filters['order_asc']) && $order_by == $filters['order_by']) ? $filters['order_asc'] : null;
 
 		$overrides = array(
 			'order_by' => $order_by,
