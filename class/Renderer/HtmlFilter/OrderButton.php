@@ -37,6 +37,7 @@ class OrderButton extends SimpleButton
 		$overrides = array(
 			'order_by' => $order_by,
 			'order_asc' => $effective_order_asc === null ? $order_asc : ! $effective_order_asc,
+			'offset'=> null,
 		);
 
 		echo "<a href=\"", htmlspecialchars(static::buildFilterLink($filters, $overrides)), "\"";
