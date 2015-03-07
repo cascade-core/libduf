@@ -218,5 +218,19 @@ class Toolbox
 		throw new RendererException('Undefined field renderer "'.$renderer_name.'". Field type: '.$field_type);
 	}
 
+
+	/**
+	 * Retrieve content renderer.
+	 *
+	 * @return callable which converts some data of given type into HTML representation.
+	 */
+	public function getContentRenderer($content_type)
+	{
+		if (isset($this->config['content_types'][$content_type]['renderer'])) {
+			return $this->config['content_types'][$content_type]['renderer'];
+		}
+		throw new RendererException('Undefined content type renderer. Content type: '.$content_type);
+	}
+
 }
 

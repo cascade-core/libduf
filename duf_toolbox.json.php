@@ -397,5 +397,10 @@
         "filter_paginator": {
             "renderer": "\\Duf\\Renderer\\HtmlFilter\\Paginator"
         }
+    },
+    "content_types": {
+        "text/markdown": {
+            "renderer": "\\Duf\\Renderer\\Content\\Markdown"
+        }
     }
 }

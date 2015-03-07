@@ -930,6 +930,16 @@ class Form
 
 
 	/**
+	 * Helper method to render some non-trivial content.
+	 */
+	public function renderContent($template_engine, $content_type, $content)
+	{
+		$renderer = $this->toolbox->getContentRenderer($content_type);
+		return $renderer::renderContent($this, $template_engine, $content_type, $content);
+	}
+
+
+	/**
 	 * Returns item of multidimensional $array specified by keys, or null when item is not found.
 	 *
 	 * @param $array is an array to walk.

@@ -16,27 +16,23 @@
  *
  */
 
-namespace Duf\Renderer\HtmlView;
+namespace Duf\Renderer;
 
 /**
- * Render markdown field value using `<div>` and markdown processor.
- *
- * @note This renderer requires Parsedown: http://parsedown.org/
+ * Render a non-trivial content. This is meant for displaying things like Markdown.
  */
-class MarkdownArea extends Input implements \Duf\Renderer\IFieldWidgetRenderer
+interface IContentRenderer
 {
 
-	/// @copydoc \Duf\Renderer\IFieldWidgetRenderer::renderFieldWidget
-	public static function renderFieldWidget(\Duf\Form $form, $template_engine, $widget_conf, $group_id, $field_id, $field_conf)
-	{
-		echo "<div";
-		static::commonAttributes($field_conf);
-		echo ">";
-
-		$form->renderContent($template_engine, 'text/markdown', $form->getViewData($group_id, $field_id));
-
-		echo "</div>\n";
-	}
+	/**
+	 * Render the content
+	 *
+	 * @param $form is the Form.
+	 * @param $template_engine is templating engine which may be used for rendering (optional).
+	 * @param $content_type is mime type of the content, for example 'text/markdown'.
+	 * @param $content is the datastructure to render.
+	 */
+	public static function renderContent(\Duf\Form $form, $template_engine, $content_type, $content);
 
 }
 
