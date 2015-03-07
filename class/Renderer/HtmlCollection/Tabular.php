@@ -141,7 +141,7 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 					echo "<span class=\"rotated\">";
 				}
 
-				if (!empty($col['order_by'])) {
+				if (!empty($col['order_by']) && $filters_group_id !== null) {
 					\Duf\Renderer\HtmlFilter\OrderButton::renderWidget($form, $template_engine, array(
 						'group_id' => $filters_group_id,
 						'order_by' => $col['order_by'],
