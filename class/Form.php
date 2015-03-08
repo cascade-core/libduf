@@ -317,7 +317,7 @@ class Form
 				$this->field_defaults = $custom_defaults;
 			} else {
 				foreach ($custom_defaults as $k => $v) {
-					if (isset($this->field_defaults[$k])) {
+					if (isset($this->field_defaults[$k]) && $v !== null) {
 						$this->field_defaults[$k] = array_merge($this->field_defaults[$k], $v);
 					} else {
 						$this->field_defaults[$k] = $v;
@@ -328,7 +328,7 @@ class Form
 			if ($replace) {
 				$this->field_defaults[$group] = $custom_defaults;
 			} else {
-				if (isset($this->field_defaults[$group])) {
+			if (isset($this->field_defaults[$group]) && $custom_defaults !== null) {
 					$this->field_defaults[$group] = array_merge($this->field_defaults[$group], $custom_defaults);
 				} else {
 					$this->field_defaults[$group] = $custom_defaults;
