@@ -71,6 +71,7 @@ class Toolbox
 	 */
 	public function registerFieldGroupGenerator($generator_name, $generator)
 	{
+		if (function_exists('debug_msg')) debug_msg('Registering field group generator "%s" (%s)', $generator_name, get_class($generator));
 		$this->field_group_generators[$generator_name] = $generator;
 	}
 
