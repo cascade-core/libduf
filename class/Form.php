@@ -316,22 +316,22 @@ class Form
 			if ($replace) {
 				$this->field_defaults = $custom_defaults;
 			} else {
-				foreach ($custom_defaults as $k => $v) {
-					if (isset($this->field_defaults[$k])) {
-						$this->field_defaults[$k] = array_merge($this->field_defaults[$k], (array) $v);
+				foreach ($custom_defaults as $gk => $gv) {
+					if (empty($this->field_defaults[$gk])) {
+						$this->field_defaults[$gk] = $gv;
 					} else {
-						$this->field_defaults[$k] = $v;
+						foreach ($gv as $k => $v) {
+							$this->field_defaults[$gk][$k] = $v;
+						}
 					}
 				}
 			}
 		} else {
-			if ($replace) {
+			if ($replace || empty($this->field_defaults[$group])) {
 				$this->field_defaults[$group] = $custom_defaults;
 			} else {
-				if (isset($this->field_defaults[$group])) {
-					$this->field_defaults[$group] = array_merge($this->field_defaults[$group], (array) $custom_defaults);
-				} else {
-					$this->field_defaults[$group] = $custom_defaults;
+				foreach ($custom_defaults as $k => $v) {
+					$this->field_defaults[$group][$k] = $v;
 				}
 			}
 		}
