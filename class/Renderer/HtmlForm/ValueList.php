@@ -36,9 +36,11 @@ class ValueList extends TextArea implements \Duf\Renderer\IFieldWidgetRenderer
 
 		parent::renderFieldWidget($form, $template_engine, $widget_conf, $group_id, $field_id, $field_conf);
 
-		echo "<div class=\"textarea_note\">";
-		static::renderNoteText();
-		echo "</div>\n";
+		if (empty($field_conf['field_note'])) {
+			echo "<div class=\"textarea_note\">";
+			static::renderNoteText();
+			echo "</div>\n";
+		}
 
 		echo "</div>\n";
 	}
