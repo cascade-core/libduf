@@ -34,30 +34,40 @@ class Plain implements \Duf\Renderer\IWidgetRenderer
 
 		$collection_key = array();
 		$dimensions = $group['collection_dimensions'];
-		\Duf\CollectionWalker::walkCollection($form->getViewData($group_id), $dimensions,
-			function($collection_key) use ($form, $template_engine, $widget_conf, $group_id, $dimensions) {
-				$form->setCollectionKey($group_id, $collection_key);
-				echo "<div";
-				if (isset($widget_conf['dimensions'][$dimensions]['class'])) {
-					static::renderClassAttr($form, $template_engine, $widget_conf['dimensions'][$dimensions]['class']);
-				}
-				echo ">\n";
-				$form->renderWidgets($template_engine, $widget_conf['widgets']);
+		$collection = $form->getViewData($group_id);
+
+		if (empty($collection)) {
+			if (isset($widget_conf['empty_widgets'])) {
+				echo "<div class=\"empty_collection\">";
+				$form->renderWidgets($template_engine, $widget_conf['empty_widgets']);
 				echo "</div>\n";
-			},
-			function($depth) use ($form, $template_engine, $widget_conf) {
-				if (isset($widget_conf['dimensions'][$depth]['class'])) {
+			}
+		} else {
+			\Duf\CollectionWalker::walkCollection($collection, $dimensions,
+				function($collection_key) use ($form, $template_engine, $widget_conf, $group_id, $dimensions) {
+					$form->setCollectionKey($group_id, $collection_key);
 					echo "<div";
-					static::renderClassAttr($form, $template_engine, $widget_conf['dimensions'][$depth]['class']);
+					if (isset($widget_conf['dimensions'][$dimensions]['class'])) {
+						static::renderClassAttr($form, $template_engine, $widget_conf['dimensions'][$dimensions]['class']);
+					}
 					echo ">\n";
-				}
-			},
-			function($depth) use ($form, $template_engine, $widget_conf) {
-				if (isset($widget_conf['dimensions'][$depth]['class'])) {
+					$form->renderWidgets($template_engine, $widget_conf['widgets']);
 					echo "</div>\n";
-				}
-			});
-		$form->unsetCollectionKey($group_id);
+				},
+				function($depth) use ($form, $template_engine, $widget_conf) {
+					if (isset($widget_conf['dimensions'][$depth]['class'])) {
+						echo "<div";
+						static::renderClassAttr($form, $template_engine, $widget_conf['dimensions'][$depth]['class']);
+						echo ">\n";
+					}
+				},
+				function($depth) use ($form, $template_engine, $widget_conf) {
+					if (isset($widget_conf['dimensions'][$depth]['class'])) {
+						echo "</div>\n";
+					}
+				});
+			$form->unsetCollectionKey($group_id);
+		}
 	}
 
 }
