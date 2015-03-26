@@ -69,7 +69,7 @@ class Paginator extends SimpleButton implements \Duf\Renderer\IWidgetRenderer
 				echo "<span>&hellip;</span>\n";
 				continue;
 			}
-			static::renderPageButton($form, $template_engine, $filters, $page + 1, 'page', array(
+			static::renderPageButton($form, $template_engine, $filters, $page + 1, 'page number', array(
 				'offset' => $page * $page_size,
 				'limit' => $page_size,
 			));
