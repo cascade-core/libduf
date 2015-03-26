@@ -19,7 +19,7 @@
 namespace Duf\Renderer\HtmlLayout;
 
 /**
- * Just render widgets.
+ * Just render widgets. Optionaly with container around them.
  */
 class NullLayout implements \Duf\Renderer\IWidgetRenderer
 {
@@ -27,8 +27,17 @@ class NullLayout implements \Duf\Renderer\IWidgetRenderer
 	/// @copydoc \Duf\Renderer\IWidgetRenderer::renderWidget
 	public static function renderWidget(\Duf\Form $form, $template_engine, $widget_conf)
 	{
+		if (isset($widget_conf['class'])) {
+			// FIXME: Some smarter rendering here?
+			echo "<div class=\"", htmlspecialchars($widget_conf['class']), "\">\n";
+		}
+
 		if (isset($widget_conf['widgets'])) {
 			$form->renderWidgets($template_engine, $widget_conf['widgets']);
+		}
+
+		if (isset($widget_conf['class'])) {
+			echo "</div>\n";
 		}
 	}
 
