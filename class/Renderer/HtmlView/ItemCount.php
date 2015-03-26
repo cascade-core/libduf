@@ -48,7 +48,7 @@ class ItemCount extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 
 		echo ">";
 
-		printf(ngettext('%d item', '%d items', $count), $count);
+		printf(ngettext('<span>%d</span> item', '<span>%d</span> items', $count), $count);
 
 		echo "</$tag>\n";
 	}
