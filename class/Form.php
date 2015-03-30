@@ -317,9 +317,12 @@ class Form
 				$this->field_defaults = $custom_defaults;
 			} else {
 				foreach ($custom_defaults as $gk => $gv) {
+					if ($gv === null) {
+						continue;
+					}
 					if (empty($this->field_defaults[$gk])) {
 						$this->field_defaults[$gk] = $gv;
-					} else if (!empty($gv)) {
+					} else {
 						foreach ($gv as $k => $v) {
 							$this->field_defaults[$gk][$k] = $v;
 						}
@@ -327,11 +330,13 @@ class Form
 				}
 			}
 		} else {
-			if ($replace || empty($this->field_defaults[$group])) {
+			if ($replace) {
 				$this->field_defaults[$group] = $custom_defaults;
 			} else {
 				foreach ($custom_defaults as $k => $v) {
-					$this->field_defaults[$group][$k] = $v;
+					if ($v !== null) {
+						$this->field_defaults[$group][$k] = $v;
+					}
 				}
 			}
 		}
@@ -412,6 +417,11 @@ class Form
 							$this->field_values[$gi] = array();
 						}
 					}
+				}
+
+				if ($this->http_method == 'get') {
+					// FIXME: This does not work with collections
+					$this->field_values = array_replace_recursive($this->field_defaults, $this->field_values);
 				}
 			}
 			return $this->field_values;
@@ -537,40 +547,60 @@ class Form
 	public function getRawData($group, $field = null)
 	{
 		if ($this->readonly || $this->use_defaults || !empty($this->form_def['field_groups'][$group]['readonly'])) {
-			// Default values need to be converted to raw form data.
+			// Use defaults
 			if (!isset($this->raw_defaults[$group])) {
-				foreach ($this->form_def['field_groups'] as $gi => $g) {
-					if (!empty($g['wild'])) {
-						// Wild group has no default data, but group still exists
-						$this->raw_defaults[$gi] = array();
-					} else if (isset($this->field_defaults[$gi])) {
-						// Values for the group are set, use them.
-						$this->preProcessGroup($gi, $g, $this->field_defaults[$gi], $this->raw_defaults[$gi]);
-					} else {
-						if (empty($g['collection_dimensions'])) {
-							// Values for the group are missing, use defaults from the form definition.
-							$group_defaults = array();
-							foreach ($g['fields'] as $fi => $f) {
-								if (isset($f['default'])) {
-									$group_defaults[$fi] = $f['default'];
-								}
-							}
-							$this->preProcessGroup($gi, $g, $group_defaults, $this->raw_defaults[$gi]);
-						} else {
-							// Empty collection by default.
-							$this->raw_defaults[$gi] = array();
-						}
-					}
-				}
+				// Default values need to be converted to raw form data.
+				$this->calculateRawDefaults();
 			}
 
 			return $this->getArrayItemByPath($this->raw_defaults, $group,
 				isset($this->group_keys[$group]) ? $this->group_keys[$group] : null,
 				$field);
 		} else {
+			if ($this->http_method == 'get') {
+				// Merge raw inputs with raw defaults, because GET forms work differently
+				if (!isset($this->raw_defaults[$group])) {
+					$this->calculateRawDefaults();
+				}
+				// FIXME: This does not work with collections
+				$this->raw_input = array_replace_recursive($this->raw_defaults, $this->raw_input);
+			}
+
+			// Use raw input
 			return $this->getArrayItemByPath($this->raw_input, $group,
 				isset($this->group_keys[$group]) ? $this->group_keys[$group] : null,
 				$field);
+		}
+	}
+
+
+	/**
+	 * Convert default values to raw data
+	 */
+	private function calculateRawDefaults()
+	{
+		foreach ($this->form_def['field_groups'] as $gi => $g) {
+			if (!empty($g['wild'])) {
+				// Wild group has no default data, but group still exists
+				$this->raw_defaults[$gi] = array();
+			} else if (isset($this->field_defaults[$gi])) {
+				// Values for the group are set, use them.
+				$this->preProcessGroup($gi, $g, $this->field_defaults[$gi], $this->raw_defaults[$gi]);
+			} else {
+				if (empty($g['collection_dimensions'])) {
+					// Values for the group are missing, use defaults from the form definition.
+					$group_defaults = array();
+					foreach ($g['fields'] as $fi => $f) {
+						if (isset($f['default'])) {
+							$group_defaults[$fi] = $f['default'];
+						}
+					}
+					$this->preProcessGroup($gi, $g, $group_defaults, $this->raw_defaults[$gi]);
+				} else {
+					// Empty collection by default.
+					$this->raw_defaults[$gi] = array();
+				}
+			}
 		}
 	}
 
