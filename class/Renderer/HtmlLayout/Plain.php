@@ -40,6 +40,13 @@ class Plain implements \Duf\Renderer\IWidgetRenderer
 		}
 
 		foreach($widget_conf['rows'] as $row) {
+			if (isset($row['require_value'])) {
+				// calculate required value, skip row if it is false
+				if (!static::calculateValue($form, $template_engine, $row['require_value'])) {
+					continue;
+				}
+			}
+
 			$row_has_holder = !empty($row['has_holder']) || isset($row['class']);
 			if ($row_has_holder) {
 				echo "<div";

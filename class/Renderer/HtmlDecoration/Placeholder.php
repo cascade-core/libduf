@@ -27,7 +27,7 @@ class Placeholder implements \Duf\Renderer\IWidgetRenderer
 	/// @copydoc \Duf\Renderer\IWidgetRenderer::renderWidget
 	public static function renderWidget(\Duf\Form $form, $template_engine, $widget_conf)
 	{
-		echo "<div class=\"placeholder\">";
+		echo "<div class=\"placeholder", (isset($widget_conf['class']) ? ' '.$widget_conf['class'] : ''), "\">";
 		echo htmlspecialchars($widget_conf['text']);
 		echo "</div>\n";
 	}

@@ -28,6 +28,13 @@ class Fieldsets implements \Duf\Renderer\IWidgetRenderer
 	public static function renderWidget(\Duf\Form $form, $template_engine, $widget_conf)
 	{
 		foreach($widget_conf['fieldsets'] as $set) {
+			if (isset($set['require_value'])) {
+				// calculate required value, skip row if it is false
+				if (!static::calculateValue($form, $template_engine, $set['require_value'])) {
+					continue;
+				}
+			}
+
 			echo "<fieldset";
 			if (isset($set['class'])) {
 				if (is_array($set['class'])) {

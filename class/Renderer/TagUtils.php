@@ -108,7 +108,7 @@ trait TagUtils {
 
 		// Get value
 		$field_id = isset($rules['field_id']) ? $rules['field_id'] : null;
-		$value = $form->getRawData($group_id, $field_id);
+		$value = $form->getViewData($group_id, $field_id);
 
 		// Apply map function if specified
 		if (isset($rules['map_function'])) {
@@ -119,12 +119,14 @@ trait TagUtils {
 		// Cast result
 		if (isset($rules['cast_value'])) {
 			switch($rules['cast_value']) {
-				case 'bool':     $value = (bool)   $value; break;
-				case 'int':      $value = (int)    $value; break;
-				case 'float':    $value = (float)  $value; break;
-				case 'string':   $value = (string) $value; break;
-				case 'is_null':  $value = ($value === null); break;
-				case 'not_null': $value = ($value !== null); break;
+				case 'bool':      $value = (bool)   $value; break;
+				case 'int':       $value = (int)    $value; break;
+				case 'float':     $value = (float)  $value; break;
+				case 'string':    $value = (string) $value; break;
+				case 'is_null':   $value = ($value === null); break;
+				case 'not_null':  $value = ($value !== null); break;
+				case 'is_empty':  $value = empty($value); break;
+				case 'not_empty': $value = !empty($value); break;
 			}
 		}
 
