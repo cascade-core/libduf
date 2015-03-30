@@ -46,23 +46,40 @@ class Plain implements \Duf\Renderer\IWidgetRenderer
 			\Duf\CollectionWalker::walkCollection($collection, $dimensions,
 				function($collection_key) use ($form, $template_engine, $widget_conf, $group_id, $dimensions) {
 					$form->setCollectionKey($group_id, $collection_key);
-					echo "<div";
+					if (isset($widget_conf['dimensions'][$dimensions]['element'])) {
+						$element = $widget_conf['dimensions'][$dimensions]['element'];
+					} else {
+						$element = 'div';
+					}
+					echo "<", $element;
 					if (isset($widget_conf['dimensions'][$dimensions]['class'])) {
 						static::renderClassAttr($form, $template_engine, $widget_conf['dimensions'][$dimensions]['class']);
 					}
 					echo ">\n";
 					$form->renderWidgets($template_engine, $widget_conf['widgets']);
-					echo "</div>\n";
+					echo "</", $element, ">\n";
 				},
 				function($depth) use ($form, $template_engine, $widget_conf) {
-					if (isset($widget_conf['dimensions'][$depth]['class'])) {
-						echo "<div";
-						static::renderClassAttr($form, $template_engine, $widget_conf['dimensions'][$depth]['class']);
+					if (isset($widget_conf['dimensions'][$depth]['class']) || isset($widget_conf['dimensions'][$depth]['element'])) {
+						if (isset($widget_conf['dimensions'][$depth]['element'])) {
+							$element = $widget_conf['dimensions'][$depth]['element'];
+						} else {
+							$element = 'div';
+						}
+						echo "<", $element;
+						if (isset($widget_conf['dimensions'][$depth]['class'])) {
+							static::renderClassAttr($form, $template_engine, $widget_conf['dimensions'][$depth]['class']);
+						}
 						echo ">\n";
 					}
 				},
 				function($depth) use ($form, $template_engine, $widget_conf) {
-					if (isset($widget_conf['dimensions'][$depth]['class'])) {
+					if (isset($widget_conf['dimensions'][$depth]['class']) || isset($widget_conf['dimensions'][$depth]['element'])) {
+						if (isset($widget_conf['dimensions'][$depth]['element'])) {
+							$element = $widget_conf['dimensions'][$depth]['element'];
+						} else {
+							$element = 'div';
+						}
 						echo "</div>\n";
 					}
 				});
