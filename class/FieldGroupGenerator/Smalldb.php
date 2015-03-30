@@ -50,11 +50,24 @@ class Smalldb implements IFieldGroupGenerator
 	/// @copydoc IFieldGroupGenerator::updateFieldGroup
 	public function updateFieldGroup(& $group_config)
 	{
-		if (empty($group_config['machine_type'])) {
-			throw new \InvalidArgumentException('Missing machine_type in field group configuration.');
-		} else {
-			$machine_type = $group_config['machine_type'];
+		// Step 1: Generate smalldb machine stuff if machine type is defined
+		if (!empty($group_config['machine_type'])) {
+			$this->generateFieldGroupFromMachine($group_config['machine_type'], $group_config);
 		}
+
+		// Step 2: Process all fields to implement smalldb-specific stuff
+		foreach ($group_config['fields'] as $field_id => & $field) {
+			$this->postprocessField($field_id, $field);
+		}
+	}
+
+
+	/**
+	 * Assumes the group represents smalldb machine, so it generates fields
+	 * and actions to represent this smalldb state machine.
+	 */
+	protected function generateFieldGroupFromMachine($machine_type, & $group_config)
+	{
 		$machine = $this->smalldb->getMachine($machine_type);
 		if (!$machine) {
 			// Not failing because we want to survive magic templates
@@ -222,6 +235,42 @@ class Smalldb implements IFieldGroupGenerator
 
 		$group_config['collection_actions'] = $collection_actions;
 		$group_config['item_actions'] = $item_actions;
+	}
+
+
+	/**
+	 * Postprocess field to implement Smalldb-specific stuff like selects
+	 * from listings.
+	 */
+	protected function postprocessField($field_id, & $field_conf)
+	{
+		if (isset($field_conf['options_listing_filters'])) {
+			$smalldb = $this->smalldb;
+
+			$field_conf['options_factory'] = function($field_conf, $value) use ($smalldb) {
+				$listing = $smalldb->createListing($field_conf['options_listing_filters'])->fetchAll();
+
+				// Key containing the primary key of the listing
+				if (isset($field_conf['options_listing_key'])) {
+					$key = $field_conf['options_listing_key'];
+				} else {
+					$key = 'id';
+				}
+
+				// Value format
+				if (isset($field_conf['options_value_fmt'])) {
+					$value_fmt = $field_conf['options_value_fmt'];
+				} else {
+					$value_fmt = '{name}';
+				}
+
+				$options = array();
+				foreach ($listing as $item) {
+					$options[$item[$key]] = filename_format($value_fmt, $item);
+				}
+				return $options;
+			};
+		}
 	}
 
 }

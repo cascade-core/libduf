@@ -58,7 +58,30 @@ class Select extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 		echo ">\n";
 
                 $value = $form->getRawData($group_id, $field_id);
-                foreach ($field_conf['options'] as $key => $option) {
+
+		// Lazy-load possible values, just like for <select>
+		if (isset($field_conf['options_factory'])) {
+			$of = $field_conf['options_factory'];
+			$options = $of($field_conf, $value);
+		} else if (isset($field_conf['options'])) {
+			$options = $field_conf['options'];
+		} else {
+			throw new \InvalidArgumentException('Missing both "options_factory" and "options".');
+		}
+
+		// Option for empty value
+		echo "<option value=\"\"";
+		if (empty($value)) {
+			echo " selected";
+		}
+		if (!empty($field_conf['required'])) {
+			echo " disabled style=\"display: none;\"";
+		}
+		echo ">";
+		echo "</option>\n";
+
+
+                foreach ($options as $key => $option) {
                         if (is_array($option)) {
                                 $opt_label = $option['label'];
                                 $opt_value = $option['value'];

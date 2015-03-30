@@ -319,7 +319,7 @@ class Form
 				foreach ($custom_defaults as $gk => $gv) {
 					if (empty($this->field_defaults[$gk])) {
 						$this->field_defaults[$gk] = $gv;
-					} else {
+					} else if (!empty($gv)) {
 						foreach ($gv as $k => $v) {
 							$this->field_defaults[$gk][$k] = $v;
 						}
