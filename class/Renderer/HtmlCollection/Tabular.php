@@ -213,7 +213,8 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 			}
 
 			// For each row ...
-			\Duf\CollectionWalker::walkCollection($collection, $group['collection_dimensions'],
+			$prefix = isset($widget_conf['collection_key_prefix']) ? $form->setCollectionKeyPrefix($group_id, $widget_conf['collection_key_prefix']) : null;
+			\Duf\CollectionWalker::walkCollection($collection, $group['collection_dimensions'], $prefix,
 				function($collection_key, $item) use ($form, $template_engine, $group_id, $columns, & $is_row_even,
 					& $last_group_heading_value, $group_heading_field_id, $group_heading_columns)
 				{

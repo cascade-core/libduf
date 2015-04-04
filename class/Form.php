@@ -73,6 +73,7 @@ class Form
 	protected $raw_defaults = array();	///< Preprocessed default values. These data go directly to HTML form.
 	protected $use_defaults = false;	///< Use default (true) or submitted (false) values.
 	protected $group_keys = array();	///< Group keys used for accessing fields in collections.
+	protected $group_keys_prefix = array();	///< Group keys prefixes used together with $group_keys.
 
 	/**
 	 * @name Errors
@@ -495,6 +496,22 @@ class Form
 
 
 	/**
+	 * Set collection key prefix. Set constant prefix of group_keys using data from the form.
+	 *
+	 * @return The calculated prefix (pass it to CollectionWalker).
+	 */
+	public function setCollectionKeyPrefix($group, $prefix_definition)
+	{
+		$prefix = array();
+		foreach ($prefix_definition as $p) {
+			$prefix[] = $this->getViewData($p['group_id'], $p['field_id']);
+		}
+		$this->group_keys_prefix[$group] = $prefix;
+		return $prefix;
+	}
+
+
+	/**
 	 * Retrieve collection key for given group.
 	 *
 	 * @param $group is field group id which is beiing iterated.
@@ -503,7 +520,7 @@ class Form
 	 */
 	public function getCollectionKey($group)
 	{
-		return $this->group_keys[$group];
+		return array_merge($this->group_keys_prefix[$group], $this->group_keys[$group]);
 	}
 
 	/**
@@ -516,6 +533,7 @@ class Form
 	 */
 	public function unsetCollectionKey($group)
 	{
+		unset($this->group_keys_prefix[$group]);
 		unset($this->group_keys[$group]);
 	}
 
@@ -534,6 +552,7 @@ class Form
 			throw new \InvalidArgumentException('Group does not exist: '.$group);
 		}
 		return $this->getArrayItemByPath($this->field_defaults, $group,
+			isset($this->group_keys_prefix[$group]) ? $this->group_keys_prefix[$group] : null,
 			isset($this->group_keys[$group]) ? $this->group_keys[$group] : null,
 			$field);
 	}
@@ -554,6 +573,7 @@ class Form
 			}
 
 			return $this->getArrayItemByPath($this->raw_defaults, $group,
+				isset($this->group_keys_prefix[$group]) ? $this->group_keys_prefix[$group] : null,
 				isset($this->group_keys[$group]) ? $this->group_keys[$group] : null,
 				$field);
 		} else {
@@ -568,6 +588,7 @@ class Form
 
 			// Use raw input
 			return $this->getArrayItemByPath($this->raw_input, $group,
+				isset($this->group_keys_prefix[$group]) ? $this->group_keys_prefix[$group] : null,
 				isset($this->group_keys[$group]) ? $this->group_keys[$group] : null,
 				$field);
 		}
@@ -741,7 +762,9 @@ class Form
 			throw new \InvalidArgumentException('Field not specified.');
 		}
 		$e = & $this->refArrayItemByPath($this->field_errors, $group_id,
-			isset($this->group_keys[$group_id]) ? $this->group_keys[$group_id] : null, $field_id);
+			isset($this->group_keys_prefix[$group]) ? $this->group_keys_prefix[$group] : null,
+			isset($this->group_keys[$group_id]) ? $this->group_keys[$group_id] : null,
+			$field_id);
 		$e[$error] = $args;
 	}
 
@@ -751,7 +774,9 @@ class Form
 	public function getFieldErrors($group_id, $field_id)
 	{
 		return $this->getArrayItemByPath($this->field_errors, $group_id,
-			isset($this->group_keys[$group_id]) ? $this->group_keys[$group_id] : null, $field_id);
+			isset($this->group_keys_prefix[$group]) ? $this->group_keys_prefix[$group] : null,
+			isset($this->group_keys[$group_id]) ? $this->group_keys[$group_id] : null,
+			$field_id);
 	}
 
 
@@ -760,12 +785,13 @@ class Form
 	 */
 	public function getHtmlFieldId($group, $field, $field_component = null)
 	{
+		$group_keys_prefix = isset($this->group_keys_prefix[$group]) ? '__'.join('__', $this->group_keys_prefix[$group]) : '';
 		$group_keys = isset($this->group_keys[$group]) ? '__'.join('__', $this->group_keys[$group]) : '';
 
 		if ($field_component) {
-			return htmlspecialchars("{$this->id}__{$group}{$group_keys}__{$field}__{$field_component}");
+			return htmlspecialchars("{$this->id}__{$group}{$group_keys_prefix}{$group_keys}__{$field}__{$field_component}");
 		} else {
-			return htmlspecialchars("{$this->id}__{$group}{$group_keys}__{$field}");
+			return htmlspecialchars("{$this->id}__{$group}{$group_keys_prefix}{$group_keys}__{$field}");
 		}
 	}
 
@@ -775,12 +801,13 @@ class Form
 	 */
 	public function getHtmlFieldName($group, $field, $field_component = null)
 	{
+		$group_keys_prefix = isset($this->group_keys_prefix[$group]) ? '['.join('][', $this->group_keys_prefix[$group]).']' : '';
 		$group_keys = isset($this->group_keys[$group]) ? '['.join('][', $this->group_keys[$group]).']' : '';
 
 		if ($field_component) {
-			return htmlspecialchars("${group}{$group_keys}[$field][$field_component]");
+			return htmlspecialchars("${group}{$group_keys_prefix}{$group_keys}[$field][$field_component]");
 		} else {
-			return htmlspecialchars("${group}{$group_keys}[$field]");
+			return htmlspecialchars("${group}{$group_keys_prefix}{$group_keys}[$field]");
 		}
 	}
 

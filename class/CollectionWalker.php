@@ -32,7 +32,7 @@ class CollectionWalker
 	 * method arguments and it means to specify them three times, which is
 	 * not very practical.
 	 *
-	 * Trees are not supported. But if tree nodes are given in list, it is
+	 * Trees are not supported. But if tree nodes are given in a list, it is
 	 * possible to indent them manually.
 	 *
 	 * @note Do not forget to set Form collection key before rendering any child
@@ -63,15 +63,30 @@ class CollectionWalker
 	 *
 	 * @param $collection is the collection to walk.
 	 * @param $dimension is amount of dimensions to traverse (0 = single item, 1 = list, 2 = matrix, ...).
+	 * @param $collection_prefix is a list of keys to walk into collection before walking starts.
 	 * @param $render_function is `function($collection_key, $item)` called for each item in collection.
 	 * @param $on_enter is `function($depth)` called when going deeper.
 	 * @param $on_leave is `function($depth)` called when going back.
 	 * @param $depth is for internal use, leave it unspecified.
 	 * @param $collection_key is for internal use, leave it unspecified.
 	 */
-	public static function walkCollection($collection, $dimension, $render_function, $on_enter = null, $on_leave = null,
+	public static function walkCollection($collection, $dimension, $collection_prefix, $render_function, $on_enter = null, $on_leave = null,
 		$depth = 0, & $collection_key = null)
 	{
+		if ($collection_prefix !== null) {
+			// Strip prefixed dimensions from collection
+			if (count($collection_prefix) == 1) {
+				$key = reset($collection_prefix);
+				if (isset ($collection[$key])) {
+					$collection = $collection[$key];
+					$dimension--;
+				} else {
+					return;
+				}
+			} else {
+				throw new \Exception('Not implemented: $collection_prefix can have only one key to prefix. Sorry.');
+			}
+		}
 		if ($dimension > 0) {
 			// We need to go deeper ...
 			if ($collection_key === null) {
@@ -85,7 +100,7 @@ class CollectionWalker
 			}
 			foreach($collection as $i => $sub_collection) {
 				$collection_key[$depth] = $i;
-				self::walkCollection($sub_collection, $dimension - 1, $render_function, $on_enter, $on_leave, $depth + 1, $collection_key);
+				self::walkCollection($sub_collection, $dimension - 1, null, $render_function, $on_enter, $on_leave, $depth + 1, $collection_key);
 			}
 			if ($on_leave !== null) {
 				$on_leave($depth);
@@ -141,5 +156,6 @@ class CollectionWalker
 			$render_function($collection_key, $collection, $target);
 		}
 	}
+
 }
 

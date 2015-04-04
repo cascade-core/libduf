@@ -35,6 +35,7 @@ class Plain implements \Duf\Renderer\IWidgetRenderer
 		$collection_key = array();
 		$dimensions = $group['collection_dimensions'];
 		$collection = $form->getViewData($group_id);
+		$prefix = isset($widget_conf['collection_key_prefix']) ? $form->setCollectionKeyPrefix($group_id, $widget_conf['collection_key_prefix']) : null;
 
 		if (empty($collection)) {
 			if (isset($widget_conf['empty_widgets'])) {
@@ -43,7 +44,7 @@ class Plain implements \Duf\Renderer\IWidgetRenderer
 				echo "</div>\n";
 			}
 		} else {
-			\Duf\CollectionWalker::walkCollection($collection, $dimensions,
+			\Duf\CollectionWalker::walkCollection($collection, $dimensions, $prefix,
 				function($collection_key) use ($form, $template_engine, $widget_conf, $group_id, $dimensions) {
 					$form->setCollectionKey($group_id, $collection_key);
 					if (isset($widget_conf['dimensions'][$dimensions]['element'])) {
@@ -83,8 +84,8 @@ class Plain implements \Duf\Renderer\IWidgetRenderer
 						echo "</div>\n";
 					}
 				});
-			$form->unsetCollectionKey($group_id);
 		}
+		$form->unsetCollectionKey($group_id);
 	}
 
 }

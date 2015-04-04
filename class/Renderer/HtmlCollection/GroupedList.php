@@ -34,6 +34,7 @@ class GroupedList implements \Duf\Renderer\IWidgetRenderer
 
 		$collection_key = array();
 		$dimensions = $group['collection_dimensions'];
+		$prefix = isset($widget_conf['collection_key_prefix']) ? $form->setCollectionKeyPrefix($group_id, $widget_conf['collection_key_prefix']) : null;
 
 		$last_list_group_id = false;
 		$list_group_field_id = isset($widget_conf['list_group_field_id']) ? $widget_conf['list_group_field_id'] : null;
@@ -52,7 +53,7 @@ class GroupedList implements \Duf\Renderer\IWidgetRenderer
 			echo ">\n";
 		}
 
-		\Duf\CollectionWalker::walkCollection($form->getViewData($group_id), $dimensions,
+		\Duf\CollectionWalker::walkCollection($form->getViewData($group_id), $dimensions, $prefix,
 			function($collection_key) use ($form, $template_engine, $widget_conf, $group_id, $dimensions,
 				& $last_list_group_id, $list_group_field_id, $list_group_class_fmt, $list_group_heading_fmt, $list_group_heading_level)
 			{

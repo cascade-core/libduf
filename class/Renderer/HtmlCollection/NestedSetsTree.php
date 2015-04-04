@@ -35,12 +35,13 @@ class NestedSetsTree implements \Duf\Renderer\IWidgetRenderer
 		$group_id = $widget_conf['group_id'];
 		$group = $form->getFieldGroup($group_id);
 		$dimensions = isset($group['collection_dimensions']) ? (int) $group['collection_dimensions'] : 0;
+		$prefix = isset($widget_conf['collection_key_prefix']) ? $form->setCollectionKeyPrefix($group_id, $widget_conf['collection_key_prefix']) : null;
 		$depth_key = isset($widget_conf['depth_key']) ? $widget_conf['depth_key'] : 'tree_depth';
 		$label_tag = isset($widget_conf['label_tag']) ? $widget_conf['label_tag'] : 'span';
 
 		$collection_key = array();
 		$depth = 0;
-		\Duf\CollectionWalker::walkCollection($form->getViewData($group_id), $dimensions,
+		\Duf\CollectionWalker::walkCollection($form->getViewData($group_id), $dimensions, $prefix,
 			function($collection_key) use ($form, $template_engine, $widget_conf, $group_id, & $depth, $depth_key, $label_tag) {
 				$form->setCollectionKey($group_id, $collection_key);
 				$node_depth = $form->getViewData($group_id, $depth_key);
