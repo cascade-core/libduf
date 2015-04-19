@@ -762,7 +762,7 @@ class Form
 			throw new \InvalidArgumentException('Field not specified.');
 		}
 		$e = & $this->refArrayItemByPath($this->field_errors, $group_id,
-			isset($this->group_keys_prefix[$group]) ? $this->group_keys_prefix[$group] : null,
+			isset($this->group_keys_prefix[$group_id]) ? $this->group_keys_prefix[$group_id] : null,
 			isset($this->group_keys[$group_id]) ? $this->group_keys[$group_id] : null,
 			$field_id);
 		$e[$error] = $args;
@@ -774,7 +774,7 @@ class Form
 	public function getFieldErrors($group_id, $field_id)
 	{
 		return $this->getArrayItemByPath($this->field_errors, $group_id,
-			isset($this->group_keys_prefix[$group]) ? $this->group_keys_prefix[$group] : null,
+			isset($this->group_keys_prefix[$group_id]) ? $this->group_keys_prefix[$group_id] : null,
 			isset($this->group_keys[$group_id]) ? $this->group_keys[$group_id] : null,
 			$field_id);
 	}
