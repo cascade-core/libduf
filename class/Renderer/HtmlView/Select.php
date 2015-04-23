@@ -31,7 +31,7 @@ class Select extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 
                 static::commonAttributes($field_conf);
 
-		echo ">\n";
+		echo ">";
 
 		$value = $form->getViewData($group_id, $field_id);
 
