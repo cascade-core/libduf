@@ -2,7 +2,7 @@
 Form with submit button
 --FILE--
 <?php
-require(dirname(__FILE__).'/../../../lib/autoload.php');
+require(dirname(__FILE__).'/../../../../lib/autoload.php');
 
 $id = 'test.form';
 
@@ -47,18 +47,19 @@ echo "Submitted: ", var_export($form->isSubmitted(), true), "\n";
 echo "Valid:     ", var_export($form->isValid(), true), "\n";
 echo "\n";
 
-$values = $form->getValues();
-
-if ($values['submit'] !== $post_data['submit']) {
-	var_export($values);
-} else {
-	echo "Values == Post data\n";
-}
+print_r($form->getValues());
 
 ?>
 --EXPECT--
 Submitted: true
 Valid:     true
 
-Values == Post data
+Array
+(
+    [submit] => Array
+        (
+            [submit] => 1
+        )
+
+)
 

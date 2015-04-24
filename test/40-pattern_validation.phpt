@@ -2,7 +2,7 @@
 Patter validation
 --FILE--
 <?php
-require(dirname(__FILE__).'/../../../lib/autoload.php');
+require(dirname(__FILE__).'/../../../../lib/autoload.php');
 
 $id = 'test.form';
 
@@ -125,6 +125,10 @@ Valid:     false
 
 == Form errors ==
 array (
+  'form_field_error' => 
+  array (
+    'message' => 'The form is not correctly filled. Please check marked fields.',
+  ),
 )
 
 == Field errors ==
@@ -150,25 +154,28 @@ array (
 )
 
 == Output ==
-line 6 column 1 - Warning: <table> lacks "summary" attribute
-line 20 column 1 - Warning: <input> proprietary attribute "pattern"
-line 28 column 1 - Warning: <input> proprietary attribute "pattern"
-line 39 column 1 - Warning: <input> proprietary attribute "pattern"
-line 47 column 1 - Warning: <input> proprietary attribute "required"
-line 47 column 1 - Warning: <input> proprietary attribute "pattern"
+line 9 column 1 - Warning: <table> lacks "summary" attribute
+line 23 column 1 - Warning: <input> proprietary attribute "pattern"
+line 31 column 1 - Warning: <input> proprietary attribute "pattern"
+line 42 column 1 - Warning: <input> proprietary attribute "pattern"
+line 50 column 1 - Warning: <input> proprietary attribute "required"
+line 50 column 1 - Warning: <input> proprietary attribute "pattern"
 
 <!DOCTYPE html>
 <html>
 <head><title></title></head>
 <body>
-<form id="test.form" class="duf_form" action="" method="post">
-<table class="duf_form">
+<form id="test.form" action="" method="post" class=" form">
+<ul class="errors">
+<li class="error_form_field_error">The form is not correctly filled. Please check marked fields.</li>
+</ul>
+<table class="form">
 <tr>
 <th>
 <label for="test.form__foo__no_pattern">Text (filled):</label>
 </th>
 <td>
-<input type="text" id="test.form__foo__no_pattern" name="foo[no_pattern]" value="Hello world">
+<input type="text" id="test.form__foo__no_pattern" tabindex="100" name="foo[no_pattern]" value="Hello world">
 </td>
 </tr>
 <tr>
@@ -176,7 +183,7 @@ line 47 column 1 - Warning: <input> proprietary attribute "pattern"
 <label for="test.form__foo__number_not_rq_fill_good">Number (not rq.; filled; good):</label>
 </th>
 <td>
-<input type="text" id="test.form__foo__number_not_rq_fill_good" name="foo[number_not_rq_fill_good]" value="123" pattern="[0-9]+">
+<input type="text" id="test.form__foo__number_not_rq_fill_good" tabindex="100" name="foo[number_not_rq_fill_good]" value="123" pattern="[0-9]+">
 </td>
 </tr>
 <tr>
@@ -184,7 +191,7 @@ line 47 column 1 - Warning: <input> proprietary attribute "pattern"
 <label for="test.form__foo__number_not_rq_fill_bad">Number (not rq.; filled; bad):</label>
 </th>
 <td>
-<input type="text" id="test.form__foo__number_not_rq_fill_bad" name="foo[number_not_rq_fill_bad]" value="abc" pattern="[0-9]+">
+<input type="text" id="test.form__foo__number_not_rq_fill_bad" tabindex="100" name="foo[number_not_rq_fill_bad]" value="abc" pattern="[0-9]+">
 <ul class="errors">
 <li class="error_field_malformed">Field does not match pattern: [0-9]+</li>
 </ul>
@@ -195,7 +202,7 @@ line 47 column 1 - Warning: <input> proprietary attribute "pattern"
 <label for="test.form__foo__number_not_rq_empty">Number (not rq.; empty):</label>
 </th>
 <td>
-<input type="text" id="test.form__foo__number_not_rq_empty" name="foo[number_not_rq_empty]" value="" pattern="[0-9]+">
+<input type="text" id="test.form__foo__number_not_rq_empty" tabindex="100" name="foo[number_not_rq_empty]" value="" pattern="[0-9]+">
 </td>
 </tr>
 <tr>
@@ -203,7 +210,7 @@ line 47 column 1 - Warning: <input> proprietary attribute "pattern"
 <label for="test.form__foo__number_rq_empty">Number (required; empty):</label>
 </th>
 <td>
-<input type="text" id="test.form__foo__number_rq_empty" name="foo[number_rq_empty]" value="" required pattern="[0-9]+">
+<input type="text" id="test.form__foo__number_rq_empty" tabindex="100" name="foo[number_rq_empty]" value="" required pattern="[0-9]+">
 <ul class="errors">
 <li class="error_field_required">Please fill this field.</li>
 </ul>
@@ -213,7 +220,7 @@ line 47 column 1 - Warning: <input> proprietary attribute "pattern"
 <th>
 </th>
 <td>
-<input type="submit" id="test.form__submit__submit" name="submit[submit]" value="Submit">
+<input type="submit" id="test.form__submit__submit" tabindex="100" name="submit[submit]" value="Submit">
 </td>
 </tr>
 </table>

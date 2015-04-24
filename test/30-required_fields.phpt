@@ -2,7 +2,7 @@
 Required fields
 --FILE--
 <?php
-require(dirname(__FILE__).'/../../../lib/autoload.php');
+require(dirname(__FILE__).'/../../../../lib/autoload.php');
 
 $id = 'test.form';
 
@@ -107,6 +107,10 @@ Valid:     false
 
 == Form errors ==
 array (
+  'form_field_error' => 
+  array (
+    'message' => 'The form is not correctly filled. Please check marked fields.',
+  ),
 )
 
 == Field errors ==
@@ -124,22 +128,25 @@ array (
 )
 
 == Output ==
-line 6 column 1 - Warning: <table> lacks "summary" attribute
-line 12 column 1 - Warning: <input> proprietary attribute "required"
-line 20 column 1 - Warning: <input> proprietary attribute "required"
+line 9 column 1 - Warning: <table> lacks "summary" attribute
+line 15 column 1 - Warning: <input> proprietary attribute "required"
+line 23 column 1 - Warning: <input> proprietary attribute "required"
 
 <!DOCTYPE html>
 <html>
 <head><title></title></head>
 <body>
-<form id="test.form" class="duf_form" action="" method="post">
-<table class="duf_form">
+<form id="test.form" action="" method="post" class=" form">
+<ul class="errors">
+<li class="error_form_field_error">The form is not correctly filled. Please check marked fields.</li>
+</ul>
+<table class="form">
 <tr>
 <th>
 <label for="test.form__foo__rq_text_filled">Required text (filled):</label>
 </th>
 <td>
-<input type="text" id="test.form__foo__rq_text_filled" name="foo[rq_text_filled]" value="Hello world" required>
+<input type="text" id="test.form__foo__rq_text_filled" tabindex="100" name="foo[rq_text_filled]" value="Hello world" required>
 </td>
 </tr>
 <tr>
@@ -147,7 +154,7 @@ line 20 column 1 - Warning: <input> proprietary attribute "required"
 <label for="test.form__foo__rq_text_empty">Required text (empty):</label>
 </th>
 <td>
-<input type="text" id="test.form__foo__rq_text_empty" name="foo[rq_text_empty]" value="" required>
+<input type="text" id="test.form__foo__rq_text_empty" tabindex="100" name="foo[rq_text_empty]" value="" required>
 <ul class="errors">
 <li class="error_field_required">Please fill this field.</li>
 </ul>
@@ -157,7 +164,7 @@ line 20 column 1 - Warning: <input> proprietary attribute "required"
 <th>
 </th>
 <td>
-<input type="submit" id="test.form__submit__submit" name="submit[submit]" value="Submit">
+<input type="submit" id="test.form__submit__submit" tabindex="100" name="submit[submit]" value="Submit">
 </td>
 </tr>
 </table>
