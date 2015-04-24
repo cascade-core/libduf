@@ -42,7 +42,11 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 		// add value-specific classes
 		switch ($type) {
 			case 'checkbox':
-				$field_conf['class'][] = $raw_value ? 'true' : 'false';
+				if ($raw_value !== null) {
+					$field_conf['class'][] = $raw_value ? 'true' : 'false';
+				} else {
+					$field_conf['class'][] = 'null_value';
+				}
 				break;
 		}
 
@@ -64,10 +68,14 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 				break;
 
 			case 'checkbox':
-				if (isset($field_conf['values'])) {
-					echo htmlspecialchars($field_conf['values'][$raw_value]);
-				} else {
-					echo $raw_value ? _('yes') : _('no');
+				if ($raw_value !== null) {
+					if (isset($field_conf['values'])) {
+						echo htmlspecialchars($field_conf['values'][$raw_value]);
+					} else {
+						echo $raw_value ? _('yes') : _('no');
+					}
+				} else if (isset($field_conf['null_value'])) {
+					echo htmlspecialchars($field_conf['null_value']);
 				}
 				break;
 
