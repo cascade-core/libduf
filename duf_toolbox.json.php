@@ -376,6 +376,9 @@
         "heading": {
             "renderer": "\\Duf\\Renderer\\HtmlDecoration\\Heading"
         },
+        "hr": {
+            "renderer": "\\Duf\\Renderer\\HtmlDecoration\\HRule"
+        },
         "slot": {
             "renderer": "\\Duf\\Renderer\\HtmlDecoration\\Slot"
         },
