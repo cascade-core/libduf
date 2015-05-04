@@ -1,5 +1,5 @@
 
-all: doc
+all: tests doc
 
 tests:
 	echo ; pear run-tests ./test ; echo

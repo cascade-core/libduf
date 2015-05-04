@@ -316,6 +316,10 @@
             "@edit": "\\Duf\\Renderer\\HtmlForm\\Form",
             "@view": "\\Duf\\Renderer\\HtmlView\\Form"
         },
+        "compilers": {
+            "@edit": "\\Duf\\Compiler\\HtmlForm\\Form",
+            "@view": "\\Duf\\Compiler\\HtmlView\\Form"
+        },
         "common_field_renderers": {
             "@label": "\\Duf\\Renderer\\HtmlForm\\Label",
             "@error": "\\Duf\\Renderer\\HtmlForm\\Error"

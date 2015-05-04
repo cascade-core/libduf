@@ -144,6 +144,20 @@ class Toolbox
 
 
 	/**
+	 * Retrieve form compiler.
+	 *
+	 * @return `function($form, $buf)`
+	 */
+	public function getFormCompiler($compiler)
+	{
+		if (isset($this->config['form']['compilers'][$compiler])) {
+			return $this->config['form']['compilers'][$compiler];
+		}
+		throw new RendererException('Undefined form compiler: '.$compiler);
+	}
+
+
+	/**
 	 * Retrieve widget renderer.
 	 *
 	 * @return `function($form, $template_engine, $widget_conf)`
