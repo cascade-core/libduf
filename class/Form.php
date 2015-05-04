@@ -916,7 +916,7 @@ class Form
 			$field_conf = $group_def['fields'][$field_id];
 
 			// Renderer substitution for read-only groups
-			if ($this->readonly || !empty($group_def['readonly'])) {
+			if ($this->readonly || !empty($group_def['readonly']) || !empty($field_conf['readonly'])) {
 				switch ($renderer_name) {
 					case '@edit':
 						$renderer_name = '@view';
