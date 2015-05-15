@@ -403,6 +403,9 @@
         },
         "filter_paginator": {
             "renderer": "\\Duf\\Renderer\\HtmlFilter\\Paginator"
+        },
+        "filter_month_paginator": {
+            "renderer": "\\Duf\\Renderer\\HtmlFilter\\MonthPaginator"
         }
     },
     "content_types": {
