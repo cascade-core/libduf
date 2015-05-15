@@ -52,7 +52,9 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 
 		echo "<$tag";
 
-		if (isset($field_conf['link'])) {
+		if ($raw_value === null && isset($field_conf['null_link'])) {
+			echo " href=\"", htmlspecialchars(filename_format($field_conf['null_link'], $form->getViewData($group_id))), "\"";
+		} else if (isset($field_conf['link'])) {
 			echo " href=\"", htmlspecialchars(filename_format($field_conf['link'], $form->getViewData($group_id))), "\"";
 		}
 
