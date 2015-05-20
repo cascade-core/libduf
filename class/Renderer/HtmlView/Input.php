@@ -148,7 +148,7 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 
 			default:
 				if ($raw_value !== null) {
-					echo htmlspecialchars($raw_value);
+					echo isset($field_conf['format']) ? htmlspecialchars(sprintf($field_conf['format'], $raw_value)) : htmlspecialchars($raw_value);
 				} else if (isset($field_conf['null_value'])) {
 					echo htmlspecialchars($field_conf['null_value']);
 				}
