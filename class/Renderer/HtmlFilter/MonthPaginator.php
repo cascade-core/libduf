@@ -58,18 +58,18 @@ class MonthPaginator extends SimpleButton implements \Duf\Renderer\IWidgetRender
 		$format = isset($widget_conf['format']) ? $widget_conf['format'] : _('%B %Y');
 
 		// Previous page
-		if ($active - 1 >= $begin) {
-			$m = $active - 1;
+		if ($active + 1 <= $end) {
+			$m = $active + 1;
 			$month = $m % 12 + 1;
 			$year = ($m - $month + 1) / 12;
 			$iso_date = sprintf("%04d-%02d-01", $year, $month);
-			static::renderPageButton($form, $template_engine, $filters, _('Previous'), 'page prev', array(
+			static::renderPageButton($form, $template_engine, $filters, _('Later'), 'page prev', array(
 				$page_filter_name => $iso_date,
 			));
 		}
 
 		// Pages
-		for ($m = $begin; $m <= $end; $m++) {
+		for ($m = $end; $m >= $begin; $m--) {
 			$month = $m % 12 + 1;
 			$year = ($m - $month + 1) / 12;
 
@@ -81,12 +81,12 @@ class MonthPaginator extends SimpleButton implements \Duf\Renderer\IWidgetRender
 		}
 
 		// Next page
-		if ($active + 1 <= $end) {
-			$m = $active + 1;
+		if ($active - 1 >= $begin) {
+			$m = $active - 1;
 			$month = $m % 12 + 1;
 			$year = ($m - $month + 1) / 12;
 			$iso_date = sprintf("%04d-%02d-01", $year, $month);
-			static::renderPageButton($form, $template_engine, $filters, _('Next'), 'page next', array(
+			static::renderPageButton($form, $template_engine, $filters, _('Earlier'), 'page next', array(
 				$page_filter_name => $iso_date,
 			));
 		}
