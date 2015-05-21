@@ -28,7 +28,7 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 	public static function renderFieldWidget(\Duf\Form $form, $template_engine, $widget_conf, $group_id, $field_id, $field_conf)
 	{
 		// FIXME: This should not be here
-		$type = $field_conf['type'];
+		$type = isset($widget_conf['type']) ? $widget_conf['type'] : $field_conf['type'];
 
 		if (isset($field_conf['link'])) {
 			$tag = 'a';
@@ -38,6 +38,19 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 
 		// Get value early, so class can be set
 		$raw_value = $form->getViewData($group_id, $field_id);
+
+		// Handle null value and null format
+		if ($raw_value !== null) {
+			$format = isset($widget_conf['format']) ? $widget_conf['format'] : (isset($field_conf['format']) ? $field_conf['format'] : null);
+			$value = $raw_value;
+		} else {
+			$format = isset($widget_conf['null_format']) ? $widget_conf['null_format']
+				: (isset($field_conf['null_format']) ? $field_conf['null_format']
+				: (isset($widget_conf['format']) ? $widget_conf['format']
+				: (isset($field_conf['format']) ? $field_conf['format']
+				: null)));
+			$value = isset($widget_conf['null_value']) ? $widget_conf['null_value'] : (isset($field_conf['null_value']) ? $field_conf['null_value'] : null);
+		}
 
 		// add value-specific classes
 		switch ($type) {
@@ -88,7 +101,7 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 			case 'email':
 				if ($raw_value !== null) {
 					echo str_replace(array('@', '.'), array('<span>&#64;</span>', '<span>&#46;</span>'),
-						htmlspecialchars($raw_value));
+						htmlspecialchars($value));
 				} else if (isset($field_conf['null_value'])) {
 					echo htmlspecialchars($field_conf['null_value']);
 				}
@@ -96,61 +109,30 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 
 			case 'datetime':
 			case 'datetime-local':
-				if ($raw_value !== null) {
-					echo strftime(
-						isset($field_conf['format']) ? $field_conf['format'] : _('%d.&nbsp;%m.&nbsp;%Y,&nbsp;%H:%M'),
-						strtotime($raw_value));
-				} else if (isset($field_conf['null_value'])) {
-					echo htmlspecialchars($field_conf['null_value']);
-				}
+				echo htmlspecialchars(strftime($format !== null ? $format : _('%d.&nbsp;%m.&nbsp;%Y,&nbsp;%H:%M'), strtotime($value)));
 				break;
 
 			case 'time':
-				if ($raw_value !== null) {
-					echo strftime(
-						isset($field_conf['format']) ? $field_conf['format'] : _('%H:%M'),
-						strtotime($raw_value));
-				} else if (isset($field_conf['null_value'])) {
-					echo htmlspecialchars($field_conf['null_value']);
-				}
+				echo htmlspecialchars(strftime($format !== null ? $format : _('%H:%M'), strtotime($value)));
 				break;
 
 			case 'date':
-				if ($raw_value !== null) {
-					echo strftime(
-						isset($field_conf['format']) ? $field_conf['format'] : _('%d.&nbsp;%m.&nbsp;%Y'),
-						strtotime($raw_value));
-				} else if (isset($field_conf['null_value'])) {
-					echo htmlspecialchars($field_conf['null_value']);
-				}
+				echo htmlspecialchars(strftime($format !== null ? $format : _('%d.&nbsp;%m.&nbsp;%Y'), strtotime($value)));
 				break;
 
 			case 'week':
-				if ($raw_value !== null) {
-					echo strftime(
-						isset($field_conf['format']) ? $field_conf['format'] : _('%V/%Y'),
-						strtotime($raw_value));
-				} else if (isset($field_conf['null_value'])) {
-					echo htmlspecialchars($field_conf['null_value']);
-				}
+				echo htmlspecialchars(strftime($format !== null ? $format : _('%V/%Y'), strtotime($value)));
 				break;
 
 			case 'month':
-				if ($raw_value !== null) {
-					echo strftime(
-						isset($field_conf['format']) ? $field_conf['format'] : _('%B&nbsp;%Y'),
-						strtotime($raw_value));
-				} else if (isset($field_conf['null_value'])) {
-					echo htmlspecialchars($field_conf['null_value']);
-				}
+				echo htmlspecialchars(strftime($format !== null ? $format : _('%B %Y'), strtotime($value)));
 				break;
 
-
 			default:
-				if ($raw_value !== null) {
-					echo isset($field_conf['format']) ? htmlspecialchars(sprintf($field_conf['format'], $raw_value)) : htmlspecialchars($raw_value);
-				} else if (isset($field_conf['null_value'])) {
-					echo htmlspecialchars($field_conf['null_value']);
+				if ($format !== null) {
+					echo htmlspecialchars(sprintf($format, $value));
+				} else {
+					echo htmlspecialchars($value);
 				}
 				break;
 		}
