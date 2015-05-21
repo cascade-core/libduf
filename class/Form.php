@@ -910,9 +910,14 @@ class Form
 
 			// Get field definition
 			if (!isset($group_def['fields'][$field_id])) {
-				throw new RendererException('Unknown field: '.$field_id);
+				if (empty($group_def['wild'])) {
+					throw new RendererException('Unknown field: '.$group_id.'/'.$field_id);
+				} else {
+					$field_conf = array();
+				}
+			} else {
+				$field_conf = $group_def['fields'][$field_id];
 			}
-			$field_conf = $group_def['fields'][$field_id];
 
 			// Renderer substitution for read-only groups
 			if ($this->readonly || !empty($group_def['readonly']) || !empty($field_conf['readonly'])) {
@@ -926,8 +931,10 @@ class Form
 			// Get type of the field (widget_conf may override field_conf here)
 			if (isset($widget_conf['type'])) {
 				$type = $widget_conf['type'];
-			} else {
+			} else if (isset($field_conf['type'])) {
 				$type = $field_conf['type'];
+			} else {
+				throw new RendererException('Field type not specified: '.$group_id.'/'.$field_id);
 			}
 
 			// Get renderer class
