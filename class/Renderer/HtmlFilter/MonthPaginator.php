@@ -36,20 +36,37 @@ class MonthPaginator extends SimpleButton implements \Duf\Renderer\IWidgetRender
 
 		$begin_t = strtotime($min_date);
 		$end_t = strtotime($max_date);
+		$active_t = empty($filters[$page_filter_name]) ? time() : strtotime($filters[$page_filter_name]);
 
 		// Calculate bounds from dates
-		$begin_year  = (int) strftime('%Y', $begin_t);
-		$begin_month = (int) strftime('%m', $begin_t);
-		$end_year    = (int) strftime('%Y', $end_t);
-		$end_month   = (int) strftime('%m', $end_t);
-		$begin = 12 * $begin_year + ($begin_month - 1);
-		$end   = 12 * $end_year   + ($end_month   - 1);
+		$begin_year   = (int) strftime('%Y', $begin_t);
+		$begin_month  = (int) strftime('%m', $begin_t);
+		$end_year     = (int) strftime('%Y', $end_t);
+		$end_month    = (int) strftime('%m', $end_t);
+		$active_year  = (int) strftime('%Y', $active_t);
+		$active_month = (int) strftime('%m', $active_t);
+		$begin  = 12 * $begin_year  + ($begin_month  - 1);
+		$end    = 12 * $end_year    + ($end_month    - 1);
+		$active = 12 * $active_year + ($active_month - 1);
 
 		echo "<div";
 		static::renderClassAttr($form, $template_engine,
 			isset($widget_conf['class']) ? $widget_conf['class'] : null,
 			'filter_paginator', 'month_paginator');
 		echo ">";
+
+		$format = isset($widget_conf['format']) ? $widget_conf['format'] : _('%B %Y');
+
+		// Previous page
+		if ($active - 1 >= $begin) {
+			$m = $active - 1;
+			$month = $m % 12 + 1;
+			$year = ($m - $month + 1) / 12;
+			$iso_date = sprintf("%04d-%02d-01", $year, $month);
+			static::renderPageButton($form, $template_engine, $filters, _('Previous'), 'page prev', array(
+				$page_filter_name => $iso_date,
+			));
+		}
 
 		// Pages
 		for ($m = $begin; $m <= $end; $m++) {
@@ -58,10 +75,22 @@ class MonthPaginator extends SimpleButton implements \Duf\Renderer\IWidgetRender
 
 			$iso_date = sprintf("%04d-%02d-01", $year, $month);
 			static::renderPageButton($form, $template_engine, $filters,
-				mb_convert_case(strftime('%B %Y', strtotime($iso_date)), MB_CASE_TITLE), 'page number', array(
+				mb_convert_case(strftime($format, strtotime($iso_date)), MB_CASE_TITLE), 'page number', array(
 				$page_filter_name => $iso_date,
 			));
 		}
+
+		// Next page
+		if ($active + 1 <= $end) {
+			$m = $active + 1;
+			$month = $m % 12 + 1;
+			$year = ($m - $month + 1) / 12;
+			$iso_date = sprintf("%04d-%02d-01", $year, $month);
+			static::renderPageButton($form, $template_engine, $filters, _('Next'), 'page next', array(
+				$page_filter_name => $iso_date,
+			));
+		}
+
 
 		echo "</div>\n";
 	}
