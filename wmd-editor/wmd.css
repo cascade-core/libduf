@@ -33,6 +33,19 @@
 		margin: 0px;
 	}
 
+	.wmd-editor .wmd-button-bar .wmd-button-row {
+		z-index: 1;
+	}
+
+	.wmd-editor .wmd-button-bar .wmd-help-link {
+		z-index: 2;
+		float: right;
+		width: auto;
+		position: relative;
+		line-height: 26px;
+		margin: 0px 0.5em;
+	}
+
 .wmd-editor .wmd-input-and-preview-holder {
 }
 

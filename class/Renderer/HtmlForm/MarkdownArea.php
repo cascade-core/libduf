@@ -31,7 +31,9 @@ class MarkdownArea extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 
 		echo	"<div id=\"", $suffix, "\" class=\"wmd-editor\" data-wmd-suffix=\"$suffix\">\n",
 				"<div class=\"wmd-button-bar-holder\">\n",
-					"<div class=\"wmd-button-bar\" id=\"wmd-button-bar-$suffix\"></div>\n",
+					"<div class=\"wmd-button-bar\" id=\"wmd-button-bar-$suffix\">\n",
+						"<a class=\"wmd-help-link\" href=\"http://daringfireball.net/projects/markdown/syntax\" target=\"_blank\">", _('Markdown syntax'), "</a>\n",
+					"</div>\n",
 				"</div>\n",
 				"<div class=\"wmd-input-and-preview-holder\">\n",
 					"<div class=\"wmd-input-holder\">\n";
