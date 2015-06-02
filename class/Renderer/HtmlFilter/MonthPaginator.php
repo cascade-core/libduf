@@ -29,6 +29,10 @@ class MonthPaginator extends SimpleButton implements \Duf\Renderer\IWidgetRender
 	{
 		// Get value early, so class can be set
 		$filters = $form->getViewData($widget_conf['group_id']);
+		if (empty($filters['_min_date']) || empty($filters['_max_date'])) {
+			// Do not render paginator, if bounds are not defined
+			return;
+		}
 		$page_filter_name = isset($widget_conf['filter_name']) ? $widget_conf['filter_name'] : 'month';
 		$min_date = $filters['_min_date'];
 		$max_date = $filters['_max_date'];
