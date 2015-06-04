@@ -36,9 +36,14 @@ class Toolbox
 	protected $config;
 
 	/**
-	 * Field group generators
+	 * Field group generators - these update field group configuration before it is used by form
 	 */
 	protected $field_group_generators = array();
+
+	/**
+	 * Field generators - these update field configuration before it is used by form.
+	 */
+	protected $field_generators = array();
 
 
 	/**
@@ -60,6 +65,12 @@ class Toolbox
 				$this->registerFieldGroupGenerator($generator_name, is_object($generator_class) ? $generator_class : new $generator_class());
 			}
 		}
+
+		if (isset($this->config['field_generators'])) {
+			foreach ($this->config['field_generators'] as $generator_name => $generator_class) {
+				$this->registerFieldGenerator($generator_name, is_object($generator_class) ? $generator_class : new $generator_class());
+			}
+		}
 	}
 
 
@@ -73,6 +84,19 @@ class Toolbox
 	{
 		if (function_exists('debug_msg')) debug_msg('Registering field group generator "%s" (%s)', $generator_name, get_class($generator));
 		$this->field_group_generators[$generator_name] = $generator;
+	}
+
+
+	/**
+	 * Register field generator.
+	 *
+	 * It is external tool connected to external resources, so toolbox
+	 * cannot create it.
+	 */
+	public function registerFieldGenerator($generator_name, $generator)
+	{
+		if (function_exists('debug_msg')) debug_msg('Registering field generator "%s" (%s)', $generator_name, get_class($generator));
+		$this->field_generators[$generator_name] = $generator;
 	}
 
 
@@ -93,9 +117,30 @@ class Toolbox
 	public function updateFieldGroup($generator_name, & $field_group)
 	{
 		if (isset($this->field_group_generators[$generator_name])) {
-			return $this->field_group_generators[$generator_name]->updateFieldGroup($field_group);
+			$this->field_group_generators[$generator_name]->updateFieldGroup($field_group);
+		} else {
+			throw new \RuntimeException('Unknown field group generator: '.$generator_name);
 		}
-		throw new \RuntimeException('Unknown field group generator: '.$generator_name);
+
+		if (!empty($field_group['fields'])) {
+			foreach ($field_group['fields'] as $fi => & $field) {
+				if (!isset($field['type'])) {
+					throw new \RuntimeException("Missing field type for field \"$fi\".");
+				}
+				if (!isset($this->config['field_types'][$field['type']])) {
+					throw new \RuntimeException("Unknown field type of field \"$fi\".");
+				}
+				$field_type_cfg = $this->config['field_types'][$field['type']];
+				if (isset($field_type_cfg['generator'])) {
+					$generator_name = $field_type_cfg['generator'];
+					if (isset($this->field_generators[$generator_name])) {
+						$this->field_generators[$generator_name]->updateField($field);
+					} else {
+						throw new \RuntimeException('Unknown field generator: '.$generator_name);
+					}
+				}
+			}
+		}
 	}
 
 
