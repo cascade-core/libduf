@@ -42,7 +42,7 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 		// relative URL may be anything
 		// FIXME: Any restrictions ?
 		if ($type == 'relative_url') {
-			$type = 'text';
+			$type = 'url';
 		}
 
 		// Change datetime to datetime-local because browser support

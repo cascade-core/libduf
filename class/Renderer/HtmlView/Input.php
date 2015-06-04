@@ -30,14 +30,19 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 		// FIXME: This should not be here
 		$type = isset($widget_conf['type']) ? $widget_conf['type'] : $field_conf['type'];
 
-		if (isset($field_conf['link'])) {
-			$tag = 'a';
-		} else {
-			$tag = 'span';
-		}
-
 		// Get value early, so class can be set
 		$raw_value = $form->getViewData($group_id, $field_id);
+
+		if (isset($field_conf['link'])) {
+			$link = $field_conf['link'];
+			$tag = 'a';
+		} else if ($type == 'url' || $type == 'relative_url') {
+			$link = $raw_value;
+			$tag = 'a';
+		} else {
+			$link = null;
+			$tag = 'span';
+		}
 
 		// Handle null value and null format
 		if ($raw_value !== null) {
@@ -67,8 +72,8 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 
 		if ($raw_value === null && isset($field_conf['null_link'])) {
 			echo " href=\"", htmlspecialchars(filename_format($field_conf['null_link'], $form->getViewData($group_id))), "\"";
-		} else if (isset($field_conf['link'])) {
-			echo " href=\"", htmlspecialchars(filename_format($field_conf['link'], $form->getViewData($group_id))), "\"";
+		} else if ($link !== null) {
+			echo " href=\"", htmlspecialchars(filename_format($link, $form->getViewData($group_id))), "\"";
 		}
 
 		static::commonAttributes($field_conf);

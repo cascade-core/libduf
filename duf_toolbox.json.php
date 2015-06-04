@@ -227,8 +227,9 @@
                 "@thumbnail": "\\Duf\\Renderer\\HtmlView\\Thumbnail",
                 "@hidden": "\\Duf\\Renderer\\HtmlForm\\HiddenInput"
             },
+            "value_processor": "\\Duf\\FieldValueProcessor\\LocalUrl",
             "validators": {
-                "html5": "\\Duf\\FieldValidator\\TextInput"
+                "html5": "\\Duf\\FieldValidator\\UrlInput"
             }
         },
         "week": {
