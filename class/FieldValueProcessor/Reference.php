@@ -47,8 +47,10 @@ class Reference
 		}
 
 		// Copy additional values which are not field data, but they are important for `@view` renderers.
-		foreach ($field_conf['properties'] as $pi => $p) {
-			$raw_values[$pi] = isset($default_values[$pi]) ? $default_values[$pi] : null;
+		if (!empty($field_conf['properties'])) {
+			foreach ($field_conf['properties'] as $pi => $p) {
+				$raw_values[$pi] = isset($default_values[$pi]) ? $default_values[$pi] : null;
+			}
 		}
 	}
 
