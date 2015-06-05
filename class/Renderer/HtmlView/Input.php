@@ -114,23 +114,23 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 
 			case 'datetime':
 			case 'datetime-local':
-				echo htmlspecialchars(strftime($format !== null ? $format : _('%d.&nbsp;%m.&nbsp;%Y,&nbsp;%H:%M'), strtotime($value)));
+				echo htmlspecialchars(strftime($format !== null ? $format : _("%d.\302\240%m.\302\240%Y,\302\240%H:%M"), strtotime($value)));
 				break;
 
 			case 'time':
-				echo htmlspecialchars(strftime($format !== null ? $format : _('%H:%M'), strtotime($value)));
+				echo htmlspecialchars(strftime($format !== null ? $format : _("%H:%M"), strtotime($value)));
 				break;
 
 			case 'date':
-				echo htmlspecialchars(strftime($format !== null ? $format : _('%d.&nbsp;%m.&nbsp;%Y'), strtotime($value)));
+				echo htmlspecialchars(strftime($format !== null ? $format : _("%d.\302\240%m.\302\240%Y"), strtotime($value)));
 				break;
 
 			case 'week':
-				echo htmlspecialchars(strftime($format !== null ? $format : _('%V/%Y'), strtotime($value)));
+				echo htmlspecialchars(strftime($format !== null ? $format : _("%V/%Y"), strtotime($value)));
 				break;
 
 			case 'month':
-				echo htmlspecialchars(strftime($format !== null ? $format : _('%B %Y'), strtotime($value)));
+				echo htmlspecialchars(strftime($format !== null ? $format : _("%B\302\240%Y"), strtotime($value)));
 				break;
 
 			default:
