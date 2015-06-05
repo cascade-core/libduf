@@ -39,7 +39,7 @@ class LocalUrl
 		if (isset($default_values[$field_id])) {
 			// Add hostname and protocol
 			$local = trim($default_values[$field_id]);
-			if ($local[0] == '/') {
+			if ($local !== '' && $local[0] == '/') {
 				$absolute = static::getScheme() . '://' . static::getServerName() . $local;
 			} else {
 				$absolute = $local;
