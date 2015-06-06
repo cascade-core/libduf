@@ -1,5 +1,5 @@
-DUF: Declarative Ugly Forms
-============================
+libDUF: Declarative Ugly Forms
+==============================
 
 DUF is a library for creating HTML5 forms and views. Everything in DUF is
 designed to be declarative, so it is easy to connect your forms and views with
