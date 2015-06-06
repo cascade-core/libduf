@@ -887,7 +887,9 @@ class Form
 	public function renderWidget($template_engine, $widget_conf)
 	{
 		// Lookup renderer in toolbox
-		if (isset($widget_conf['#!'])) {
+		if ($widget_conf === null) {
+			return;
+		} else if (isset($widget_conf['#!'])) {
 			$renderer_name = $widget_conf['#!'];
 		} else {
 			throw new \InvalidArgumentException('Shebang is missing in widget configuration.');
