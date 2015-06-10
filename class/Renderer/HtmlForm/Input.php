@@ -224,6 +224,7 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 				case 'form':
 				case 'itemid':
 				case 'lang':
+				case 'maxlength':
 				case 'style':
 				//case 'tabindex':
 				case 'title':
