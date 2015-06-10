@@ -52,27 +52,17 @@ class Plain implements \Duf\Renderer\IWidgetRenderer
 					} else {
 						$element = 'div';
 					}
-					echo "<", $element;
-					if (isset($widget_conf['dimensions'][$dimensions]['class'])) {
-						static::renderClassAttr($form, $template_engine, $widget_conf['dimensions'][$dimensions]['class']);
-					}
-					echo ">\n";
-					$form->renderWidgets($template_engine, $widget_conf['widgets']);
-					echo "</", $element, ">\n";
-				},
-				function($depth) use ($form, $template_engine, $widget_conf) {
-					if (isset($widget_conf['dimensions'][$depth]['class']) || isset($widget_conf['dimensions'][$depth]['element'])) {
-						if (isset($widget_conf['dimensions'][$depth]['element'])) {
-							$element = $widget_conf['dimensions'][$depth]['element'];
-						} else {
-							$element = 'div';
-						}
+					if ($element) {
 						echo "<", $element;
-						if (isset($widget_conf['dimensions'][$depth]['class'])) {
-							static::renderClassAttr($form, $template_engine, $widget_conf['dimensions'][$depth]['class']);
+						if (isset($widget_conf['dimensions'][$dimensions]['class'])) {
+							static::renderClassAttr($form, $template_engine, $widget_conf['dimensions'][$dimensions]['class']);
 						}
 						echo ">\n";
 					}
+					$form->renderWidgets($template_engine, $widget_conf['widgets']);
+					if ($element) {
+						echo "</", $element, ">\n";
+					}
 				},
 				function($depth) use ($form, $template_engine, $widget_conf) {
 					if (isset($widget_conf['dimensions'][$depth]['class']) || isset($widget_conf['dimensions'][$depth]['element'])) {
@@ -81,7 +71,25 @@ class Plain implements \Duf\Renderer\IWidgetRenderer
 						} else {
 							$element = 'div';
 						}
-						echo "</div>\n";
+						if ($element) {
+							echo "<", $element;
+							if (isset($widget_conf['dimensions'][$depth]['class'])) {
+								static::renderClassAttr($form, $template_engine, $widget_conf['dimensions'][$depth]['class']);
+							}
+							echo ">\n";
+						}
+					}
+				},
+				function($depth) use ($form, $template_engine, $widget_conf) {
+					if (isset($widget_conf['dimensions'][$depth]['class']) || isset($widget_conf['dimensions'][$depth]['element'])) {
+						if (isset($widget_conf['dimensions'][$depth]['element'])) {
+							$element = $widget_conf['dimensions'][$depth]['element'];
+						} else {
+							$element = 'div';
+						}
+						if ($element) {
+							echo "</div>\n";
+						}
 					}
 				});
 		}
