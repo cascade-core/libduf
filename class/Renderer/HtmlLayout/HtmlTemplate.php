@@ -70,7 +70,9 @@ class HtmlTemplate implements \Duf\Renderer\IWidgetRenderer
 
 					case 2:
 						// Dual key points to field
-						if ($raw) {
+						if ($raw == '%') {
+							echo urlencode($form->getViewData($key[0], $key[1]));
+						} else if ($raw) {
 							echo htmlspecialchars($form->getViewData($key[0], $key[1]));
 						} else {
 							ob_start();
@@ -103,7 +105,7 @@ class HtmlTemplate implements \Duf\Renderer\IWidgetRenderer
 	private static function processTemplate($template, $value_callback)
 	{
 		$tokens = preg_split('/(?:({)'
-					."(!?)"
+					."([!%]?)"
 					."(\\/?[a-zA-Z0-9_-]+)"			// first symbol name part
 					."(?:\.(\\/?[a-zA-Z0-9_-]+))*"		// another symbol name part
 					.'(})'
@@ -133,6 +135,8 @@ class HtmlTemplate implements \Duf\Renderer\IWidgetRenderer
 				case 10:
 					if ($token == '!') {
 						$raw = true;
+					} else if ($token == '%') {
+						$raw = '%';
 					} else {
 						$key = array($token);
 						$status = 20;
