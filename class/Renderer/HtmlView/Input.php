@@ -114,7 +114,9 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 
 			case 'datetime':
 			case 'datetime-local':
-				echo htmlspecialchars(strftime($format !== null ? $format : _("%d.\302\240%m.\302\240%Y,\302\240%H:%M"), strtotime($value)));
+				echo htmlspecialchars(strftime($format !== null ? $format
+					: (empty($field_conf['precision']) ? _("%d.\302\240%m.\302\240%Y,\302\240%H:%M") : _("%d.\302\240%m.\302\240%Y,\302\240%H:%M:%S")),
+						strtotime($value)));
 				break;
 
 			case 'time':

@@ -78,7 +78,8 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 			case 'datetime':
 			case 'datetime-local':
 				if ($raw_data) {
-					echo " value=\"", htmlspecialchars(strftime('%Y-%m-%dT%H:%M:%S', strtotime($raw_data))), "\"";
+					echo " value=\"", htmlspecialchars(strftime(empty($field_conf['precision']) ? '%Y-%m-%dT%H:%M:00' : '%Y-%m-%dT%H:%M:%S',
+						strtotime($raw_data))), "\"";
 				}
 				break;
 			case 'date':
