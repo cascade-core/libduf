@@ -27,26 +27,37 @@ class Reference extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 	/// @copydoc \Duf\Renderer\IFieldWidgetRenderer::renderFieldWidget
 	public static function renderFieldWidget(\Duf\Form $form, $template_engine, $widget_conf, $group_id, $field_id, $field_conf)
 	{
-		if (isset($field_conf['link'])) {
-			$tag = 'a';
-		} else {
-			$tag = 'span';
-		}
-
 		$raw_values = $form->getViewData($group_id);
 
-		echo "<$tag";
-
-		if (isset($field_conf['link'])) {
-			echo " href=\"", htmlspecialchars(filename_format($field_conf['link'], $raw_values)), "\"";
+		// Detect null refs (this should be done by the reference, but it is better to avoid creating a lot of useless objects)
+		$is_null = false;
+		foreach ($field_conf['machine_id'] as $m_id_key) {
+			if (empty($raw_values[$m_id_key])) {
+				$is_null = true;
+				break;
+			}
 		}
 
-		static::commonAttributes($field_conf);
+		// Get view configuration
+		if ($is_null) {
+			$link = isset($field_conf['null_link']) ? $field_conf['null_link'] : null;
+			$value_fmt = isset($field_conf['null_value_fmt']) ? $field_conf['null_value_fmt'] : null;
+		} else {
+			$link = isset($field_conf['link']) ? $field_conf['link'] : null;
+			$value_fmt = isset($field_conf['value_fmt']) ? $field_conf['value_fmt'] : null;
+		}
 
+		// Render reference element
+		$tag = ($link === null ? 'span' : 'a');
+		echo "<$tag";
+		if ($link !== null) {
+			echo " href=\"", htmlspecialchars(filename_format($link, $raw_values)), "\"";
+		}
+		static::commonAttributes($field_conf);
 		echo ">";
 
 		// Value
-		echo template_format($field_conf['value_fmt'], $raw_values);
+		echo template_format($value_fmt, $raw_values);
 
 		echo "</$tag>\n";
 	}
