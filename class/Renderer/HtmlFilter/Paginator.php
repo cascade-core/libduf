@@ -31,13 +31,13 @@ class Paginator extends SimpleButton implements \Duf\Renderer\IWidgetRenderer
 		$filters = $form->getViewData($widget_conf['group_id']);
 		$page_size = isset($widget_conf['page_size']) ? $widget_conf['page_size'] : 150;
 		$offset = isset($filters['offset']) ? $filters['offset'] : 0;
-		$page_count = isset($filters['_count']) ? ceil($filters['_count'] / $page_size) : ceil($offset / $page_size) + 3;
+		$page_count = isset($filters['_count']) ? ceil($filters['_count'] / $page_size) : 0;
 		$current_page = ceil($offset / $page_size);
 		$inner_radius = isset($widget_conf['inner_radius']) ? $widget_conf['inner_radius'] : 3;
 		$outter_radius = isset($widget_conf['outter_radius']) ? $widget_conf['outter_radius'] : 2;
 
 		// If there is only one page, this paginator is not needed.
-		if ($page_count == 1) {
+		if ($page_count <= 1) {
 			return;
 		}
 
