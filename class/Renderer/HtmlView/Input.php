@@ -144,6 +144,24 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 				echo htmlspecialchars(strftime($format !== null ? $format : _("%B\302\240%Y"), strtotime($value)));
 				break;
 
+			case 'select':
+				if (isset($field_conf['options'][$value])) {
+					$option = $field_conf['options'][$value];
+					if (is_array($option)) {
+						$opt_val = $option['label'];
+					} else {
+						$opt_val = $option;
+					}
+				} else {
+					$opt_val = $value;
+				}
+				if ($format !== null) {
+					echo htmlspecialchars(sprintf($format, $opt_val));
+				} else {
+					echo htmlspecialchars($opt_val);
+				}
+				break;
+
 			default:
 				if ($format !== null) {
 					echo htmlspecialchars(sprintf($format, $value));

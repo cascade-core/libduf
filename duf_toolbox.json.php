@@ -134,7 +134,7 @@
         "select": {
             "renderers": {
                 "@edit": "\\Duf\\Renderer\\HtmlForm\\Select",
-                "@view": "\\Duf\\Renderer\\HtmlView\\Select",
+                "@view": "\\Duf\\Renderer\\HtmlView\\Input",
                 "@hidden": "\\Duf\\Renderer\\HtmlForm\\HiddenInput"
             },
             "validators": {
