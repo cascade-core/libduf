@@ -32,6 +32,7 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 
 		// Get value early, so class can be set
 		$raw_value = $form->getViewData($group_id, $field_id);
+		$view_data = $form->getViewData($group_id);
 
 		if (isset($field_conf['link'])) {
 			$link = $field_conf['link'];
@@ -48,6 +49,8 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 		if ($raw_value !== null) {
 			$format = isset($widget_conf['format']) ? $widget_conf['format'] : (isset($field_conf['format']) ? $field_conf['format'] : null);
 			$value = $raw_value;
+			$tooltip = isset($widget_conf['tooltip_format']) ? $widget_conf['tooltip_format']
+				: (isset($field_conf['tooltip_format']) ? $field_conf['tooltip_format'] : null);
 		} else {
 			$format = isset($widget_conf['null_format']) ? $widget_conf['null_format']
 				: (isset($field_conf['null_format']) ? $field_conf['null_format']
@@ -55,6 +58,8 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 				: (isset($field_conf['format']) ? $field_conf['format']
 				: null)));
 			$value = isset($widget_conf['null_value']) ? $widget_conf['null_value'] : (isset($field_conf['null_value']) ? $field_conf['null_value'] : null);
+			$tooltip = isset($widget_conf['null_tooltip_format']) ? $widget_conf['null_tooltip_format']
+				: (isset($field_conf['null_tooltip_format']) ? $field_conf['null_tooltip_format'] : null);
 		}
 
 		// add value-specific classes
@@ -71,9 +76,13 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 		echo "<$tag";
 
 		if ($raw_value === null && isset($field_conf['null_link'])) {
-			echo " href=\"", htmlspecialchars(filename_format($field_conf['null_link'], $form->getViewData($group_id))), "\"";
+			echo " href=\"", htmlspecialchars(filename_format($field_conf['null_link'], $view_data)), "\"";
 		} else if ($link !== null) {
-			echo " href=\"", htmlspecialchars(filename_format($link, $form->getViewData($group_id))), "\"";
+			echo " href=\"", htmlspecialchars(filename_format($link, $view_data)), "\"";
+		}
+
+		if ($tooltip !== null) {
+			echo " title=\"", htmlspecialchars(filename_format($tooltip, $view_data)), "\"";
 		}
 
 		static::commonAttributes($field_conf);
