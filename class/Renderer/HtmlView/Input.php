@@ -47,6 +47,7 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 		if ($raw_value !== null) {
 			$link = isset($widget_conf['link']) ? $widget_conf['link'] : (isset($field_conf['link']) ? $field_conf['link'] : null);
 			$format = isset($widget_conf['format']) ? $widget_conf['format'] : (isset($field_conf['format']) ? $field_conf['format'] : null);
+			$target = isset($widget_conf['target']) ? $widget_conf['target'] : (isset($field_conf['target']) ? $field_conf['target'] : null);
 			$value = $raw_value;
 			$tooltip = isset($widget_conf['tooltip_format']) ? $widget_conf['tooltip_format']
 				: (isset($field_conf['tooltip_format']) ? $field_conf['tooltip_format'] : null);
@@ -57,6 +58,7 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 				: (isset($widget_conf['format']) ? $widget_conf['format']
 				: (isset($field_conf['format']) ? $field_conf['format']
 				: null)));
+			$target = isset($widget_conf['null_target']) ? $widget_conf['null_target'] : (isset($field_conf['null_target']) ? $field_conf['null_target'] : null);
 			$value = isset($widget_conf['null_value']) ? $widget_conf['null_value'] : (isset($field_conf['null_value']) ? $field_conf['null_value'] : null);
 			$tooltip = isset($widget_conf['null_tooltip_format']) ? $widget_conf['null_tooltip_format']
 				: (isset($field_conf['null_tooltip_format']) ? $field_conf['null_tooltip_format'] : null);
@@ -98,6 +100,10 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 			echo " href=\"", htmlspecialchars(filename_format($field_conf['null_link'], $view_data)), "\"";
 		} else if ($link !== null) {
 			echo " href=\"", htmlspecialchars(filename_format($link, $view_data)), "\"";
+		}
+
+		if ($target !== null) {
+			echo " target=\"", htmlspecialchars(filename_format($target, $view_data)), "\"";
 		}
 
 		if ($tooltip !== null) {
