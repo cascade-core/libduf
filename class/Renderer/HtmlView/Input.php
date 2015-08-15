@@ -34,24 +34,24 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 		$raw_value = $form->getViewData($group_id, $field_id);
 		$view_data = $form->getViewData($group_id);
 
-		if (isset($field_conf['link'])) {
-			$link = $field_conf['link'];
-			$tag = 'a';
-		} else if ($type == 'url' || $type == 'relative_url') {
-			$link = $raw_value;
-			$tag = 'a';
-		} else {
-			$link = null;
-			$tag = 'span';
+		// Detect special null values
+		switch ($type) {
+			case 'gps_coords':
+				if (empty($raw_value['lat']) || empty($raw_value['lon'])) {
+					$raw_value = null;
+				}
+				break;
 		}
 
 		// Handle null value and null format
 		if ($raw_value !== null) {
+			$link = isset($widget_conf['link']) ? $widget_conf['link'] : (isset($field_conf['link']) ? $field_conf['link'] : null);
 			$format = isset($widget_conf['format']) ? $widget_conf['format'] : (isset($field_conf['format']) ? $field_conf['format'] : null);
 			$value = $raw_value;
 			$tooltip = isset($widget_conf['tooltip_format']) ? $widget_conf['tooltip_format']
 				: (isset($field_conf['tooltip_format']) ? $field_conf['tooltip_format'] : null);
 		} else {
+			$link = isset($widget_conf['null_link']) ? $widget_conf['null_link'] : (isset($field_conf['null_link']) ? $field_conf['null_link'] : null);
 			$format = isset($widget_conf['null_format']) ? $widget_conf['null_format']
 				: (isset($field_conf['null_format']) ? $field_conf['null_format']
 				: (isset($widget_conf['format']) ? $widget_conf['format']
@@ -61,6 +61,25 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 			$tooltip = isset($widget_conf['null_tooltip_format']) ? $widget_conf['null_tooltip_format']
 				: (isset($field_conf['null_tooltip_format']) ? $field_conf['null_tooltip_format'] : null);
 		}
+
+		// Link default value (can be overriden with false)
+		if ($link === null) {
+			switch ($type) {
+				case 'url':
+				case 'relative_url':
+					$link = $raw_value;
+					break;
+				case 'gps_coords':
+					$link = (isset($raw_value['lat']) && isset($raw_value['lon'])
+						? sprintf('geo:%s,%s', $raw_value['lat'], $raw_value['lon'])
+						: null);
+					break;
+				default:
+					$link = null;
+					break;
+			}
+		}
+		$tag = ($link ? 'a' : 'span');
 
 		// add value-specific classes
 		switch ($type) {
@@ -159,6 +178,18 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 					echo htmlspecialchars(sprintf($format, $opt_val));
 				} else {
 					echo htmlspecialchars($opt_val);
+				}
+				break;
+
+			case 'gps_coords':
+				if (isset($value['lat']) && isset($value['lon'])) {
+					if ($format !== null) {
+						echo htmlspecialchars(sprintf($format, $value['lat'], $value['lon']));
+					} else {
+						echo htmlspecialchars(sprintf("%s,\302\240%s", $value['lat'], $value['lon']));
+					}
+				} else if (is_string($value)) {
+					echo htmlspecialchars($value);
 				}
 				break;
 

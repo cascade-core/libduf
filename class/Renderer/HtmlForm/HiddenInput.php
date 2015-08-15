@@ -27,12 +27,24 @@ class HiddenInput implements \Duf\Renderer\IFieldWidgetRenderer
 	/// @copydoc \Duf\Renderer\IFieldWidgetRenderer::renderFieldWidget
 	public static function renderFieldWidget(\Duf\Form $form, $template_engine, $widget_conf, $group_id, $field_id, $field_conf)
 	{
-		echo "<input",
-			" type=\"hidden\"",
-			" id=\"", $form->getHtmlFieldId($group_id, $field_id), "\"",
-			" name=\"", $form->getHtmlFieldName($group_id, $field_id), "\"",
-			" value=\"", htmlspecialchars($form->getRawData($group_id, $field_id)), "\"",
-			">\n";
+		$value = $form->getRawData($group_id, $field_id);
+		if (is_array($value)) {
+			echo "<input",
+				" type=\"hidden\"",
+				" id=\"", $form->getHtmlFieldId($group_id, $field_id), "\"",
+				" name=\"", $form->getHtmlFieldName($group_id, $field_id), "\"",
+				" value=\"", htmlspecialchars($value), "\"",
+				">\n";
+		} else {
+			foreach ($value as $k => $v) {
+				echo "<input",
+					" type=\"hidden\"",
+					" id=\"", $form->getHtmlFieldId($group_id, $field_id), "__", htmlspecialchars($k), "\"",
+					" name=\"", $form->getHtmlFieldName($group_id, $field_id), "[", htmlspecialchars($k), "]\"",
+					" value=\"", htmlspecialchars($v), "\"",
+					">\n";
+			}
+		}
 	}
 
 }

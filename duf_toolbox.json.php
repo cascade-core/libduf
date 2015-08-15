@@ -310,6 +310,15 @@
             "value_processor": "\\Duf\\FieldValueProcessor\\LineList",
             "validators": {
             }
+        },
+        "gps_coords": {
+            "renderers": {
+                "@edit": "\\Duf\\Renderer\\HtmlForm\\Input",
+                "@view": "\\Duf\\Renderer\\HtmlView\\Input",
+                "@hidden": "\\Duf\\Renderer\\HtmlForm\\HiddenInput"
+            },
+            "validators": {
+            }
         }
     },
     "form": {

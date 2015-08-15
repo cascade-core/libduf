@@ -1,6 +1,6 @@
 <?php
 /*
- * Copyright (c) 2014, Josef Kufner  <jk@frozen-doe.net>
+ * Copyright (c) 2014-2015, Josef Kufner  <jk@frozen-doe.net>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -92,7 +92,11 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 					echo " value=\"", htmlspecialchars(strftime('%H:%M:%S', strtotime($raw_data))), "\"";
 				}
 				break;
-
+			case 'gps_coords':
+				if ($raw_data && isset($raw_data['lat']) && isset($raw_data['lon'])) {
+					echo " value=\"", htmlspecialchars($raw_data['lat'].','.$raw_data['lon']), "\"";
+				}
+				break;
 			default:
 				echo " value=\"", htmlspecialchars($raw_data), "\"";
 				break;
