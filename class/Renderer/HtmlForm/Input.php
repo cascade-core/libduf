@@ -92,11 +92,6 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 					echo " value=\"", htmlspecialchars(strftime('%H:%M:%S', strtotime($raw_data))), "\"";
 				}
 				break;
-			case 'gps_coords':
-				if ($raw_data && isset($raw_data['lat']) && isset($raw_data['lon'])) {
-					echo " value=\"", htmlspecialchars($raw_data['lat'].','.$raw_data['lon']), "\"";
-				}
-				break;
 			default:
 				echo " value=\"", htmlspecialchars($raw_data), "\"";
 				break;

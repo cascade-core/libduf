@@ -317,6 +317,7 @@
                 "@view": "\\Duf\\Renderer\\HtmlView\\Input",
                 "@hidden": "\\Duf\\Renderer\\HtmlForm\\HiddenInput"
             },
+            "value_processor": "\\Duf\\FieldValueProcessor\\GpsCoords",
             "validators": {
             }
         }
