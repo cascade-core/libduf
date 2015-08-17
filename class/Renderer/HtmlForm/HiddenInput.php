@@ -29,13 +29,6 @@ class HiddenInput implements \Duf\Renderer\IFieldWidgetRenderer
 	{
 		$value = $form->getRawData($group_id, $field_id);
 		if (is_array($value)) {
-			echo "<input",
-				" type=\"hidden\"",
-				" id=\"", $form->getHtmlFieldId($group_id, $field_id), "\"",
-				" name=\"", $form->getHtmlFieldName($group_id, $field_id), "\"",
-				" value=\"", htmlspecialchars($value), "\"",
-				">\n";
-		} else {
 			foreach ($value as $k => $v) {
 				echo "<input",
 					" type=\"hidden\"",
@@ -44,6 +37,13 @@ class HiddenInput implements \Duf\Renderer\IFieldWidgetRenderer
 					" value=\"", htmlspecialchars($v), "\"",
 					">\n";
 			}
+		} else {
+			echo "<input",
+				" type=\"hidden\"",
+				" id=\"", $form->getHtmlFieldId($group_id, $field_id), "\"",
+				" name=\"", $form->getHtmlFieldName($group_id, $field_id), "\"",
+				" value=\"", htmlspecialchars($value), "\"",
+				">\n";
 		}
 	}
 
