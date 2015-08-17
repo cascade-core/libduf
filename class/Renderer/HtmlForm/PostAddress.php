@@ -36,18 +36,20 @@ class PostAddress extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 		}
 		$common_attr = join('', $common_attr);
 
+		$ti = " tabindex=\"".($form->base_tabindex + (isset($field_conf['tabindex']) ? $field_conf['tabindex'] : 0))."\"";
+
 		echo "<address";
 		echo " id=\"", $form->getHtmlFieldId($group_id, $field_id), "\"";
 		static::commonAttributes($field_conf);
 		echo ">";
-		echo "<input class=\"addr_street\"   name=\"{$name}[street]\"   value=\"", htmlspecialchars(isset($val['street'])   ? $val['street'] : ''),   "\"", $common_attr,
+		echo "<input class=\"addr_street\"   name=\"{$name}[street]\"   value=\"", htmlspecialchars(isset($val['street'])   ? $val['street'] : ''),   "\"", $ti, $common_attr,
 			" placeholder=\"", _('Street'), "\" title=\"", _('Street'), "\">\n";
-		echo "<input class=\"addr_city\"     name=\"{$name}[city]\"     value=\"", htmlspecialchars(isset($val['city'])     ? $val['city'] : ''),     "\"", $common_attr,
+		echo "<input class=\"addr_city\"     name=\"{$name}[city]\"     value=\"", htmlspecialchars(isset($val['city'])     ? $val['city'] : ''),     "\"", $ti, $common_attr,
 			" placeholder=\"", _('City'), "\" title=\"", _('City'), "\">\n";
-		echo "<input class=\"addr_postcode\" name=\"{$name}[postcode]\" value=\"", htmlspecialchars(isset($val['postcode']) ? $val['postcode'] : ''), "\"", $common_attr,
+		echo "<input class=\"addr_postcode\" name=\"{$name}[postcode]\" value=\"", htmlspecialchars(isset($val['postcode']) ? $val['postcode'] : ''), "\"", $ti, $common_attr,
 			" placeholder=\"", _('Post code'), "\" title=\"", _('Post code'), "\">\n";
 		echo "<select class=\"addr_country\"  name=\"{$name}[country]\"", $common_attr,
-			" title=\"", _('Country'), "\">\n";
+			" title=\"", _('Country'), "\"", $ti, ">\n";
 		static::printCountryCodeOptions(isset($val['country']) ? $val['country'] : 'CZ');
 		echo "</select>\n";
 		echo "</address>\n";
