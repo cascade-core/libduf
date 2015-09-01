@@ -85,6 +85,11 @@ class Reference extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 
 			echo "</select>\n";
 		}
+
+		if (isset($field_conf['field_note'])) {
+			echo "<span class=\"field_note\">", htmlspecialchars($field_conf['field_note']), "</span>";
+		}
+
 	}
 
 }
