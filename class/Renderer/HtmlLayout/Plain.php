@@ -47,6 +47,10 @@ class Plain implements \Duf\Renderer\IWidgetRenderer
 				}
 			}
 
+			if (isset($row['require_readonly_form']) && (!!$form->readonly != !!$row['require_readonly_form'])) {
+				continue;
+			}
+
 			$row_has_holder = !empty($row['has_holder']) || isset($row['class']);
 			if ($row_has_holder) {
 				echo "<div";
