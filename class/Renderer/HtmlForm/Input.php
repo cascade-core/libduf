@@ -183,7 +183,9 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 				// Confirm button click
 				case 'confirm_query':
 					if ($type == 'submit') {
-						echo "onclick=\"return confirm('", htmlspecialchars(addcslashes($v, "'")), "');\"";
+						$view_data = $form->getViewData($group_id);
+						$question = filename_format($v, $view_data);
+						echo " onclick=\"return confirm('", htmlspecialchars(addcslashes($question, "'")), "');\"";
 					}
 					break;
 			}
