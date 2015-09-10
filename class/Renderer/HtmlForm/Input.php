@@ -28,6 +28,7 @@ namespace Duf\Renderer\HtmlForm;
  */
 class Input implements \Duf\Renderer\IFieldWidgetRenderer
 {
+	use \Duf\Renderer\TagUtils;
 
 	/// @copydoc \Duf\Renderer\IFieldWidgetRenderer::renderFieldWidget
 	public static function renderFieldWidget(\Duf\Form $form, $template_engine, $widget_conf, $group_id, $field_id, $field_conf)
@@ -63,7 +64,17 @@ class Input implements \Duf\Renderer\IFieldWidgetRenderer
 		$raw_data = $form->getRawData($group_id, $field_id);
 		switch ($type) {
 			case 'submit':
-				echo " value=\"", htmlspecialchars(isset($field_conf['label']) ? $field_conf['label'] : $field_conf['name']), "\"";
+				if (isset($field_conf['label_map']) && isset($field_conf['label_key'])) {
+					$label_key = static::calculateValue($form, $template_engine, $field_conf['label_key']);
+					if (isset($field_conf['label_map'][$label_key])) {
+						$label = $field_conf['label_map'][$label_key];
+					} else {
+						$label = isset($field_conf['label']) ? $field_conf['label'] : $field_conf['name'];
+					}
+				} else {
+					$label = isset($field_conf['label']) ? $field_conf['label'] : $field_conf['name'];
+				}
+				echo " value=\"", htmlspecialchars($label), "\"";
 				break;
 
 			case 'checkbox':
