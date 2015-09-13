@@ -67,7 +67,7 @@ class DefaultTable implements \Duf\Renderer\IWidgetRenderer
 				if ($required_field_option !== null && empty($field_def[$required_field_option])) {
 					continue;
 				}
-				if (!empty($field_def['hidden']) || (!$form->readonly && !empty($field_def['calculated']))) {
+				if (!empty($field_def['hidden']) || (!$form->readonly && !empty($field_def['calculated']) && empty($field_def['visible']))) {
 					continue;
 				}
 				if (!empty($skip_empty) && ($group_readonly || $form->readonly) && $form->getViewData($group_id, $field_id) == '') {
