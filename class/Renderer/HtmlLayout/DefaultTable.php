@@ -73,7 +73,11 @@ class DefaultTable implements \Duf\Renderer\IWidgetRenderer
 				if (!empty($skip_empty) && ($group_readonly || $form->readonly) && $form->getViewData($group_id, $field_id) == '') {
 					continue;
 				}
-				echo "<tr>\n";
+				echo "<tr";
+				if (!empty($field_def['row_class'])) {
+					echo " class=\"", htmlspecialchars($field_def['row_class']), "\"";
+				}
+				echo ">\n";
 				echo "<th>\n";
 				$form->renderField($template_engine, $group_id, $field_id, '@label');
 				echo "</th>\n";
