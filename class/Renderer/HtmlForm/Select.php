@@ -49,6 +49,7 @@ class Select extends Input implements \Duf\Renderer\IFieldWidgetRenderer
                                 case 'minlength':
                                 case 'placeholder':
                                 case 'rows':
+				case 'size':
                                 case 'wrap':
                                         echo " $k=\"", htmlspecialchars($v), "\"";
                                         break;
