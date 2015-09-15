@@ -519,7 +519,9 @@ class Form
 	 */
 	public function getCollectionKey($group)
 	{
-		return array_merge($this->group_keys_prefix[$group], $this->group_keys[$group]);
+		return array_merge(
+			isset($this->group_keys_prefix[$group]) ? $this->group_keys_prefix[$group] : array(),
+			$this->group_keys[$group]);
 	}
 
 	/**
