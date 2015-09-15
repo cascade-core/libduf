@@ -62,7 +62,7 @@ class Select extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 		// Lazy-load possible values, just like for <select>
 		if (isset($field_conf['options_factory'])) {
 			$of = $field_conf['options_factory'];
-			$options = $of($field_conf, $value);
+			$options = $of($form, $template_engine, $widget_conf, $group_id, $field_id, $field_conf, $value);
 		} else if (isset($field_conf['options'])) {
 			$options = $field_conf['options'];
 		} else {
