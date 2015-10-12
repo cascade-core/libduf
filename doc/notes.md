@@ -1,9 +1,9 @@
-# DUF:
+# DUF v2.0 - Příklady a poznámky
 
 
 ## Renderování
 
- - Obecný kód, který prochází konfiguraci formuláře a kreslí, je příliš pomalý. Je potřeba konfiguraci zkompilovat do PHP třídy a tu pak jen volat. Podobně, jako to dělá Twig.
+ - Obecný kód, který prochází konfiguraci formuláře a kreslí, je příliš pomalý. Je potřeba konfiguraci zkompilovat do PHP třídy a tu pak jen volat. Podobně, jako to dělá [Twig](http://twig.sensiolabs.org/doc/internals.html).
 
 ## Základní formuláře
 
@@ -43,7 +43,7 @@
 
  - Tabulka, kde každý řádek odpovídá jedné instanci entity a každý sloupec jedné vlastnosti entity.
 
- - Obsah buněk tabulky je kreslen pomocí běžného políčka v read-only režimu (typicky <span> nebo <a>).
+ - Obsah buněk tabulky je kreslen pomocí běžného políčka v read-only režimu (typicky `<span>` nebo `<a>`).
 
  - Tabulka může reprezentovat strom načtený jako seznam. Každý řádek má dané odsazení, jinak to je jen seznam.
 
@@ -67,7 +67,7 @@
 
  - Filtry jsou key-value struktura předávaná v query parametrech URL (za otazníkem). Načítání kolekce tyto parametry interpretuje a DUF obsahuje widgety pro jejich generování. Je tak řešeno i stránkování.
 
- - Viz „faceted search“ a [https://git.frozen-doe.net/cascade/libsmalldb/blob/master/class/FlupdoGenericListing.php||FlupdoGenericListing v libSmalldb].
+ - Viz „[faceted search](https://scholar.google.cz/scholar?q=faceted+search)“ a [FlupdoGenericListing v libSmalldb](https://git.frozen-doe.net/cascade/libsmalldb/blob/master/class/FlupdoGenericListing.php).
 
 ## Dynamické kolekce
 
@@ -121,13 +121,13 @@
 
  - Framework se musí umět uhnout z cesty, pokud je daný úkol nad jeho síly. Ale pořád by měly být nástroje frameworku snadno dostupné, aby programátor nemusel dělat vše znovu.
 
-10 Uživatelská políčka
+## Uživatelská políčka
 
  - Jak umožnit snadnou tvorbu vlastních políček?
 
  - Renderování, validace, konverze dat mezi reprezentací ve formuláři a v datech vrácených formulářem?
 
-11 Integrace s React a Angular
+## Integrace s React a Angular
 
  - Jak je realizovatelná kooperace s knihovnami React a Angular?
 
