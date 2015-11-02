@@ -129,6 +129,9 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 			echo "<thead>\n";
 			echo "<tr>\n";
 			foreach ($columns as $field_id => $col) {
+				if (!empty($col['tabular_hidden']) || !empty($col['hidden'])) {
+					continue;
+				}
 				echo "<th";
 				if (isset($col['width'])) {
 					echo " width=\"", htmlspecialchars($col['width']), "\"";
@@ -234,6 +237,9 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 					// Row cells
 					echo "<tr class=\"", $is_row_even ? 'even':'odd', "\">\n";
 					foreach ($columns as $field_id => $col) {
+						if (!empty($col['tabular_hidden']) || !empty($col['hidden'])) {
+							continue;
+						}
 						echo "<td";
 						if (isset($col['indent_key']) && !empty($item[$col['indent_key']])) {
 							echo " style=\"padding-left: ", 2 * $item[$col['indent_key']], "em;\"";
@@ -265,6 +271,9 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 	private static function renderColumns(\Duf\Form $form, $template_engine, $columns, $tag = 'td')
 	{
 		foreach ($columns as $col) {
+			if (!empty($col['tabular_hidden']) || !empty($col['hidden'])) {
+				continue;
+			}
 			echo "<$tag";
 			if (!empty($col['colspan'])) {
 				echo " colspan=\"", htmlspecialchars($col['colspan']), "\"";
