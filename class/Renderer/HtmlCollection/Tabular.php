@@ -43,17 +43,18 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 		$fields = $group['fields'];
 
 		// Calculate prefixed tabular keys
-		$key_prefix  = isset($widget_conf['option_prefix']) ? $widget_conf['option_prefix'] : 'tabular';
-		$k_hidden    = $key_prefix.'_hidden';
-		$k_weight    = $key_prefix.'_weight';
-		$k_width     = $key_prefix.'_width';
-		$k_label     = $key_prefix.'_label';
-		$k_indent    = $key_prefix.'_indent_key';
-		$k_order_by  = $key_prefix.'_order_by';
-		$k_order_asc = $key_prefix.'_order_asc';
-		$k_rotated   = $key_prefix.'_rotated_header';
-		$k_irf_name  = $key_prefix.'_indent_rq_filter_name';
-		$k_irf_value = $key_prefix.'_indent_rq_filter_value';
+		$key_prefix    = isset($widget_conf['option_prefix']) ? $widget_conf['option_prefix'] : 'tabular';
+		$k_hidden      = $key_prefix.'_hidden';
+		$k_weight      = $key_prefix.'_weight';
+		$k_width       = $key_prefix.'_width';
+		$k_label       = $key_prefix.'_label';
+		$k_indent      = $key_prefix.'_indent_key';
+		$k_order_by    = $key_prefix.'_order_by';
+		$k_order_asc   = $key_prefix.'_order_asc';
+		$k_filter_name = $key_prefix.'_filter_name';
+		$k_rotated     = $key_prefix.'_rotated_header';
+		$k_irf_name    = $key_prefix.'_indent_rq_filter_name';
+		$k_irf_value   = $key_prefix.'_indent_rq_filter_value';
 
 		// Get column list from group fields
 		if (!empty($widget_conf['columns_from_fields'])) {
@@ -67,14 +68,15 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 					continue;
 				}
 				$columns[$field_id] = array(
-					'weight'     => isset($f[$k_weight])    ? $f[$k_weight]    : (isset($f['weight'])          ? $f['weight']          : 50),
-					'width'      => isset($f[$k_width])     ? $f[$k_width]     : (isset($f['width'])           ? $f['width']           : null),
-					'label'      => isset($f[$k_label])     ? $f[$k_label]     : (isset($f['label'])           ? $f['label']           :
-					                                                             (isset($f['name'])            ? $f['name']            : $field_id)),
-					'order_by'   => isset($f[$k_order_by])  ? $f[$k_order_by]  : (isset($f['order_by'])        ? $f['order_by']        : null),
-					'order_asc'  => isset($f[$k_order_asc]) ? $f[$k_order_asc] : (isset($f['order_asc'])       ? $f['order_asc']       : true),
-					'indent_key' => isset($f[$k_indent])    ? $f[$k_indent]    : (isset($f['indent_key'])      ? $f['indent_key']      : null),
-					'rotated'    => isset($f[$k_rotated])   ? $f[$k_rotated]   : (isset($f['rotated_header'])  ? $f['rotated_header']  : null),
+					'weight'      => isset($f[$k_weight])      ? $f[$k_weight]      : (isset($f['weight'])          ? $f['weight']          : 50),
+					'width'       => isset($f[$k_width])       ? $f[$k_width]       : (isset($f['width'])           ? $f['width']           : null),
+					'label'       => isset($f[$k_label])       ? $f[$k_label]       : (isset($f['label'])           ? $f['label']           :
+					                                                                  (isset($f['name'])            ? $f['name']            : $field_id)),
+					'order_by'    => isset($f[$k_order_by])    ? $f[$k_order_by]    : (isset($f['order_by'])        ? $f['order_by']        : null),
+					'order_asc'   => isset($f[$k_order_asc])   ? $f[$k_order_asc]   : (isset($f['order_asc'])       ? $f['order_asc']       : true),
+					'filter_name' => isset($f[$k_filter_name]) ? $f[$k_filter_name] : (isset($f['filter_name'])     ? $f['filter_name']     : $field_id),
+					'indent_key'  => isset($f[$k_indent])      ? $f[$k_indent]      : (isset($f['indent_key'])      ? $f['indent_key']      : null),
+					'rotated'     => isset($f[$k_rotated])     ? $f[$k_rotated]     : (isset($f['rotated_header'])  ? $f['rotated_header']  : null),
 				);
 
 				$irf_name  = isset($f[$k_irf_name])  ? $f[$k_irf_name]  : (isset($f['indent_rq_filter_name'])  ? $f['indent_rq_filter_name']   : null);
@@ -113,6 +115,12 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 			return $a['weight'] > $b['weight'] ? 1 : -1;	// never equal because of fractions
 		});
 
+		// Filter form
+		$filters_enabled = $form->readonly && $filters_group_id;
+		if ($filters_enabled) {
+			echo "<form action=\"\" method=\"get\">\n";
+		}
+
 		// Begin
 		echo "<table";
 		$class = isset($widget_conf['class']) ? (array) $widget_conf['class'] : array();
@@ -127,6 +135,8 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 		// Header
 		if (empty($widget_conf['thead']['hidden'])) {
 			echo "<thead>\n";
+
+			// Heading
 			echo "<tr>\n";
 			foreach ($columns as $field_id => $col) {
 				if (!empty($col['tabular_hidden']) || !empty($col['hidden'])) {
@@ -168,6 +178,30 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 				echo "</th>\n";
 			}
 			echo "</tr>\n";
+
+			// Filters
+			if ($filters_enabled) {
+				echo "<tr>\n";
+				foreach ($columns as $field_id => $col) {
+					if (!empty($col['tabular_hidden']) || !empty($col['hidden'])) {
+						continue;
+					}
+					echo "<th class=\"filter\">";
+					//debug_dump($col, $field_id);
+					if (isset($col['filter_widgets'])) {
+						$form->renderWidgets($template_engine, $col['filter_widgets']);
+					} else if ($field_id) {
+						echo "<input name=\"", htmlspecialchars($field_id), "\"",
+							" value=\"", htmlspecialchars($form->getViewData($filters_group_id, $col['filter_name'])), "\"",
+							" style=\"display: block; width: 100%;\">\n";
+					} else {
+						echo "<input type=\"submit\" value=\"", _('Filter'), "\">\n";
+					}
+					echo "</th>\n";
+				}
+				echo "</tr>\n";
+			}
+
 			echo "</thead>\n";
 		}
 
@@ -263,6 +297,10 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 
 		// End
 		echo "</table>\n";
+
+		if ($filters_enabled) {
+			echo "</form>\n";
+		}
 	}
 
 	/**
