@@ -191,7 +191,8 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 					if (!empty($col['filter_name'])) {
 						unset($unrendered_filters[$col['filter_name']]);
 						// TODO: Use field filtering renderer
-						echo "<input name=\"", htmlspecialchars($field_id), "\"",
+						echo "<input name=\"", htmlspecialchars($col['filter_name']), "\"",
+							" title=\"", htmlspecialchars($col['filter_name']), "\"",
 							" value=\"", htmlspecialchars($form->getViewData($filters_group_id, $col['filter_name'])), "\"",
 							" style=\"display: block; width: 100%;\">\n";
 					} else if (!$field_id) {
