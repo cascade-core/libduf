@@ -118,6 +118,7 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 		// Filter form
 		$filters_enabled = $form->readonly && $filters_group_id;
 		if ($filters_enabled) {
+			$unrendered_filters = $form->getViewData($filters_group_id);
 			echo "<form action=\"\" method=\"get\">\n";
 		}
 
@@ -187,14 +188,13 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 						continue;
 					}
 					echo "<th class=\"filter\">";
-					//debug_dump($col, $field_id);
-					if (isset($col['filter_widgets'])) {
-						$form->renderWidgets($template_engine, $col['filter_widgets']);
-					} else if ($field_id) {
+					if (!empty($col['filter_name'])) {
+						unset($unrendered_filters[$col['filter_name']]);
+						// TODO: Use field filtering renderer
 						echo "<input name=\"", htmlspecialchars($field_id), "\"",
 							" value=\"", htmlspecialchars($form->getViewData($filters_group_id, $col['filter_name'])), "\"",
 							" style=\"display: block; width: 100%;\">\n";
-					} else {
+					} else if (!$field_id) {
 						echo "<input type=\"submit\" value=\"", _('Filter'), "\">\n";
 					}
 					echo "</th>\n";
@@ -299,6 +299,9 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 		echo "</table>\n";
 
 		if ($filters_enabled) {
+			foreach ($unrendered_filters as $filter_name => $filter_value) {
+				echo "<input type=\"hidden\" name=\"", htmlspecialchars($filter_name), "\" value=\"", htmlspecialchars($filter_value), "\">\n";
+			}
 			echo "</form>\n";
 		}
 	}
