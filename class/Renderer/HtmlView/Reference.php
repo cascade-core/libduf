@@ -42,9 +42,11 @@ class Reference extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 		if ($is_null) {
 			$link = isset($field_conf['null_link']) ? $field_conf['null_link'] : null;
 			$value_fmt = isset($field_conf['null_value_fmt']) ? $field_conf['null_value_fmt'] : null;
+			$target = isset($widget_conf['null_target']) ? $widget_conf['null_target'] : (isset($field_conf['null_target']) ? $field_conf['null_target'] : null);
 		} else {
 			$link = isset($field_conf['link']) ? $field_conf['link'] : null;
 			$value_fmt = isset($field_conf['value_fmt']) ? $field_conf['value_fmt'] : null;
+			$target = isset($widget_conf['target']) ? $widget_conf['target'] : (isset($field_conf['target']) ? $field_conf['target'] : null);
 		}
 
 		// Render reference element
@@ -52,6 +54,9 @@ class Reference extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 		echo "<$tag";
 		if ($link !== null) {
 			echo " href=\"", htmlspecialchars(filename_format($link, $raw_values)), "\"";
+		}
+		if ($target !== null) {
+			echo " target=\"", htmlspecialchars(filename_format($target, $raw_values)), "\"";
 		}
 		static::commonAttributes($field_conf);
 		echo ">";
