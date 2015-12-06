@@ -897,6 +897,11 @@ class Form
 			throw new \InvalidArgumentException('Shebang is missing in widget configuration.');
 		}
 
+		// Skip hidden widgets
+		if (!empty($widget_conf['hidden'])) {
+			return;
+		}
+
 		if ($renderer_name[0] == '@') {
 			// Field renderer: Lookup field type and select correct renderer
 			if (empty($widget_conf['group_id']) || empty($widget_conf['field_id'])) {
