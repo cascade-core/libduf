@@ -379,6 +379,9 @@
         "switch": {
             "renderer": "\\Duf\\Renderer\\Utils\\SwitchWidget"
         },
+        "permission_check": {
+            "renderer": "\\Duf\\Renderer\\Utils\\PermissionCheckWidget"
+        },
         "item_actions": {
             "renderer": "\\Duf\\Renderer\\HtmlDecoration\\ItemActions"
         },
