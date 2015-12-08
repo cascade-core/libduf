@@ -121,6 +121,10 @@ class Smalldb implements IFieldGroupGenerator
 					'limit' => false,
 				);
 
+				if (isset($ref['filters'])) {
+					$filters = array_merge($filters, $ref['filters']);
+				}
+
 				if (!empty($ref['lazy_load'])) {
 					// Load only selected item, rest will get loaded by Select2 or something like that
 					$filters[$machine_id_key] = $value;
