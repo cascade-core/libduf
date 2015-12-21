@@ -106,15 +106,15 @@ class Smalldb implements IFieldGroupGenerator
 
 			// FIXME: Shouldn't we use toolbox?
 			$smalldb = $this->smalldb;
+			$ref['options_value_keys'] = $machine->describeId();
 			$ref['options_factory'] = function($field_conf, $value) use ($smalldb, $ref) {
+				// FIXME: $field_conf == $ref ... almost. So $ref should be removed.
 				$items = array();
-				$machine = $smalldb->getMachine($ref['machine_type']);
-				$machine_id_keys = $machine->describeId();
+				$machine_id_keys = $ref['options_value_keys'];
 				if (count($machine_id_keys) != 1) {
 					throw new \Exception('Sorry, only simple primary keys are supported.');
 				}
 				$machine_id_key = reset($machine_id_keys);
-				$machine_value_fmt = $ref['value_fmt'];
 
 				$filters = array(
 					'type' => $ref['machine_type'],
@@ -130,16 +130,7 @@ class Smalldb implements IFieldGroupGenerator
 					$filters[$machine_id_key] = $value;
 				}
 
-				foreach ($smalldb->createListing($filters)->query() as $item)
-				{
-					// FIXME: Optimize this.
-					$p = array();
-					foreach ($ref['properties'] as $pk => $pv) {
-						$p[$pk] = $item[$pv];
-					}
-					$items[$item[$machine_id_key]] = filename_format($machine_value_fmt, $p);
-				}
-				return $items;
+				return $smalldb->createListing($filters)->query();
 			};
 
 			$fields[$ref_name] = $ref;

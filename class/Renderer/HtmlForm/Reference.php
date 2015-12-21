@@ -49,7 +49,6 @@ class Reference extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 
 		} else {
 			$value = $form->getRawData($group_id, $field_id);
-
 			// Lazy-load possible values, just like for <select>
 			if (isset($field_conf['options_factory'])) {
 				$of = $field_conf['options_factory'];
@@ -75,12 +74,45 @@ class Reference extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 			if (!empty($field_conf['required'])) {
 				echo " disabled style=\"display: none;\"";
 			}
-			echo ">";
 			echo "</option>\n";
 
-			foreach ($options as $opt_value => $opt_label) {
-				echo "<option value=\"", htmlspecialchars($opt_value), "\"", ($value == $opt_value ? " selected":""), ">",
-					htmlspecialchars($opt_label), "</option>\n";
+			$opt_key = isset($field_conf['options_value_keys']) ? reset($field_conf['options_value_keys']) : null;
+
+			foreach ($options as $opt_value => $opt) {
+				if (is_scalar($opt)) {
+					$opt_label = $opt;
+				} else {
+					// Reference value format is defined using referred properties included into
+					// original entity. Since $opt iterates over listing of referred entities,
+					// properties must be mapped.
+					if (isset($field_conf['properties'])) {
+						$p = array();
+						foreach ($field_conf['properties'] as $pk => $pv) {
+							$p[$pk] = $opt[$pv];
+						}
+					} else {
+						$p = $opt;
+					}
+					$opt_label = filename_format($field_conf['value_fmt'], $p);
+
+					// Use one of properties as a key
+					if ($opt_key !== null) {
+						$opt_value = $opt[$opt_key];
+					}
+				}
+
+				echo "<option value=\"", htmlspecialchars($opt_value), "\"", ($value == $opt_value ? " selected":"");
+				if (!empty($field_conf['options_data_fields'])) {
+					foreach ($field_conf['options_data_fields'] as $dk => $df) {
+						if (empty($df)) {
+							continue;
+						}
+						echo " data-", preg_replace('/["\'>\\/=\\0 \s]/', '_', $dk), "=\"", htmlspecialchars($opt[$df]), "\"";
+					}
+				}
+				echo ">";
+				echo htmlspecialchars($opt_label);
+				echo "</option>\n";
 			}
 
 			echo "</select>\n";
