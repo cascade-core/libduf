@@ -52,6 +52,7 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 		$k_order_by    = $key_prefix.'_order_by';
 		$k_order_asc   = $key_prefix.'_order_asc';
 		$k_filter_name = $key_prefix.'_filter_name';
+		$k_filter_type = $key_prefix.'_filter_type';
 		$k_rotated     = $key_prefix.'_rotated_header';
 		$k_irf_name    = $key_prefix.'_indent_rq_filter_name';
 		$k_irf_value   = $key_prefix.'_indent_rq_filter_value';
@@ -75,6 +76,7 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 					'order_by'    => isset($f[$k_order_by])    ? $f[$k_order_by]    : (isset($f['order_by'])        ? $f['order_by']        : null),
 					'order_asc'   => isset($f[$k_order_asc])   ? $f[$k_order_asc]   : (isset($f['order_asc'])       ? $f['order_asc']       : true),
 					'filter_name' => isset($f[$k_filter_name]) ? $f[$k_filter_name] : (isset($f['filter_name'])     ? $f['filter_name']     : $field_id),
+					'filter_type' => isset($f[$k_filter_type]) ? $f[$k_filter_type] : (isset($f['filter_type'])     ? $f['filter_type']     : 'text'),
 					'indent_key'  => isset($f[$k_indent])      ? $f[$k_indent]      : (isset($f['indent_key'])      ? $f['indent_key']      : null),
 					'rotated'     => isset($f[$k_rotated])     ? $f[$k_rotated]     : (isset($f['rotated_header'])  ? $f['rotated_header']  : null),
 				);
@@ -190,11 +192,42 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 					echo "<th class=\"filter\">";
 					if (!empty($col['filter_name'])) {
 						unset($unrendered_filters[$col['filter_name']]);
-						// TODO: Use field filtering renderer
-						echo "<input name=\"", htmlspecialchars($col['filter_name']), "\"",
-							" title=\"", htmlspecialchars($col['filter_name']), "\"",
-							" value=\"", htmlspecialchars($form->getViewData($filters_group_id, $col['filter_name'])), "\"",
-							" style=\"display: block; width: 100%;\">\n";
+						// TODO: Refactor this and use field filtering renderer
+						switch ($col['filter_type']) {
+							case 'text':
+								echo "<input name=\"", htmlspecialchars($col['filter_name']), "\"",
+									" title=\"", htmlspecialchars($col['filter_name']), "\"",
+									" value=\"", htmlspecialchars($form->getViewData($filters_group_id, $col['filter_name'])), "\"",
+									" style=\"display: block; width: 100%;\">\n";
+								break;
+							case 'range':
+							case 'number_range':
+								$value = $form->getViewData($filters_group_id, $col['filter_name']);
+								$min = isset($value['min']) ? $value['min'] : null;
+								$max = isset($value['max']) ? $value['max'] : null;
+								echo "<input type=\"text\" name=\"", htmlspecialchars($col['filter_name']), "[min]\"",
+									" value=\"", htmlspecialchars($min), "\"",
+									" title=\"", __('from ...'), "\"",
+									" style=\"display: block; width: 100%;\">\n";
+								echo "<input type=\"text\" name=\"", htmlspecialchars($col['filter_name']), "[max]\"",
+									" value=\"", htmlspecialchars($max), "\"",
+									" title=\"", __('... up to'), "\"",
+									" style=\"display: block; width: 100%;\">\n";
+								break;
+							case 'date_range':
+								$value = $form->getViewData($filters_group_id, $col['filter_name']);
+								$min = isset($value['min']) ? $value['min'] : null;
+								$max = isset($value['max']) ? $value['max'] : null;
+								echo "<input type=\"date\" name=\"", htmlspecialchars($col['filter_name']), "[min]\"",
+									" value=\"", htmlspecialchars($min), "\"",
+									" title=\"", __('since ...'), "\"",
+									" style=\"display: block; width: 100%;\">\n";
+								echo "<input type=\"date\" name=\"", htmlspecialchars($col['filter_name']), "[max]\"",
+									" value=\"", htmlspecialchars($max), "\"",
+									" title=\"", __('... until'), "\"",
+									" style=\"display: block; width: 100%;\">\n";
+								break;
+						}
 					} else if (!$field_id) {
 						echo "<input type=\"submit\" value=\"", _('Filter'), "\">\n";
 					}
