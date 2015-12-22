@@ -44,6 +44,7 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 
 		// Calculate prefixed tabular keys
 		$key_prefix    = isset($widget_conf['option_prefix']) ? $widget_conf['option_prefix'] : 'tabular';
+		$k_type        = $key_prefix.'_type';
 		$k_hidden      = $key_prefix.'_hidden';
 		$k_weight      = $key_prefix.'_weight';
 		$k_width       = $key_prefix.'_width';
@@ -69,6 +70,7 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 					continue;
 				}
 				$columns[$field_id] = array(
+					'type'        => isset($f[$k_weight])      ? $f[$k_type]        : (isset($f['type'])            ? $f['type']            : null),
 					'weight'      => isset($f[$k_weight])      ? $f[$k_weight]      : (isset($f['weight'])          ? $f['weight']          : 50),
 					'width'       => isset($f[$k_width])       ? $f[$k_width]       : (isset($f['width'])           ? $f['width']           : null),
 					'label'       => isset($f[$k_label])       ? $f[$k_label]       : (isset($f['label'])           ? $f['label']           :
@@ -357,6 +359,9 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 							continue;
 						}
 						echo "<td";
+						if (!empty($col['type'])) {
+							echo " class=\"", htmlspecialchars($col['type']), "\"";
+						}
 						if (isset($col['indent_key']) && !empty($item[$col['indent_key']])) {
 							echo " style=\"padding-left: ", 2 * $item[$col['indent_key']], "em;\"";
 						}
