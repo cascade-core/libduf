@@ -79,6 +79,8 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 					'filter_type' => isset($f[$k_filter_type]) ? $f[$k_filter_type] : (isset($f['filter_type'])     ? $f['filter_type']     : 'text'),
 					'indent_key'  => isset($f[$k_indent])      ? $f[$k_indent]      : (isset($f['indent_key'])      ? $f['indent_key']      : null),
 					'rotated'     => isset($f[$k_rotated])     ? $f[$k_rotated]     : (isset($f['rotated_header'])  ? $f['rotated_header']  : null),
+
+					'options'     => isset($f['options']) ? $f['options'] : null,
 				);
 
 				$irf_name  = isset($f[$k_irf_name])  ? $f[$k_irf_name]  : (isset($f['indent_rq_filter_name'])  ? $f['indent_rq_filter_name']   : null);
@@ -192,17 +194,19 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 					echo "<th class=\"filter\">";
 					if (!empty($col['filter_name'])) {
 						unset($unrendered_filters[$col['filter_name']]);
+						$value = $form->getViewData($filters_group_id, $col['filter_name']);
 						// TODO: Refactor this and use field filtering renderer
 						switch ($col['filter_type']) {
+
 							case 'text':
 								echo "<input name=\"", htmlspecialchars($col['filter_name']), "\"",
 									" title=\"", htmlspecialchars($col['filter_name']), "\"",
-									" value=\"", htmlspecialchars($form->getViewData($filters_group_id, $col['filter_name'])), "\"",
+									" value=\"", htmlspecialchars($value), "\"",
 									" style=\"display: block; width: 100%;\">\n";
 								break;
+
 							case 'range':
 							case 'number_range':
-								$value = $form->getViewData($filters_group_id, $col['filter_name']);
 								$min = isset($value['min']) ? $value['min'] : null;
 								$max = isset($value['max']) ? $value['max'] : null;
 								echo "<input type=\"text\" name=\"", htmlspecialchars($col['filter_name']), "[min]\"",
@@ -214,8 +218,8 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 									" title=\"", __('... up to'), "\"",
 									" style=\"display: block; width: 100%;\">\n";
 								break;
+
 							case 'date_range':
-								$value = $form->getViewData($filters_group_id, $col['filter_name']);
 								$min = isset($value['min']) ? $value['min'] : null;
 								$max = isset($value['max']) ? $value['max'] : null;
 								echo "<input type=\"date\" name=\"", htmlspecialchars($col['filter_name']), "[min]\"",
@@ -227,6 +231,50 @@ class Tabular implements \Duf\Renderer\IWidgetRenderer
 									" title=\"", __('... until'), "\"",
 									" style=\"display: block; width: 100%;\">\n";
 								break;
+
+							case 'options':
+								echo "<select name=\"", htmlspecialchars($col['filter_name']), "\"",
+									" title=\"", htmlspecialchars($col['filter_name']), "\"",
+									" style=\"display: block; width: 100%;\">\n";
+								echo "<option value=\"\"";
+								if (empty($value)) {
+									echo " selected";
+								}
+								echo ">";
+								echo "</option>\n";
+								foreach ($col['options'] as $key => $option) {
+									if (is_array($option)) {
+										$opt_label = $option['label'];
+										$opt_value = $option['value'];
+									} else {
+										$opt_label = $option;
+										$opt_value = $key;
+									}
+									echo "<option value=\"", htmlspecialchars($opt_value), "\"", ($value == $opt_value ? " selected":""), ">",
+										htmlspecialchars($opt_label), "</option>\n";
+								}
+								echo "</select>\n";
+								break;
+
+							case 'bool':
+								echo "<select name=\"", htmlspecialchars($col['filter_name']), "\"",
+									" title=\"", htmlspecialchars($col['filter_name']), "\"",
+									" style=\"display: block; width: 100%;\">\n";
+								echo "<option value=\"\"";
+								if ($value == '') {
+									echo " selected";
+								}
+								echo ">";
+								echo "</option>\n";
+								foreach (array('1' => _('yes'), '0' => _('no')) as $opt_value => $opt_label) {
+									echo "<option value=\"", htmlspecialchars($opt_value), "\"",
+										($value == $opt_value && $value != '' ? " selected":""),
+										">",
+										htmlspecialchars($opt_label), "</option>\n";
+								}
+								echo "</select>\n";
+								break;
+
 						}
 					} else if (!$field_id) {
 						echo "<input type=\"submit\" value=\"", _('Filter'), "\">\n";

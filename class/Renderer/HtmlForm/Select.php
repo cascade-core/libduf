@@ -81,7 +81,6 @@ class Select extends Input implements \Duf\Renderer\IFieldWidgetRenderer
 		echo ">";
 		echo "</option>\n";
 
-
                 foreach ($options as $key => $option) {
                         if (is_array($option)) {
                                 $opt_label = $option['label'];
